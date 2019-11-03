@@ -1,9 +1,9 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import PapersChart from './PapersChart'
 
 const Teste = () => {
 
-  const [teste, setTeste] = useState(11)
+  const [papers, setPapers] = useState({})
 
   const fetchPapers = async () => {
     const queryGetPapers = await fetch("/papers",
@@ -19,18 +19,22 @@ const Teste = () => {
 
     PromiseGetPapers.then((response: any) => {
       console.log('response:', response)
+      setPapers(response)
     })
   }
 
-  fetchPapers()
+  // When component starts, fetch papers data once
+  useEffect(() => {
+    fetchPapers()
+  }, [])
 
   return (
     <React.Fragment>
       <div>
-        MY TEST {teste}
+        Papers
       </div>
       <div>
-        <PapersChart />
+        <PapersChart data={papers} />
       </div>
     </React.Fragment>)
 }

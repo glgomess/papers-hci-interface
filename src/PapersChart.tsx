@@ -2,49 +2,56 @@
 import React, { Component } from 'react'
 import '../node_modules/react-vis/dist/style.css'
 import { XYPlot, DecorativeAxis, LineSeries, VerticalGridLines, HorizontalGridLines, XAxis, YAxis, LabelSeries } from 'react-vis'
+import { number } from 'prop-types'
 
 const PapersChart = (props: any) => {
 
-  
+  console.log('props', props)
 
-  const data = [
-    { x: 0, y: 0, label: 'a1' },
-    { x: 0, y: 1, label: 'a2' },
-    { x: 0, y: 2, label: 'a3' },
-    { x: 2, y: 4, label: 'b' },
-    { x: 4, y: 1, label: 'c' },
-    { x: 6, y: 6, label: 'd' },
-    { x: 8, y: 2, label: 'ee' },
-    { x: 10, y: 0, label: 'ff' }
+  const { data } = props
+
+  const years: string[] = Object.keys(data)
+  const firstYear = years.length > 0 ? parseInt(years[0]) : 0
+  const lastYear = years.length > 0 ? parseInt(years[years.length - 1]) : 0
+  console.log('years', years)
+
+  const chartData: any = []
+
+  years.map((year: string) => {
+    const papers = data[year]
+    papers.map(([paper_id, paper_title]: [number, string], index: any) => {
+      chartData.push({
+        x: year, y: index, label: paper_title.substring(0, 15) + '...', id: paper_id
+      })
+    })
+  })
+
+  console.log('data', chartData)
+
+  const dt = [
+    { x: 1998, y: 0, label: 'a1' },
+    { x: 1999, y: 0, label: 'a2' },
   ];
 
   return (
     <XYPlot
-      xDomain={[0, 11]}
-      yDomain={[0, 11]}
-      width={300}
-      height={300}>
+      xDomain={[firstYear - 1, lastYear + 1]}
+      yDomain={[0, 30]}
+      width={700}
+      height={500}
+      >
       <VerticalGridLines />
       <HorizontalGridLines />
-      <LineSeries data={data} />
-      <DecorativeAxis
-        axisStart={{ x: 0, y: 0 }}
-        axisEnd={{ x: 0, y: 10 }}
-        axisDomain={[0, 10]}
-      />
-      <DecorativeAxis
-        axisStart={{ x: 2, y: 0 }}
-        axisEnd={{ x: 2, y: 10 }}
-        axisDomain={[0, 10]}
-      />
-      <DecorativeAxis
-        axisStart={{ x: 4, y: 0 }}
-        axisEnd={{ x: 4, y: 10 }}
-        axisDomain={[0, 10]}
-      />
+      <XAxis tickValues={years} tickFormat={year => `${year}`} />
+      {/* <LineSeries data={dt} /> */}
+      {/* <DecorativeAxis
+        axisStart={{ x: firstYear, y: 0 }}
+        axisEnd={{ x: lastYear, y: 0 }}
+        axisDomain={[firstYear, lastYear]}
+      /> */}
       <LabelSeries
-        style={{ pointerEvents: 'none' }}
-        data={data}
+        style={{ pointerEvents: 'stroke' }}
+        data={chartData}
         labelAnchorX="middle"
         labelAnchorY="baseline"
       />
