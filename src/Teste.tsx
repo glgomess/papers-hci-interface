@@ -1,11 +1,12 @@
 import React, { useState } from 'react'
+import PapersChart from './PapersChart'
 
 const Teste = () => {
 
   const [teste, setTeste] = useState(11)
 
-  const fetchPapers = () => {
-    const PromiseGetPapers = fetch("/papers",
+  const fetchPapers = async () => {
+    const queryGetPapers = await fetch("/papers",
       {
         method: 'GET',
         headers: {
@@ -14,17 +15,24 @@ const Teste = () => {
         credentials: "same-origin"
       })
 
+    const PromiseGetPapers = queryGetPapers.json()
+
     PromiseGetPapers.then((response: any) => {
-      console.log('resp', response.json(), response.data)
+      console.log('response:', response)
     })
   }
 
-  return (
-    <div>
-      MY TEST {teste}
+  fetchPapers()
 
-      {fetchPapers()}
-    </div>)
+  return (
+    <React.Fragment>
+      <div>
+        MY TEST {teste}
+      </div>
+      <div>
+        <PapersChart />
+      </div>
+    </React.Fragment>)
 }
 
 export default Teste
