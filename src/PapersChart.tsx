@@ -1,48 +1,46 @@
 /// <reference types="react-vis-types" />
 import React, { Component } from 'react'
 import '../node_modules/react-vis/dist/style.css'
-import { XYPlot, DecorativeAxis, LineSeries, VerticalGridLines, HorizontalGridLines, XAxis, YAxis, LabelSeries } from 'react-vis'
+import { XYPlot, DecorativeAxis, LineSeries, VerticalGridLines, HorizontalGridLines, XAxis, YAxis, LabelSeries, LineMarkSeriesCanvas } from 'react-vis'
 import { number } from 'prop-types'
 
 const PapersChart = (props: any) => {
 
-  console.log('props', props)
-
   const { data } = props
 
   const years: string[] = Object.keys(data)
-  const firstYear = years.length > 0 ? parseInt(years[0]) : 0
-  const lastYear = years.length > 0 ? parseInt(years[years.length - 1]) : 0
-  console.log('years', years)
-
   const chartData: any = []
+  const tickSpace = 2
+  const ticks = Array.from(Array(years.length).keys()).map(el => el * tickSpace)
+  let maxPapersPerYear = 0
 
-  years.map((year: string) => {
+  years.map((year: string, idx: number) => {
     const papers = data[year]
-    papers.map(([paper_id, paper_title]: [number, string], index: any) => {
+    if (papers.length > maxPapersPerYear) {
+      maxPapersPerYear = papers.length
+    }
+    papers.map(([paper_id, paper_title]: [number, string], index: number) => {
       chartData.push({
-        x: year, y: index, label: paper_title.substring(0, 15) + '...', id: paper_id
+        x: idx * tickSpace,
+        y: index,
+        label: paper_title.substring(0, 5) + '...',
+        id: paper_id,
+        style: { fontSize: 10, color: '#2657de' }
       })
     })
   })
 
-  console.log('data', chartData)
-
-  const dt = [
-    { x: 1998, y: 0, label: 'a1' },
-    { x: 1999, y: 0, label: 'a2' },
-  ];
-
   return (
     <XYPlot
-      xDomain={[firstYear - 1, lastYear + 1]}
-      yDomain={[0, 30]}
-      width={700}
-      height={500}
-      >
+      xDomain={[-(tickSpace / 2), ticks[ticks.length - 1] + (tickSpace / 2)]}
+      yDomain={[0, maxPapersPerYear + 1]}
+      width={1000}
+      height={650}
+    >
       <VerticalGridLines />
       <HorizontalGridLines />
-      <XAxis tickValues={years} tickFormat={year => `${year}`} />
+      <XAxis tickValues={ticks} tickFormat={year => `${years[year / tickSpace]}`} />
+      <YAxis />
       {/* <LineSeries data={dt} /> */}
       {/* <DecorativeAxis
         axisStart={{ x: firstYear, y: 0 }}
@@ -54,7 +52,7 @@ const PapersChart = (props: any) => {
         data={chartData}
         labelAnchorX="middle"
         labelAnchorY="baseline"
-      />
+      ></LabelSeries>
     </XYPlot>
 
   )
