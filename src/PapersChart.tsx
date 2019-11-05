@@ -2,11 +2,10 @@
 import React, { Component, useState } from 'react'
 import '../node_modules/react-vis/dist/style.css'
 import { XYPlot, DecorativeAxis, LineSeries, VerticalGridLines, HorizontalGridLines, XAxis, YAxis, LabelSeries, LineMarkSeriesCanvas } from 'react-vis'
-import { number } from 'prop-types'
 
 const PapersChart = (props: any) => {
 
-  const { data } = props
+  const { data, handlePaperId } = props
 
   const [highlightSeries, setHighlight] = useState(null)
 
@@ -32,6 +31,11 @@ const PapersChart = (props: any) => {
     })
   })
 
+  const openPaperDescription = (id: number) => {
+    console.log('open:', id)
+    handlePaperId(id)
+  }
+
   return (
     <XYPlot
       xDomain={[-(tickSpace / 2), ticks[ticks.length - 1] + (tickSpace / 2)]}
@@ -41,20 +45,23 @@ const PapersChart = (props: any) => {
     >
       <VerticalGridLines />
       <HorizontalGridLines />
-      <XAxis tickValues={ticks} tickFormat={year => `${years[year / tickSpace]}`} />
+      <XAxis tickValues={ticks} tickFormat={(year: any) => `${years[year / tickSpace]}`} />
       <YAxis />
       {/* <LineSeries data={dt} /> */}
       {chartData.map((el: any) => {
-        const id = el.id
-
         return <LabelSeries
-          key={id}
-          style={{ pointerEvents: 'stroke', stroke: (id === highlightSeries ? 'black' : 'none') }}
+          key={el.id}
+          style={{
+            pointerEvents: 'stroke',
+            stroke: (el.id === highlightSeries ? 'black' : 'none'),
+            opacity: (el.id === highlightSeries ? 1.0 : 0.6)
+          }}
           data={[el]}
           labelAnchorX="middle"
           labelAnchorY="baseline"
-          onSeriesMouseOver={() => setHighlight(id)}
+          onSeriesMouseOver={() => setHighlight(el.id)}
           onSeriesMouseOut={() => setHighlight(null)}
+          onSeriesClick={() => openPaperDescription(el.id)}
         ></LabelSeries>
       })}
     </XYPlot>

@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import PapersChart from './PapersChart'
+import PaperInfo from './PaperInfo'
 
 const Teste = () => {
 
   const [papers, setPapers] = useState({})
+  const [currentPaperId, setCurrentPaperId] = useState(null)
 
   const fetchPapers = async () => {
     const queryGetPapers = await fetch("/papers",
@@ -30,12 +32,18 @@ const Teste = () => {
 
   return (
     <React.Fragment>
-      <div>
-        Papers
+      <div className="pl5">
+        <h2>Papers</h2>
       </div>
-      <div>
-        <PapersChart data={papers} />
+      <div className="flex-row flex">
+        <div className='dib w-70'>
+          <PapersChart data={papers} handlePaperId={setCurrentPaperId} />
+        </div>
+        <div className='w-30'>
+          <PaperInfo id={currentPaperId} />
+        </div>
       </div>
+
     </React.Fragment>)
 }
 
