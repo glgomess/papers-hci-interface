@@ -32,14 +32,11 @@ const Teste = () => {
 
   return (
     <React.Fragment>
-      <div className="pl5">
-        <h2>Papers</h2>
-      </div>
       <div className="flex-row flex">
         <div className='dib w-70'>
           <PapersChart data={papers} handlePaperId={setCurrentPaperId} />
         </div>
-        <div className='w-30'>
+        <div className='dib w-30'>
           <PaperInfo id={currentPaperId} />
         </div>
       </div>

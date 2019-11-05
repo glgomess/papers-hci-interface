@@ -42,14 +42,14 @@ const PaperInfo = (props: any) => {
   }, [props.id])
 
   return (
-    <div>
+    <React.Fragment>
       <h2>Paper Info</h2>
       <h4>{paperData.title}</h4>
       <span>{paperData.abstract_PT}</span>
       <br />
       <br />
       <span>{paperData.authors ? paperData.authors.map((author: string) => <span><br />{author}</span>) : ''}</span>
-    </div>
+    </React.Fragment>
   )
 }
 

@@ -37,35 +37,37 @@ const PapersChart = (props: any) => {
   }
 
   return (
-    <XYPlot
-      xDomain={[-(tickSpace / 2), ticks[ticks.length - 1] + (tickSpace / 2)]}
-      yDomain={[0, maxPapersPerYear + 1]}
-      width={1000}
-      height={650}
-    >
-      <VerticalGridLines />
-      <HorizontalGridLines />
-      <XAxis tickValues={ticks} tickFormat={(year: any) => `${years[year / tickSpace]}`} />
-      <YAxis />
-      {/* <LineSeries data={dt} /> */}
-      {chartData.map((el: any) => {
-        return <LabelSeries
-          key={el.id}
-          style={{
-            pointerEvents: 'stroke',
-            stroke: (el.id === highlightSeries ? 'black' : 'none'),
-            opacity: (el.id === highlightSeries ? 1.0 : 0.6)
-          }}
-          data={[el]}
-          labelAnchorX="middle"
-          labelAnchorY="baseline"
-          onSeriesMouseOver={() => setHighlight(el.id)}
-          onSeriesMouseOut={() => setHighlight(null)}
-          onSeriesClick={() => openPaperDescription(el.id)}
-        ></LabelSeries>
-      })}
-    </XYPlot>
-
+    <React.Fragment>
+      <h2>Papers</h2>
+      <XYPlot
+        xDomain={[-(tickSpace / 2), ticks[ticks.length - 1] + (tickSpace / 2)]}
+        yDomain={[0, maxPapersPerYear + 1]}
+        width={1000}
+        height={650}
+      >
+        <VerticalGridLines />
+        <HorizontalGridLines />
+        <XAxis tickValues={ticks} tickFormat={(year: any) => `${years[year / tickSpace]}`} />
+        <YAxis />
+        {/* <LineSeries data={dt} /> */}
+        {chartData.map((el: any) => {
+          return <LabelSeries
+            key={el.id}
+            style={{
+              pointerEvents: 'stroke',
+              stroke: (el.id === highlightSeries ? 'black' : 'none'),
+              opacity: (el.id === highlightSeries ? 1.0 : 0.6)
+            }}
+            data={[el]}
+            labelAnchorX="middle"
+            labelAnchorY="baseline"
+            onSeriesMouseOver={() => setHighlight(el.id)}
+            onSeriesMouseOut={() => setHighlight(null)}
+            onSeriesClick={() => openPaperDescription(el.id)}
+          ></LabelSeries>
+        })}
+      </XYPlot>
+    </React.Fragment>
   )
 }
 
