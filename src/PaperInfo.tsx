@@ -10,8 +10,6 @@ interface PaperData {
 
 const PaperInfo = (props: any) => {
 
-  console.log('props paperinfo:', props)
-
   const { id } = props
 
   const [paperData, setPaperData]: any = useState({} as PaperData)
@@ -29,7 +27,6 @@ const PaperInfo = (props: any) => {
     const PromiseGetPaperInfo = queryGetPaperInfo.json()
 
     PromiseGetPaperInfo.then((response: any) => {
-      console.log('response:', response)
       setPaperData(response)
     })
   }

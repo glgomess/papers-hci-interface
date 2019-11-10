@@ -1,5 +1,5 @@
 /// <reference types="react-vis-types" />
-import React, { Component, useState } from 'react'
+import React, { Component, useState, useEffect } from 'react'
 import '../node_modules/react-vis/dist/style.css'
 import { XYPlot, makeVisFlexible, VerticalGridLines, HorizontalGridLines, XAxis, YAxis, LabelSeries, LineMarkSeriesCanvas } from 'react-vis'
 import RangeSlider from './RangeSlider'
@@ -9,10 +9,14 @@ const PapersChart = (props: any) => {
   const { data, handlePaperId } = props
 
   const [highlightSeries, setHighlight] = useState(null)
+  const [XDomain, setXDomain] = useState<number[]>([0, 0])
 
   const years: string[] = Object.keys(data)
-  const startYear: number = years.length > 0 ? parseInt(years[0]) : 0
-  const endYear: number = years.length > 0 ? parseInt(years[years.length - 1]) : 0
+  const yearsRange: { start: number, end: number } = years.length > 0 ?
+    { start: parseInt(years[0]), end: parseInt(years[years.length - 1]) } :
+    { start: 0, end: 0 }
+  const startYear: number = years.length > 5 ? yearsRange.end - 5 : yearsRange.start
+  const endYear: number = yearsRange.end
 
   const chartData: any = []
   const tickSpace = 4
@@ -36,8 +40,32 @@ const PapersChart = (props: any) => {
   })
 
   const openPaperDescription = (id: number) => {
-    console.log('open:', id)
     handlePaperId(id)
+  }
+
+  useEffect(() => {
+    getXDomain()
+  }, [props.data])
+
+  const getXDomain = () => {
+    // Scale start/end years and add padding
+    const startX = years.findIndex((el: any) => el == startYear) * tickSpace - tickSpace/2
+    const endX = years.findIndex((el: any) => el == endYear) * tickSpace + tickSpace/2
+
+    setXDomain([startX, endX])
+  }
+
+  const getVisibleTicks = () => {
+    const begin = years.findIndex((el: any) => el == startYear)
+    const end = years.findIndex((el: any) => el == endYear)
+
+    return ticks.slice(begin, end + 1)
+  }
+
+  const getVisibleLabels = (tick: any) => {
+    const index = tick / tickSpace
+
+    return `${years[index]}`
   }
 
   const FlexibleXYPlot = makeVisFlexible(XYPlot);
@@ -48,16 +76,15 @@ const PapersChart = (props: any) => {
       <div className="pr3">
         <FlexibleXYPlot
           // xDomain={[-(tickSpace / 2), ticks[ticks.length - 1] + (tickSpace / 2)]}
-          xDomain={[-2, 10]}
+          xDomain={XDomain}
           yDomain={[0, maxPapersPerYear + 1]}
           height={550}
         >
           <VerticalGridLines />
           <HorizontalGridLines />
           {/* <XAxis tickValues={ticks} tickFormat={(year: any) => `${years[year / tickSpace]}`} /> */}
-          <XAxis tickValues={ticks.slice(0, 3)} tickFormat={(year: any) => `${years[year / tickSpace]}`} />
+          <XAxis tickValues={getVisibleTicks()} tickFormat={getVisibleLabels} />
           <YAxis />
-          {/* <LineSeries data={dt} /> */}
           {chartData.map((el: any) => {
             return <LabelSeries
               key={el.id}
@@ -76,7 +103,7 @@ const PapersChart = (props: any) => {
           })}
         </FlexibleXYPlot>
         <br />
-        <RangeSlider startYear={startYear} endYear={endYear} />
+        <RangeSlider startYear={startYear} endYear={endYear} yearsRange={yearsRange} />
       </div>
     </React.Fragment>
   )
