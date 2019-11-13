@@ -3,28 +3,32 @@ import Typography from '@material-ui/core/Typography';
 import Slider from '@material-ui/core/Slider';
 
 interface CustomProps {
+  restart: boolean,
   startYear: number,
   endYear: number,
-  yearsRange: { start: number, end: number }
+  yearsRange: { start: number, end: number },
+  handleRangeInput: Function
 }
 
 const RangeSlider = (props: CustomProps) => {
-
-  const { startYear, endYear, yearsRange } = props
-
-  const [value, setValue] = useState<number[]>([startYear, endYear]);
+  
+  const [value, setValue] = useState<number[]>([0, 0]);
 
   const handleChange = (event: any, newValue: number | number[]) => {
-    setValue(newValue as number[]);
+    setValue(newValue as number[])
+    props.handleRangeInput(newValue as number[])
   }
 
   const valuetext = (value: number) => {
     return `${value}`;
   }
 
+  console.log("#restart", props.restart)
+
   useEffect(() => {
-    setValue([startYear, endYear])
-  }, [props.startYear, props.endYear])
+    console.log('props change', props)
+    setValue([props.startYear, props.endYear])
+  }, [props.restart])
 
   return (
     <div className="items-center pl5 pr5">
@@ -32,8 +36,8 @@ const RangeSlider = (props: CustomProps) => {
         Years Range
       </Typography>
       <Slider
-        min={yearsRange.start}
-        max={yearsRange.end}
+        min={props.yearsRange.start}
+        max={props.yearsRange.end}
         value={value}
         onChange={handleChange}
         valueLabelDisplay="auto"

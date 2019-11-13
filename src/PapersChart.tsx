@@ -4,23 +4,26 @@ import '../node_modules/react-vis/dist/style.css'
 import { XYPlot, makeVisFlexible, VerticalGridLines, HorizontalGridLines, XAxis, YAxis, LabelSeries, LineMarkSeriesCanvas } from 'react-vis'
 import RangeSlider from './RangeSlider'
 
+interface DateRange {
+  start: number,
+  end: number
+}
+
 const PapersChart = (props: any) => {
 
   const { data, handlePaperId } = props
 
   const [highlightSeries, setHighlight] = useState(null)
   const [XDomain, setXDomain] = useState<number[]>([0, 0])
-
-  const years: string[] = Object.keys(data)
-  const yearsRange: { start: number, end: number } = years.length > 0 ?
-    { start: parseInt(years[0]), end: parseInt(years[years.length - 1]) } :
-    { start: 0, end: 0 }
-  const startYear: number = years.length > 5 ? yearsRange.end - 5 : yearsRange.start
-  const endYear: number = yearsRange.end
+  const [years, setYears] = useState<string[]>([])
+  const [startYear, setStartYear] = useState<number>(0)
+  const [endYear, setEndYear] = useState<number>(0)
+  const [restartSlider, setRestartSlider] = useState(false)
+  const [yearsRange, setYearsRange] = useState<DateRange>({ start: 0, end: 0 })
+  const [ticks, setTicks] = useState<number[]>([])
 
   const chartData: any = []
   const tickSpace = 4
-  const ticks = Array.from(Array(years.length).keys()).map(el => el * tickSpace)
   let maxPapersPerYear = 0
 
   years.map((year: string, idx: number) => {
@@ -39,18 +42,49 @@ const PapersChart = (props: any) => {
     })
   })
 
+  const handleRangeInput = (values: number[]) => {
+    console.log('range input', values)
+    setStartYear(values[0])
+    setEndYear(values[values.length - 1])
+  }
+
   const openPaperDescription = (id: number) => {
     handlePaperId(id)
   }
 
+  console.log('#years', years)
+  console.log('#ticks', ticks)
+  console.log('#XDomain', XDomain)
+
   useEffect(() => {
-    getXDomain()
+    console.log('props.data changed', props.data)
+    setYears(Object.keys(props.data))
   }, [props.data])
+
+
+  useEffect(() => {
+    console.log('years changed', years)
+    if (years.length > 0) {
+      setYearsRange({ start: parseInt(years[0]), end: parseInt(years[years.length - 1]) })
+    }
+    setTicks(Array.from(Array(years.length).keys()).map(el => el * tickSpace))
+  }, [years])
+
+  useEffect(() => {
+    setStartYear(years.length > 1 ? yearsRange.end - 1 : yearsRange.start)
+    setEndYear(yearsRange.end)
+  }, [yearsRange])
+
+  useEffect(() => {
+    console.log('something changed', startYear, endYear, yearsRange)
+    setRestartSlider(!restartSlider)
+    getXDomain()
+  }, [startYear, endYear])
 
   const getXDomain = () => {
     // Scale start/end years and add padding
-    const startX = years.findIndex((el: any) => el == startYear) * tickSpace - tickSpace/2
-    const endX = years.findIndex((el: any) => el == endYear) * tickSpace + tickSpace/2
+    const startX = years.findIndex((el: any) => el == startYear) * tickSpace - tickSpace / 2
+    const endX = years.findIndex((el: any) => el == endYear) * tickSpace + tickSpace / 2
 
     setXDomain([startX, endX])
   }
@@ -103,7 +137,10 @@ const PapersChart = (props: any) => {
           })}
         </FlexibleXYPlot>
         <br />
-        <RangeSlider startYear={startYear} endYear={endYear} yearsRange={yearsRange} />
+        <RangeSlider
+          restart={restartSlider}
+          startYear={startYear} endYear={endYear}
+          yearsRange={yearsRange} handleRangeInput={handleRangeInput} />
       </div>
     </React.Fragment>
   )
