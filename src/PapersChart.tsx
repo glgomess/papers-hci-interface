@@ -9,6 +9,14 @@ interface DateRange {
   end: number
 }
 
+interface DataPoint {
+  x: number,
+  y: number,
+  label: string,
+  id: number | string,
+  style: Object
+}
+
 const PapersChart = (props: any) => {
 
   const { data, handlePaperId } = props
@@ -16,31 +24,47 @@ const PapersChart = (props: any) => {
   const [highlightSeries, setHighlight] = useState(null)
   const [XDomain, setXDomain] = useState<number[]>([0, 0])
   const [years, setYears] = useState<string[]>([])
+  const [chartData, setChartData] = useState<DataPoint[]>([])
+  const [maxPapersPerYear, setMaxPapersPerYear] = useState(0)
   const [startYear, setStartYear] = useState<number>(0)
   const [endYear, setEndYear] = useState<number>(0)
   const [restartSlider, setRestartSlider] = useState(false)
   const [yearsRange, setYearsRange] = useState<DateRange>({ start: 0, end: 0 })
   const [ticks, setTicks] = useState<number[]>([])
 
-  const chartData: any = []
   const tickSpace = 4
-  let maxPapersPerYear = 0
 
-  years.map((year: string, idx: number) => {
-    const papers = data[year]
-    if (papers.length > maxPapersPerYear) {
-      maxPapersPerYear = papers.length
-    }
-    papers.map(([paper_id, paper_title]: [number, string], index: number) => {
-      chartData.push({
-        x: idx * tickSpace,
-        y: index,
-        label: paper_title.substring(0, 10) + '...',
-        id: paper_id,
-        style: { fontSize: 10, fill: '#000000' }
-      })
+  const buildChartData = (newData: any) => {
+    const newChartData: DataPoint[] = []
+    setMaxPapersPerYear(0)
+
+    years.map((year: string, idx: number) => {
+      const papers = newData[year]
+      if (papers) {
+        if (papers.length > maxPapersPerYear) {
+          setMaxPapersPerYear(papers.length)
+        }
+        papers.map(([paper_id, paper_title]: [number, string], index: number) => {
+          newChartData.push({
+            x: idx * tickSpace,
+            y: index,
+            label: paper_title.substring(0, 10) + '...',
+            id: paper_id,
+            style: { fontSize: 10, fill: '#000000' }
+          })
+        })
+      } else { // Fill out empty, years with no papers
+        newChartData.push({
+          x: idx * tickSpace,
+          y: 0,
+          label: '',
+          id: '#' + year,
+          style: { fontSize: 10, fill: '#000000' }
+        })
+      }
     })
-  })
+    return newChartData
+  }
 
   const handleRangeInput = (values: number[]) => {
     console.log('range input', values)
@@ -52,21 +76,18 @@ const PapersChart = (props: any) => {
     handlePaperId(id)
   }
 
-  console.log('#years', years)
-  console.log('#ticks', ticks)
-  console.log('#XDomain', XDomain)
-
   useEffect(() => {
-    console.log('props.data changed', props.data)
-    setYears(Object.keys(props.data))
+    const yearsSetWithPapers = Object.keys(props.data)
+    const firstYear = yearsSetWithPapers.length ? parseInt(yearsSetWithPapers[0]) : 0
+    const lastYear = yearsSetWithPapers.length ? parseInt(yearsSetWithPapers[yearsSetWithPapers.length - 1]) : 0
+    const fullYearsSet = Array.from(Array(lastYear - firstYear + 1).keys()).map((el: any) => (el + firstYear).toString())
+    setYears(fullYearsSet)
+    setYearsRange({ start: firstYear, end: lastYear })
   }, [props.data])
 
 
   useEffect(() => {
-    console.log('years changed', years)
-    if (years.length > 0) {
-      setYearsRange({ start: parseInt(years[0]), end: parseInt(years[years.length - 1]) })
-    }
+    setChartData(buildChartData(props.data))
     setTicks(Array.from(Array(years.length).keys()).map(el => el * tickSpace))
   }, [years])
 
@@ -76,7 +97,6 @@ const PapersChart = (props: any) => {
   }, [yearsRange])
 
   useEffect(() => {
-    console.log('something changed', startYear, endYear, yearsRange)
     setRestartSlider(!restartSlider)
     getXDomain()
   }, [startYear, endYear])
@@ -109,14 +129,12 @@ const PapersChart = (props: any) => {
       <h2>Papers</h2>
       <div className="pr3">
         <FlexibleXYPlot
-          // xDomain={[-(tickSpace / 2), ticks[ticks.length - 1] + (tickSpace / 2)]}
           xDomain={XDomain}
           yDomain={[0, maxPapersPerYear + 1]}
           height={550}
         >
           <VerticalGridLines />
           <HorizontalGridLines />
-          {/* <XAxis tickValues={ticks} tickFormat={(year: any) => `${years[year / tickSpace]}`} /> */}
           <XAxis tickValues={getVisibleTicks()} tickFormat={getVisibleLabels} />
           <YAxis />
           {chartData.map((el: any) => {

@@ -23,10 +23,7 @@ const RangeSlider = (props: CustomProps) => {
     return `${value}`;
   }
 
-  console.log("#restart", props.restart)
-
   useEffect(() => {
-    console.log('props change', props)
     setValue([props.startYear, props.endYear])
   }, [props.restart])
 
