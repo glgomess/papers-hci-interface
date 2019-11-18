@@ -67,7 +67,6 @@ const PapersChart = (props: any) => {
   }
 
   const handleRangeInput = (values: number[]) => {
-    console.log('range input', values)
     setStartYear(values[0])
     setEndYear(values[values.length - 1])
   }
@@ -84,7 +83,6 @@ const PapersChart = (props: any) => {
     setYears(fullYearsSet)
     setYearsRange({ start: firstYear, end: lastYear })
   }, [props.data])
-
 
   useEffect(() => {
     setChartData(buildChartData(props.data))
