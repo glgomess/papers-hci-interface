@@ -22,6 +22,7 @@ const PapersChart = (props: any) => {
   const { data, handlePaperId } = props
 
   const [highlightSeries, setHighlight] = useState(null)
+  const [currentPaper, setCurrentPaper] = useState<number | null>(null)
   const [XDomain, setXDomain] = useState<number[]>([0, 0])
   const [years, setYears] = useState<string[]>([])
   const [chartData, setChartData] = useState<DataPoint[]>([])
@@ -72,6 +73,7 @@ const PapersChart = (props: any) => {
   }
 
   const openPaperDescription = (id: number) => {
+    setCurrentPaper(id)
     handlePaperId(id)
   }
 
@@ -140,8 +142,8 @@ const PapersChart = (props: any) => {
               key={el.id}
               style={{
                 pointerEvents: 'stroke',
-                stroke: (el.id === highlightSeries ? 'black' : 'none'),
-                opacity: (el.id === highlightSeries ? 1.0 : 0.6)
+                stroke: (el.id === currentPaper ? 'blue' : el.id === highlightSeries ? 'black' : 'none'),
+                opacity: (el.id === highlightSeries || el.id === currentPaper ? 1.0 : 0.6)
               }}
               data={[el]}
               labelAnchorX="middle"
