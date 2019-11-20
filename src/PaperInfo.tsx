@@ -1,31 +1,20 @@
 import React, { useState, useEffect } from 'react'
+import { PaperInfoResponse, PaperRefsResponse } from './Constants'
 
-// TODO: Add props interface, API request response interface
-
-interface PaperInfoResponse {
-  abstract_PT: string,
-  authors: string[],
-  title: string
+interface CustomProps {
+  id: number,
+  references: PaperInfoResponse
 }
 
-interface PaperRefsResponse {
-  cited: Array<Array<number | string>>,
-  citedBy:  Array<Array<number | string>>
-}
-
-interface PaperData {
-  info: PaperInfoResponse,
-  references: PaperRefsResponse
-}
-
-const PaperInfo = (props: any) => {
+const PaperInfo = (props: CustomProps) => {
 
   const { id } = props
 
-  const [paperData, setPaperData]: any = useState<PaperData>({} as PaperData)
+  const [paperInfo, setPaperInfo]: any = useState<PaperInfoResponse>({} as PaperInfoResponse)
+  const [paperReferences, setPaperReferences]: any = useState<PaperRefsResponse>({} as PaperRefsResponse)
 
   const fetchPaperInfo = async () => {
-    const PromiseGetPaperInfo = fetch(`/papers/${id}`,
+    const PromisePaperInfo = fetch(`/papers/${id}`,
       {
         method: 'GET',
         headers: {
@@ -34,19 +23,8 @@ const PaperInfo = (props: any) => {
         credentials: "same-origin"
       }).then((response: any) => response.json())
 
-    const PromiseGetPaperReferences = fetch(`/papers/${id}/references`,
-      {
-        method: 'GET',
-        headers: {
-          "Content-Type": "application/json"
-        },
-        credentials: "same-origin"
-      }).then((response: any) => response.json())
-
-    Promise.all([PromiseGetPaperInfo, PromiseGetPaperReferences]).then((values: any) => {
-      const paperInfo: PaperInfoResponse = values[0]
-      const paperReferences: PaperRefsResponse = values[1]
-      setPaperData({ info: paperInfo, references: paperReferences })
+    PromisePaperInfo.then((paperInfo: any) => {
+      setPaperInfo(paperInfo)
     })
   }
 
@@ -57,21 +35,38 @@ const PaperInfo = (props: any) => {
     }
   }, [props.id])
 
+  useEffect(() => {
+    setPaperReferences(props.references)
+  }, [props.references])
+
   return (
     <React.Fragment>
-      {paperData.info &&
+      {paperInfo &&
         <>
           <h2>Paper Info</h2>
-          <h4>{paperData.info.title}</h4>
-          <span>{paperData.info.abstract_PT}</span>
+          <h4>{paperInfo.title}</h4>
+          <span>{paperInfo.abstract_PT}</span>
           <br />
           <br />
-          <span>{paperData.info.authors ? paperData.info.authors.map((author: string) => <span><br />{author}</span>) : ''}</span>
+          <span>{paperInfo.authors ? paperInfo.authors.map((author: string) => <span><br />{author}</span>) : ''}</span>
           <br />
-          <h2>Cited Papers:</h2>
-          <span>{paperData.references.cited.map(([paper_id, paper_title]: [number, string]) => <span><br /><a onClick={() => console.log(paper_id)}>{paper_title}</a></span>)}</span>
-          <h2>Cited by:</h2>
-          <span>{paperData.references.citedBy.map(([paper_id, paper_title]: [number, string]) => <span><br /><a onClick={() => console.log(paper_id)}>{paper_title}</a></span>)}</span>
+        </>
+      }
+      {
+        paperReferences &&
+        <>
+          {paperReferences.cited &&
+            <>
+              <h2>Cited Papers:</h2>
+              <span>{paperReferences.cited.map(([paper_id, paper_title]: [number, string]) => <span><br /><a onClick={() => console.log(paper_id)}>{paper_title}</a></span>)}</span>
+            </>
+          }
+          {paperReferences.citedBy &&
+            <>
+              <h2>Cited by:</h2>
+              <span>{paperReferences.citedBy.map(([paper_id, paper_title]: [number, string]) => <span><br /><a onClick={() => console.log(paper_id)}>{paper_title}</a></span>)}</span>
+            </>
+          }
         </>
       }
     </React.Fragment>

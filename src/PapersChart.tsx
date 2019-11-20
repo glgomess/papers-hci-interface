@@ -3,6 +3,7 @@ import React, { Component, useState, useEffect } from 'react'
 import '../node_modules/react-vis/dist/style.css'
 import { XYPlot, makeVisFlexible, VerticalGridLines, HorizontalGridLines, XAxis, YAxis, LabelSeries, LineMarkSeriesCanvas } from 'react-vis'
 import RangeSlider from './RangeSlider'
+import { PaperRefsResponse } from './Constants'
 
 interface DateRange {
   start: number,
@@ -17,9 +18,15 @@ interface DataPoint {
   style: Object
 }
 
-const PapersChart = (props: any) => {
+interface CustomProps {
+  data: any,
+  handlePaperId: Function,
+  currentPaperRefs: PaperRefsResponse
+}
 
-  const { data, handlePaperId } = props
+const PapersChart = (props: CustomProps) => {
+
+  const { handlePaperId } = props
 
   const [highlightSeries, setHighlight] = useState(null)
   const [currentPaper, setCurrentPaper] = useState<number | null>(null)
@@ -32,6 +39,8 @@ const PapersChart = (props: any) => {
   const [restartSlider, setRestartSlider] = useState(false)
   const [yearsRange, setYearsRange] = useState<DateRange>({ start: 0, end: 0 })
   const [ticks, setTicks] = useState<number[]>([])
+  const [citedPapers, setCitedPapers] = useState<Array<number>>([])
+  const [citedBy, setCitedBy] = useState<Array<number>>([])
 
   const tickSpace = 4
 
@@ -101,6 +110,19 @@ const PapersChart = (props: any) => {
     getXDomain()
   }, [startYear, endYear])
 
+  useEffect(() => {
+    if (props.currentPaperRefs) {
+      if (props.currentPaperRefs.cited) {
+        const cited: Array<number> = props.currentPaperRefs.cited.map(([paper_id, paper_title]: [number, string]) => paper_id)
+        setCitedPapers(cited)
+      }
+      if (props.currentPaperRefs.citedBy) {
+        const citedBy: Array<number> = props.currentPaperRefs.citedBy.map(([paper_id, paper_title]: [number, string]) => paper_id)
+        setCitedBy(citedBy)
+      }
+    }
+  }, [props.currentPaperRefs])
+
   const getXDomain = () => {
     // Scale start/end years and add padding
     const startX = years.findIndex((el: any) => el == startYear) * tickSpace - tickSpace / 2
@@ -120,6 +142,19 @@ const PapersChart = (props: any) => {
     const index = tick / tickSpace
 
     return `${years[index]}`
+  }
+
+  const getElementStroke = (id: number) => {
+    if (id === currentPaper)
+      return 'blue'
+    else if (id === highlightSeries)
+      return 'black'
+    else if (citedPapers.includes(id))
+      return 'green'
+    else if (citedBy.includes(id))
+      return 'red'
+
+    return 'none'
   }
 
   const FlexibleXYPlot = makeVisFlexible(XYPlot);
@@ -142,7 +177,7 @@ const PapersChart = (props: any) => {
               key={el.id}
               style={{
                 pointerEvents: 'stroke',
-                stroke: (el.id === currentPaper ? 'blue' : el.id === highlightSeries ? 'black' : 'none'),
+                stroke: getElementStroke(el.id),
                 opacity: (el.id === highlightSeries || el.id === currentPaper ? 1.0 : 0.6)
               }}
               data={[el]}
