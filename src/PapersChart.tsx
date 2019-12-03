@@ -1,9 +1,11 @@
 /// <reference types="react-vis-types" />
 import React, { Component, useState, useEffect } from 'react'
 import '../node_modules/react-vis/dist/style.css'
-import { XYPlot, makeVisFlexible, VerticalGridLines, HorizontalGridLines, XAxis, YAxis, LabelSeries, LineMarkSeriesCanvas } from 'react-vis'
+import { XYPlot, makeVisFlexible, VerticalGridLines, HorizontalGridLines, XAxis, YAxis, LabelSeries } from 'react-vis'
 import RangeSlider from './RangeSlider'
 import { PaperRefsResponse } from './Constants'
+import * as d3 from 'd3'
+import { CustomLabelSeries } from './custom-label-series.js'
 
 interface DateRange {
   start: number,
@@ -13,7 +15,7 @@ interface DateRange {
 interface DataPoint {
   x: number,
   y: number,
-  label: string,
+  label: any,
   id: number | string,
   style: Object
 }
@@ -58,9 +60,9 @@ const PapersChart = (props: CustomProps) => {
           newChartData.push({
             x: idx * tickSpace,
             y: index,
-            label: paper_title.substring(0, 10) + '...',
+            label: paper_title,
             id: paper_id,
-            style: { fontSize: 10, fill: '#000000' }
+            style: { fontSize: 10, textAnchor: 'start' }
           })
         })
       } else { // Fill out empty, years with no papers
@@ -69,7 +71,7 @@ const PapersChart = (props: CustomProps) => {
           y: 0,
           label: '',
           id: '#' + year,
-          style: { fontSize: 10, fill: '#000000' }
+          style: { fontSize: 10}
         })
       }
     })
@@ -157,12 +159,12 @@ const PapersChart = (props: CustomProps) => {
     return 'none'
   }
 
-  const FlexibleXYPlot = makeVisFlexible(XYPlot);
+  const FlexibleXYPlot = makeVisFlexible(XYPlot)
 
   return (
     <React.Fragment>
       <h2>Papers</h2>
-      <div className="pr3">
+      <div className="pr3" id="chartDIV">
         <FlexibleXYPlot
           xDomain={XDomain}
           yDomain={[0, maxPapersPerYear + 1]}
@@ -173,7 +175,7 @@ const PapersChart = (props: CustomProps) => {
           <XAxis tickValues={getVisibleTicks()} tickFormat={getVisibleLabels} />
           <YAxis />
           {chartData.map((el: any) => {
-            return <LabelSeries
+            return <CustomLabelSeries
               key={el.id}
               style={{
                 pointerEvents: 'stroke',
@@ -181,12 +183,12 @@ const PapersChart = (props: CustomProps) => {
                 opacity: (el.id === highlightSeries || el.id === currentPaper ? 1.0 : 0.6)
               }}
               data={[el]}
-              labelAnchorX="middle"
+              labelAnchorX="start"
               labelAnchorY="baseline"
-              onSeriesMouseOver={() => setHighlight(el.id)}
-              onSeriesMouseOut={() => setHighlight(null)}
-              onSeriesClick={() => openPaperDescription(el.id)}
-            ></LabelSeries>
+              // onValueMouseOver={() => setHighlight(el.id)}
+              // onValueMouseOut={() => setHighlight(null)}
+              onValueClick={() => openPaperDescription(el.id)}
+            ></CustomLabelSeries>
           })}
         </FlexibleXYPlot>
         <br />
