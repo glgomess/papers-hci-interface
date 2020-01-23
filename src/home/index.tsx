@@ -67,13 +67,11 @@ const Home = () => {
             />
           </form>
         </div>
-        <div className="flex-row flex">
-          <div className='dib w-70'>
-            <PapersChart data={papers} handlePaperId={handleCurrentPaper} currentPaperRefs={currentPaperRefs} />
-          </div>
-          <div className='dib w-30'>
-            <PaperInfo id={currentPaperId} references={currentPaperRefs} />
-          </div>
+        <div className='w-100 mv4'>
+          <PapersChart data={papers} handlePaperId={handleCurrentPaper} currentPaperRefs={currentPaperRefs} />
+        </div>
+        <div className='w-100 mv2'>
+          <PaperInfo id={currentPaperId} references={currentPaperRefs} />
         </div>
       </div>
     </>)

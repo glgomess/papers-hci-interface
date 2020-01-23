@@ -71,7 +71,7 @@ const PapersChart = (props: CustomProps) => {
           y: 0,
           label: '',
           id: '#' + year,
-          style: { fontSize: 10}
+          style: { fontSize: 10 }
         })
       }
     })
@@ -162,43 +162,40 @@ const PapersChart = (props: CustomProps) => {
   const FlexibleXYPlot = makeVisFlexible(XYPlot)
 
   return (
-    <React.Fragment>
-      <h2>Papers</h2>
-      <div className="pr3" id="chartDIV">
-        <FlexibleXYPlot
-          xDomain={XDomain}
-          yDomain={[0, maxPapersPerYear + 1]}
-          height={550}
-        >
-          <VerticalGridLines />
-          <HorizontalGridLines />
-          <XAxis tickValues={getVisibleTicks()} tickFormat={getVisibleLabels} />
-          <YAxis />
-          {chartData.map((el: any) => {
-            return <CustomLabelSeries
-              key={el.id}
-              style={{
-                pointerEvents: 'stroke',
-                stroke: getElementStroke(el.id),
-                opacity: (el.id === highlightSeries || el.id === currentPaper ? 1.0 : 0.6)
-              }}
-              data={[el]}
-              labelAnchorX="start"
-              labelAnchorY="baseline"
-              // onValueMouseOver={() => setHighlight(el.id)}
-              // onValueMouseOut={() => setHighlight(null)}
-              onValueClick={() => openPaperDescription(el.id)}
-              textMaxWidth={"400px"}
-            ></CustomLabelSeries>
-          })}
-        </FlexibleXYPlot>
-        <br />
-        <RangeSlider
-          restart={restartSlider}
-          startYear={startYear} endYear={endYear}
-          yearsRange={yearsRange} handleRangeInput={handleRangeInput} />
-      </div>
-    </React.Fragment>
+    <div className="pr3" id="chartDIV">
+      <FlexibleXYPlot
+        xDomain={XDomain}
+        yDomain={[0, maxPapersPerYear + 1]}
+        height={550}
+      >
+        <VerticalGridLines />
+        <HorizontalGridLines />
+        <XAxis tickValues={getVisibleTicks()} tickFormat={getVisibleLabels} />
+        <YAxis />
+        {chartData.map((el: any) => {
+          return <CustomLabelSeries
+            key={el.id}
+            style={{
+              pointerEvents: 'stroke',
+              stroke: getElementStroke(el.id),
+              opacity: (el.id === highlightSeries || el.id === currentPaper ? 1.0 : 0.6)
+            }}
+            data={[el]}
+            labelAnchorX="start"
+            labelAnchorY="baseline"
+            // onValueMouseOver={() => setHighlight(el.id)}
+            // onValueMouseOut={() => setHighlight(null)}
+            onValueClick={() => openPaperDescription(el.id)}
+            textMaxWidth={"400px"}
+          ></CustomLabelSeries>
+        })}
+      </FlexibleXYPlot>
+      <br />
+      <RangeSlider
+        restart={restartSlider}
+        startYear={startYear} endYear={endYear}
+        yearsRange={yearsRange} handleRangeInput={handleRangeInput} />
+    </div>
   )
 }
 
