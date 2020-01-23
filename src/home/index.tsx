@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import PapersChart from './PapersChart'
 import PaperInfo from './PaperInfo'
 import { PaperRefsResponse } from '../Constants'
+import TextField from '@material-ui/core/TextField'
 
 const Home = () => {
 
@@ -54,16 +55,28 @@ const Home = () => {
   }, [])
 
   return (
-    <React.Fragment>
-      <div className="flex-row flex ma4">
-        <div className='dib w-70'>
-          <PapersChart data={papers} handlePaperId={handleCurrentPaper} currentPaperRefs={currentPaperRefs} />
+    <>
+      <div className="ma4">
+        <div className="flex w-100">
+          <form noValidate autoComplete="off" className="w-50">
+            <TextField
+              id="outlined-read-only-input"
+              variant="outlined"
+              placeholder="Search..."
+              fullWidth
+            />
+          </form>
         </div>
-        <div className='dib w-30'>
-          <PaperInfo id={currentPaperId} references={currentPaperRefs} />
+        <div className="flex-row flex">
+          <div className='dib w-70'>
+            <PapersChart data={papers} handlePaperId={handleCurrentPaper} currentPaperRefs={currentPaperRefs} />
+          </div>
+          <div className='dib w-30'>
+            <PaperInfo id={currentPaperId} references={currentPaperRefs} />
+          </div>
         </div>
       </div>
-    </React.Fragment>)
+    </>)
 }
 
 export default Home
