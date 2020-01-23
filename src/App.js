@@ -1,8 +1,13 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
-import Teste from './Teste.tsx'
 import TopBar from './topbar';
+import {
+  BrowserRouter,
+  Switch,
+  Route
+} from "react-router-dom";
+import AboutUs from './aboutus/index'
+import Home from './home/index'
 
 function App() {
   return (
@@ -11,10 +16,16 @@ function App() {
       <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
 
       <TopBar />
-      {/* <div className='pa4'>
-        <h1>IHC Articles</h1>
-        <Teste />
-      </div> */}
+      <BrowserRouter>
+        <Switch>
+          <Route exact path="/">
+            <Home />
+          </Route>
+          <Route path="/aboutus">
+            <AboutUs />
+          </Route>
+        </Switch>
+      </BrowserRouter>
     </div>
   );
 }

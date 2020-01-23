@@ -1,11 +1,11 @@
 /// <reference types="react-vis-types" />
 import React, { Component, useState, useEffect } from 'react'
-import '../node_modules/react-vis/dist/style.css'
+import '../../node_modules/react-vis/dist/style.css'
 import { XYPlot, makeVisFlexible, VerticalGridLines, HorizontalGridLines, XAxis, YAxis, LabelSeries } from 'react-vis'
 import RangeSlider from './RangeSlider'
-import { PaperRefsResponse } from './Constants'
+import { PaperRefsResponse } from '../Constants'
 import * as d3 from 'd3'
-import { CustomLabelSeries } from './custom-label-series.js'
+import { CustomLabelSeries } from '../custom-label-series.js'
 
 interface DateRange {
   start: number,

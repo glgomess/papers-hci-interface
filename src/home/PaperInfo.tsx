@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { PaperInfoResponse, PaperRefsResponse } from './Constants'
+import { PaperInfoResponse, PaperRefsResponse } from '../Constants'
 
 interface CustomProps {
   id: number,

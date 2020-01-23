@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import PapersChart from './PapersChart'
 import PaperInfo from './PaperInfo'
-import { PaperRefsResponse } from './Constants'
+import { PaperRefsResponse } from '../Constants'
 
-const Teste = () => {
+const Home = () => {
 
   const [papers, setPapers] = useState({})
   const [currentPaperId, setCurrentPaperId] = useState()
@@ -55,7 +55,7 @@ const Teste = () => {
 
   return (
     <React.Fragment>
-      <div className="flex-row flex">
+      <div className="flex-row flex ma4">
         <div className='dib w-70'>
           <PapersChart data={papers} handlePaperId={handleCurrentPaper} currentPaperRefs={currentPaperRefs} />
         </div>
@@ -63,8 +63,7 @@ const Teste = () => {
           <PaperInfo id={currentPaperId} references={currentPaperRefs} />
         </div>
       </div>
-
     </React.Fragment>)
 }
 
-export default Teste
+export default Home
