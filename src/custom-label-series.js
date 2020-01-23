@@ -49,7 +49,8 @@ export class CustomLabelSeries extends AbstractSeries {
       xRange,
       yRange,
       labelAnchorX,
-      labelAnchorY
+      labelAnchorY,
+      textMaxWidth
     } = this.props;
     if (!data) {
       return null;
@@ -100,7 +101,7 @@ export class CustomLabelSeries extends AbstractSeries {
           const foreignObjAttrs = {
             x,
             y,
-            width: '100px',
+            width: textMaxWidth,
             height: '10px',
             ...markStyle
           }
@@ -134,11 +135,13 @@ CustomLabelSeries.propTypes = {
   xRange: PropTypes.arrayOf(PropTypes.number),
   yRange: PropTypes.arrayOf(PropTypes.number),
   labelAnchorX: PropTypes.string,
-  labelAnchorY: PropTypes.string
+  labelAnchorY: PropTypes.string,
+  textMaxWidth: PropTypes.string
 };
 CustomLabelSeries.defaultProps = {
   ...AbstractSeries.defaultProps,
   rotation: 0,
-  getLabel: d => d.label
+  getLabel: d => d.label,
+  textMaxWidth: "200px"
 };
 CustomLabelSeries.displayName = 'CustomLabelSeries';

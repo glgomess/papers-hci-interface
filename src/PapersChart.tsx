@@ -188,6 +188,7 @@ const PapersChart = (props: CustomProps) => {
               // onValueMouseOver={() => setHighlight(el.id)}
               // onValueMouseOut={() => setHighlight(null)}
               onValueClick={() => openPaperDescription(el.id)}
+              textMaxWidth={"400px"}
             ></CustomLabelSeries>
           })}
         </FlexibleXYPlot>
