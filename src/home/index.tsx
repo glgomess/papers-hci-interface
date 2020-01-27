@@ -13,7 +13,6 @@ const Home = () => {
   const [currentPaperRefs, setCurrentPaperRefs] = useState()
   const [currentPaperId, setCurrentPaperId] = useState()
 
-
   const handleCurrentPaper = (id: number) => {
     console.log('# handle paper: ', id)
     setCurrentPaperId(id)
