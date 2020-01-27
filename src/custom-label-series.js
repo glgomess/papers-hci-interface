@@ -101,6 +101,7 @@ export class CustomLabelSeries extends AbstractSeries {
           const foreignObjAttrs = {
             x,
             y,
+            key: i,
             width: textMaxWidth,
             height: '10px',
             ...markStyle
