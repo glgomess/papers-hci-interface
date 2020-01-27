@@ -3,55 +3,26 @@ import PapersChart from './PapersChart'
 import PaperInfo from './PaperInfo'
 import { PaperRefsResponse } from '../Constants'
 import TextField from '@material-ui/core/TextField'
+import ServiceWorker from '../serviceWorker/index'
 
 const Home = () => {
 
+  const service = ServiceWorker.getInstance()
+
   const [papers, setPapers] = useState({})
-  const [currentPaperId, setCurrentPaperId] = useState()
   const [currentPaperRefs, setCurrentPaperRefs] = useState()
+  const [currentPaperId, setCurrentPaperId] = useState()
 
-  const fetchPapers = async () => {
-    const queryGetPapers = await fetch("/papers",
-      {
-        method: 'GET',
-        headers: {
-          "Content-Type": "application/json"
-        },
-        credentials: "same-origin"
-      })
-
-    const PromiseGetPapers = queryGetPapers.json()
-
-    PromiseGetPapers.then((response: any) => {
-      console.log('response:', response)
-      setPapers(response)
-    })
-  }
-
-  const getPaperReferences = async (id: number) => {
-    const PromisePaperRefs = fetch(`/papers/${id}/references`,
-      {
-        method: 'GET',
-        headers: {
-          "Content-Type": "application/json"
-        },
-        credentials: "same-origin"
-      }).then((response: any) => response.json())
-
-    PromisePaperRefs.then((paperRefs: any) => {
-      setCurrentPaperRefs(paperRefs)
-    })
-  }
 
   const handleCurrentPaper = (id: number) => {
     console.log('# handle paper: ', id)
     setCurrentPaperId(id)
-    getPaperReferences(id)
+    service.getPaperReferences(id).then(paperRefs => setCurrentPaperRefs(paperRefs))
   }
 
   // When component starts, fetch papers data once
   useEffect(() => {
-    fetchPapers()
+    service.getPapers().then(papers => setPapers(papers))
   }, [])
 
   return (
