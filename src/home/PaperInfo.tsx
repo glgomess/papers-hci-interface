@@ -1,4 +1,7 @@
-import React, { useState, useEffect } from 'react'
+import { Typography } from '@material-ui/core'
+import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles'
+import Skeleton from '@material-ui/lab/Skeleton'
+import React, { useEffect, useState } from 'react'
 import { PaperInfoResponse, PaperRefsResponse } from '../Constants'
 import ServiceWorker from '../serviceWorker/index'
 
@@ -11,13 +14,23 @@ const PaperInfo = (props: CustomProps) => {
 
   const service = ServiceWorker.getInstance()
 
+  const emptyMessage = 'Nothing to show'
+
+  const [loading, setLoading] = useState(false)
   const [paperInfo, setPaperInfo]: any = useState<PaperInfoResponse>({} as PaperInfoResponse)
   const [paperReferences, setPaperReferences]: any = useState<PaperRefsResponse>({} as PaperRefsResponse)
 
   // Fetch paper info when receives new paper id
   useEffect(() => {
     if (props.id) {
-      service.fetchPaperInfo(props.id).then(paperInfo => setPaperInfo(paperInfo))
+      setLoading(true)
+      service.fetchPaperInfo(props.id).then(paperInfo => {
+        setPaperInfo({
+          ...paperInfo,
+          abstract_PT: paperInfo.abstract_PT !== 'NA' ? paperInfo.abstract_PT : null
+        })
+        setLoading(false)
+      })
     }
   }, [props.id])
 
@@ -26,36 +39,84 @@ const PaperInfo = (props: CustomProps) => {
   }, [props.references])
 
   return (
-    <>
-      {paperInfo &&
+    <div className="flex flex-column justify-center ma6">
+      {(props.id == undefined || loading) &&
         <>
-          <h2>Paper Info</h2>
-          <h4>{paperInfo.title}</h4>
-          <span>{paperInfo.abstract_PT}</span>
-          <br />
-          <br />
-          <span>{paperInfo.authors ? paperInfo.authors.map((author: string) => <span><br />{author}</span>) : ''}</span>
-          <br />
+          {/* Title */}
+          <div className="flex-auto w-50 pt2 pb4"><Skeleton variant="text" animation={loading ? 'wave' : false} height={35} /></div>
+          <div className="flex flex-row pb5">
+            <div className="flex-auto flex-column w-80">
+              {/* Abstract */}
+              <div className="flex-auto w-20"><Skeleton variant="text" animation={loading ? 'wave' : false} height={30} /></div>
+              <div className="flex-auto w-80"><Skeleton variant="text" animation={loading ? 'wave' : false} /></div>
+              <div className="flex-auto w-80"><Skeleton variant="text" animation={loading ? 'wave' : false} /></div>
+              <div className="flex-auto w-80"><Skeleton variant="text" animation={loading ? 'wave' : false} /></div>
+              <div className="flex-auto w-70"><Skeleton variant="text" animation={loading ? 'wave' : false} /></div>
+            </div>
+            <div className="flex-auto flex-column w-20">
+              {/* Authors */}
+              <div className="flex-auto w-60"><Skeleton variant="text" animation={loading ? 'wave' : false} height={30} /></div>
+              <div className="flex-auto w-90"><Skeleton variant="text" animation={loading ? 'wave' : false} /></div>
+              <div className="flex-auto w-80"><Skeleton variant="text" animation={loading ? 'wave' : false} /></div>
+              <div className="flex-auto"><Skeleton variant="text" animation={loading ? 'wave' : false} /></div>
+            </div>
+          </div>
+          {/* Cited */}
+          <div className="flex-auto w-20"><Skeleton variant="text" animation={loading ? 'wave' : false} height={30} /></div>
+          <div className="flex-auto w-40"><Skeleton variant="text" animation={loading ? 'wave' : false} /></div>
+          <div className="flex-auto w-30"><Skeleton variant="text" animation={loading ? 'wave' : false} /></div>
+          <div className="flex-auto w-40 pb4"><Skeleton variant="text" animation={loading ? 'wave' : false} /></div>
+          {/* Cited By */}
+          <div className="flex-auto w-20"><Skeleton variant="text" animation={loading ? 'wave' : false} height={30} /></div>
+          <div className="flex-auto w-30"><Skeleton variant="text" animation={loading ? 'wave' : false} /></div>
+          <div className="flex-auto w-40"><Skeleton variant="text" animation={loading ? 'wave' : false} /></div>
         </>
       }
-      {
-        paperReferences &&
-        <>
-          {paperReferences.cited &&
-            <>
-              <h2>Cited Papers:</h2>
-              <span>{paperReferences.cited.map(([paper_id, paper_title]: [number, string]) => <span><br /><a onClick={() => console.log(paper_id)}>{paper_title}</a></span>)}</span>
-            </>
-          }
-          {paperReferences.citedBy &&
-            <>
-              <h2>Cited by:</h2>
-              <span>{paperReferences.citedBy.map(([paper_id, paper_title]: [number, string]) => <span><br /><a onClick={() => console.log(paper_id)}>{paper_title}</a></span>)}</span>
-            </>
-          }
-        </>
+      {!(props.id == undefined) && !loading && paperInfo && paperReferences
+        && (
+          <>
+            <div className="flex-auto pt2 pb4">
+              <Typography variant="h5" gutterBottom>{paperInfo.title}</Typography>
+            </div>
+            <div className="flex flex-row pb5">
+              <div className="flex-auto flex-column w-80 pr5">
+                <Typography variant="body1" gutterBottom>{paperInfo.abstract_PT}</Typography>
+              </div>
+              <div className="flex-auto flex-column w-20">
+                <Typography variant="button" display="block" gutterBottom>
+                  {paperInfo.authors
+                    ? paperInfo.authors.map((author: string) => <span className="flex pb2">{author}</span>)
+                    : null
+                  }
+                </Typography>
+              </div>
+            </div>
+            <div className="flex flex-column pb5 w-80">
+              <Typography variant="body1" gutterBottom>
+                {paperReferences && paperReferences.cited && paperReferences.cited.map(([paper_id, paper_title]: [number, string]) =>
+                  <span className="flex pb2">
+                    <a onClick={() => console.log(paper_id)}>
+                      {paper_title}
+                    </a>
+                  </span>
+                )}
+              </Typography>
+            </div>
+            <div className="flex pb3 w-80">
+              <Typography variant="body1" gutterBottom>
+                {paperReferences && paperReferences.citedBy && paperReferences.citedBy.map(([paper_id, paper_title]: [number, string]) =>
+                  <span className="flex pb2">
+                    <a onClick={() => console.log(paper_id)}>
+                      {paper_title}
+                    </a>
+                  </span>
+                )}
+              </Typography>
+            </div>
+          </>
+        )
       }
-    </>
+    </div>
   )
 }
 
