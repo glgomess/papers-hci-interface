@@ -5,7 +5,7 @@ import { PaperInfoResponse, PaperRefsResponse } from '../Constants'
 import ServiceWorker from '../serviceWorker/index'
 
 interface CustomProps {
-  id: number,
+  id?: number,
   references: PaperInfoResponse
 }
 

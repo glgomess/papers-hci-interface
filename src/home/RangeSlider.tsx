@@ -3,43 +3,42 @@ import Typography from '@material-ui/core/Typography';
 import Slider from '@material-ui/core/Slider';
 
 interface CustomProps {
-  restart: boolean,
-  startYear: number,
-  endYear: number,
-  yearsRange: { start: number, end: number },
+  years: Years,
   handleRangeInput: Function
 }
 
 const RangeSlider = (props: CustomProps) => {
-  
-  const [value, setValue] = useState<number[]>([0, 0]);
 
-  const handleChange = (event: any, newValue: number | number[]) => {
-    setValue(newValue as number[])
-    props.handleRangeInput(newValue as number[])
+  const { handleRangeInput, years } = props
+
+  const [viewRange, setViewRange] = useState<number[]>([years.last - 1, years.last])
+
+  const handleChange = (event: any, newRange: number | number[]) => {
+    const range = newRange as number[]
+    setViewRange(range)
+    handleRangeInput({
+      start: range[0],
+      end: range[range.length - 1]
+    })
   }
-
-  const valuetext = (value: number) => {
-    return `${value}`;
-  }
-
-  useEffect(() => {
-    setValue([props.startYear, props.endYear])
-  }, [props.restart])
 
   return (
     <div className="items-center pl5 pr5">
       <Typography id="range-slider" gutterBottom>
-        Years Range
+        Linha do Tempo
       </Typography>
       <Slider
-        min={props.yearsRange.start}
-        max={props.yearsRange.end}
-        value={value}
+        min={years.first}
+        max={years.last}
+        value={viewRange}
         onChange={handleChange}
         valueLabelDisplay="auto"
         aria-labelledby="range-slider"
-        getAriaValueText={valuetext}
+        getAriaValueText={(value) => `${value}`}
+        marks={years.set.map((value: number) => {
+          return { value: value, label: `${value}` }
+        })}
+        step={1}
       />
     </div>
   );

@@ -1,15 +1,14 @@
 /// <reference types="react-vis-types" />
-import React, { Component, useState, useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
+import { HorizontalGridLines, makeVisFlexible, VerticalGridLines, XAxis, XYPlot, YAxis } from 'react-vis'
 import '../../node_modules/react-vis/dist/style.css'
-import { XYPlot, makeVisFlexible, VerticalGridLines, HorizontalGridLines, XAxis, YAxis, LabelSeries } from 'react-vis'
-import RangeSlider from './RangeSlider'
 import { PaperRefsResponse } from '../Constants'
-import * as d3 from 'd3'
 import { CustomLabelSeries } from '../custom-label-series.js'
+import RangeSlider from './RangeSlider'
 
-interface DateRange {
-  start: number,
-  end: number
+interface Ticks {
+  all: number[],
+  visible: number[]
 }
 
 interface DataPoint {
@@ -17,7 +16,9 @@ interface DataPoint {
   y: number,
   label: any,
   id: number | string,
-  style: Object
+  style: Object,
+  xOffset?: number,
+  yOffset?: number,
 }
 
 interface CustomProps {
@@ -26,32 +27,41 @@ interface CustomProps {
   currentPaperRefs: PaperRefsResponse
 }
 
-const PapersChart = (props: CustomProps) => {
+const MAX_PAPERS_PER_YEAR = 50
 
-  const { handlePaperId } = props
+const PapersChart = ({
+  data,
+  handlePaperId,
+  currentPaperRefs
+}: CustomProps) => {
 
   const [highlightSeries, setHighlight] = useState(null)
   const [currentPaper, setCurrentPaper] = useState<number | null>(null)
   const [XDomain, setXDomain] = useState<number[]>([0, 0])
-  const [years, setYears] = useState<string[]>([])
+  const [years, setYears] = useState<Years>({
+    first: 1998,
+    last: 2018,
+    set: []
+  })
   const [chartData, setChartData] = useState<DataPoint[]>([])
-  const [maxPapersPerYear, setMaxPapersPerYear] = useState(0)
-  const [startYear, setStartYear] = useState<number>(0)
-  const [endYear, setEndYear] = useState<number>(0)
-  const [restartSlider, setRestartSlider] = useState(false)
-  const [yearsRange, setYearsRange] = useState<DateRange>({ start: 0, end: 0 })
-  const [ticks, setTicks] = useState<number[]>([])
-  const [citedPapers, setCitedPapers] = useState<Array<number>>([])
-  const [citedBy, setCitedBy] = useState<Array<number>>([])
+  const [maxPapersPerYear, setMaxPapersPerYear] = useState(MAX_PAPERS_PER_YEAR)
+  const [ticks, setTicks] = useState<Ticks>({
+    all: [],
+    visible: []
+  })
+
+  const [citedPapers, setCitedPapers] = useState<number[]>([])
+  const [citedBy, setCitedBy] = useState<number[]>([])
 
   const tickSpace = 4
+  const heightMargin = 2
 
   const buildChartData = (newData: any) => {
     const newChartData: DataPoint[] = []
-    setMaxPapersPerYear(0)
+    setMaxPapersPerYear(MAX_PAPERS_PER_YEAR)
 
-    years.map((year: string, idx: number) => {
-      const papers = newData[year]
+    years.set.map((year: number, idx: number) => {
+      const papers = newData[year.toString()]
       if (papers) {
         if (papers.length > maxPapersPerYear) {
           setMaxPapersPerYear(papers.length)
@@ -59,10 +69,12 @@ const PapersChart = (props: CustomProps) => {
         papers.map(([paper_id, paper_title]: [number, string], index: number) => {
           newChartData.push({
             x: idx * tickSpace,
-            y: index,
+            y: index * 2,
             label: paper_title,
             id: paper_id,
-            style: { fontSize: 10, textAnchor: 'start' }
+            style: { fontSize: 14, textAnchor: 'start' },
+            xOffset: -200,
+            yOffset: -20,
           })
         })
       } else { // Fill out empty, years with no papers
@@ -78,9 +90,19 @@ const PapersChart = (props: CustomProps) => {
     return newChartData
   }
 
-  const handleRangeInput = (values: number[]) => {
-    setStartYear(values[0])
-    setEndYear(values[values.length - 1])
+  const handleRangeInput = ({ start, end }: { start: number, end: number }) => {
+    const startIndex = years.set.findIndex((el: any) => el == start)
+    const endIndex = years.set.findIndex((el: any) => el == end)
+
+    // Scale start/end years and add padding
+    const startX = startIndex * tickSpace - tickSpace / 2
+    const endX = endIndex * tickSpace + tickSpace / 2
+
+    setXDomain([startX, endX])
+    setTicks({
+      ...ticks,
+      visible: ticks.all.slice(startIndex, endIndex + 1)
+    })
   }
 
   const openPaperDescription = (id: number) => {
@@ -89,61 +111,45 @@ const PapersChart = (props: CustomProps) => {
   }
 
   useEffect(() => {
-    const yearsSetWithPapers = Object.keys(props.data)
-    const firstYear = yearsSetWithPapers.length ? parseInt(yearsSetWithPapers[0]) : 0
-    const lastYear = yearsSetWithPapers.length ? parseInt(yearsSetWithPapers[yearsSetWithPapers.length - 1]) : 0
-    const fullYearsSet = Array.from(Array(lastYear - firstYear + 1).keys()).map((el: any) => (el + firstYear).toString())
-    setYears(fullYearsSet)
-    setYearsRange({ start: firstYear, end: lastYear })
-  }, [props.data])
+    const yearsWithPapers = Object.keys(data).map((year: string) => parseInt(year))
+    const first = yearsWithPapers[0] || 1998
+    const last = yearsWithPapers[yearsWithPapers.length - 1] || 2018
+    const fullYearsSet = Array.from(Array(last - first + 1).keys()).map((curr: any) => curr + first)
+    setYears({
+      first,
+      last,
+      set: fullYearsSet
+    })
+    handleRangeInput({
+      start: last - 1,
+      end: last
+    })
+  }, [data])
 
   useEffect(() => {
-    setChartData(buildChartData(props.data))
-    setTicks(Array.from(Array(years.length).keys()).map(el => el * tickSpace))
+    setChartData(buildChartData(data))
+    setTicks({
+      ...ticks,
+      all: Array.from(Array(years.set.length).keys()).map(el => el * tickSpace)
+    })
   }, [years])
 
   useEffect(() => {
-    setStartYear(years.length > 1 ? yearsRange.end - 1 : yearsRange.start)
-    setEndYear(yearsRange.end)
-  }, [yearsRange])
-
-  useEffect(() => {
-    setRestartSlider(!restartSlider)
-    getXDomain()
-  }, [startYear, endYear])
-
-  useEffect(() => {
-    if (props.currentPaperRefs) {
-      if (props.currentPaperRefs.cited) {
-        const cited: Array<number> = props.currentPaperRefs.cited.map(([paper_id, paper_title]: [number, string]) => paper_id)
+    if (currentPaperRefs) {
+      if (currentPaperRefs.cited) {
+        const cited: number[] = currentPaperRefs.cited.map(([paper_id, paper_title]: [number, string]) => paper_id)
         setCitedPapers(cited)
       }
-      if (props.currentPaperRefs.citedBy) {
-        const citedBy: Array<number> = props.currentPaperRefs.citedBy.map(([paper_id, paper_title]: [number, string]) => paper_id)
+      if (currentPaperRefs.citedBy) {
+        const citedBy: number[] = currentPaperRefs.citedBy.map(([paper_id, paper_title]: [number, string]) => paper_id)
         setCitedBy(citedBy)
       }
     }
-  }, [props.currentPaperRefs])
-
-  const getXDomain = () => {
-    // Scale start/end years and add padding
-    const startX = years.findIndex((el: any) => el == startYear) * tickSpace - tickSpace / 2
-    const endX = years.findIndex((el: any) => el == endYear) * tickSpace + tickSpace / 2
-
-    setXDomain([startX, endX])
-  }
-
-  const getVisibleTicks = () => {
-    const begin = years.findIndex((el: any) => el == startYear)
-    const end = years.findIndex((el: any) => el == endYear)
-
-    return ticks.slice(begin, end + 1)
-  }
+  }, [currentPaperRefs])
 
   const getVisibleLabels = (tick: any) => {
     const index = tick / tickSpace
-
-    return `${years[index]}`
+    return `${years.set[index]}`
   }
 
   const getElementStroke = (id: number) => {
@@ -165,13 +171,18 @@ const PapersChart = (props: CustomProps) => {
     <div className="pr3" id="chartDIV">
       <FlexibleXYPlot
         xDomain={XDomain}
-        yDomain={[0, maxPapersPerYear + 1]}
-        height={550}
+        yDomain={[0, 110]}
+        height={850}
       >
         <VerticalGridLines />
         <HorizontalGridLines />
-        <XAxis tickValues={getVisibleTicks()} tickFormat={getVisibleLabels} />
-        <YAxis />
+        <XAxis
+          tickValues={ticks.visible}
+          tickFormat={getVisibleLabels}
+        />
+        <YAxis
+          tickFormat={(tick: any) => tick % 2 == 0 ? `${tick / 2}` : ''}
+        />
         {chartData.map((el: any) => {
           return <CustomLabelSeries
             key={el.id}
@@ -181,20 +192,19 @@ const PapersChart = (props: CustomProps) => {
               opacity: (el.id === highlightSeries || el.id === currentPaper ? 1.0 : 0.6)
             }}
             data={[el]}
-            labelAnchorX="start"
-            labelAnchorY="baseline"
             // onValueMouseOver={() => setHighlight(el.id)}
             // onValueMouseOut={() => setHighlight(null)}
             onValueClick={() => openPaperDescription(el.id)}
             textMaxWidth={"400px"}
-          ></CustomLabelSeries>
+          >
+          </CustomLabelSeries>
         })}
       </FlexibleXYPlot>
       <br />
       <RangeSlider
-        restart={restartSlider}
-        startYear={startYear} endYear={endYear}
-        yearsRange={yearsRange} handleRangeInput={handleRangeInput} />
+        years={years}
+        handleRangeInput={handleRangeInput}
+      />
     </div>
   )
 }

@@ -93,9 +93,9 @@ export class CustomLabelSeries extends AbstractSeries {
             onMouseOver: e => this._valueMouseOverHandler(d, e),
             onMouseOut: e => this._valueMouseOutHandler(d, e),
             textAnchor: getTextAnchor(labelAnchorX, leftOfMiddle),
-            x,
-            y,
-            transform: `rotate(${labelRotation},${x},${y})`,
+            // x,
+            // y,
+            // transform: `rotate(${labelRotation},${x + 50},${y + 50})`,
             ...markStyle
           };
           const foreignObjAttrs = {
@@ -103,8 +103,7 @@ export class CustomLabelSeries extends AbstractSeries {
             y,
             key: i,
             width: textMaxWidth,
-            height: '10px',
-            ...markStyle
+            height: d.style.fontSize + 4,
           }
           const textContent = getLabel(_data ? _data[i] : d);
           return res.concat([<foreignObject {...foreignObjAttrs}><text {...attrs}>{textContent}</text></foreignObject>]);

@@ -10,8 +10,8 @@ const Home = () => {
   const service = ServiceWorker.getInstance()
 
   const [papers, setPapers] = useState({})
-  const [currentPaperRefs, setCurrentPaperRefs] = useState()
-  const [currentPaperId, setCurrentPaperId] = useState()
+  const [currentPaperRefs, setCurrentPaperRefs] = useState<any>()
+  const [currentPaperId, setCurrentPaperId] = useState<number>()
 
   const handleCurrentPaper = (id: number) => {
     console.log('# handle paper: ', id)
