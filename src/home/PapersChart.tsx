@@ -49,12 +49,11 @@ const PapersChart = ({
     all: [],
     visible: []
   })
-
   const [citedPapers, setCitedPapers] = useState<number[]>([])
   const [citedBy, setCitedBy] = useState<number[]>([])
 
-  const tickSpace = 4
-  const heightMargin = 2
+  const TICK_SPACE = 4
+  const HEIGHT_MARGIN = 2
 
   const buildChartData = (newData: any) => {
     const newChartData: DataPoint[] = []
@@ -68,7 +67,7 @@ const PapersChart = ({
         }
         papers.map(([paper_id, paper_title]: [number, string], index: number) => {
           newChartData.push({
-            x: idx * tickSpace,
+            x: idx * TICK_SPACE,
             y: index * 2,
             label: paper_title,
             id: paper_id,
@@ -79,7 +78,7 @@ const PapersChart = ({
         })
       } else { // Fill out empty, years with no papers
         newChartData.push({
-          x: idx * tickSpace,
+          x: idx * TICK_SPACE,
           y: 0,
           label: '',
           id: '#' + year,
@@ -95,8 +94,8 @@ const PapersChart = ({
     const endIndex = years.set.findIndex((el: any) => el == end)
 
     // Scale start/end years and add padding
-    const startX = startIndex * tickSpace - tickSpace / 2
-    const endX = endIndex * tickSpace + tickSpace / 2
+    const startX = startIndex * TICK_SPACE - TICK_SPACE / 2
+    const endX = endIndex * TICK_SPACE + TICK_SPACE / 2
 
     setXDomain([startX, endX])
     setTicks({
@@ -130,7 +129,7 @@ const PapersChart = ({
     setChartData(buildChartData(data))
     setTicks({
       ...ticks,
-      all: Array.from(Array(years.set.length).keys()).map(el => el * tickSpace)
+      all: Array.from(Array(years.set.length).keys()).map(el => el * TICK_SPACE)
     })
   }, [years])
 
@@ -148,7 +147,7 @@ const PapersChart = ({
   }, [currentPaperRefs])
 
   const getVisibleLabels = (tick: any) => {
-    const index = tick / tickSpace
+    const index = tick / TICK_SPACE
     return `${years.set[index]}`
   }
 

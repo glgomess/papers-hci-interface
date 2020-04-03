@@ -18,7 +18,7 @@
     "react-vis": "^1.11.7",
     "react-vis-types": "^0.0.3",
     "tachyons": "^4.11.1",
-    "typescript": "^3.7.0"
+    "typescript": "^3.7.5"
   },
   "scripts": {
     "start": "react-scripts start",
