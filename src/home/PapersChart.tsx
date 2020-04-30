@@ -50,6 +50,7 @@ const PapersChart = ({
   })
   const [citedPapers, setCitedPapers] = useState<number[]>([])
   const [citedBy, setCitedBy] = useState<number[]>([])
+  const [columnsMaxWidth, setColumnsMaxWidth] = useState<string>()
 
   const TICK_SPACE = 4
   const HEIGHT_MARGIN = 2
@@ -94,11 +95,13 @@ const PapersChart = ({
     const startX = startIndex * TICK_SPACE - TICK_SPACE / 2
     const endX = endIndex * TICK_SPACE + TICK_SPACE / 2
 
+    const visibleTicks = ticks.all.slice(startIndex, endIndex + 1)
     setXDomain([startX, endX])
     setTicks({
       ...ticks,
-      visible: ticks.all.slice(startIndex, endIndex + 1)
+      visible: visibleTicks
     })
+    setColumnsMaxWidth((100 / visibleTicks.length ** 1.2) + '%')
   }
 
   const openPaperDescription = (id: number) => {
@@ -170,11 +173,10 @@ const PapersChart = ({
         yDomain={[0, MAX_PAPERS_PER_YEAR * 2]}
         height={850}
       >
-        {/* <VerticalGridLines /> */}
         <HorizontalGridLines
           tickValues={
             Array.from(Array(MAX_PAPERS_PER_YEAR * 2).keys()).reduce((prev: number[], next: number) =>
-              next % 10 == 0? [...prev, next] : [...prev], [])
+              next % 10 == 0 ? [...prev, next] : [...prev], [])
           }
         />
         <XAxis
@@ -199,7 +201,7 @@ const PapersChart = ({
             // onValueMouseOut={(paperElement: DataPoint) => setHighlight(null)}
             onValueClick={(paperElement: DataPoint) => paperElement.id && openPaperDescription(paperElement.id)}
             // onValueClick={(val: any) => console.log(val)}
-            textMaxWidth={"400px"}
+            textMaxWidth={columnsMaxWidth}
           >
           </CustomLabelSeries>
 
