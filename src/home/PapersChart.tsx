@@ -27,6 +27,11 @@ interface CustomProps {
   currentPaperRefs: PaperRefsResponse
 }
 
+interface Hightlight {
+  paperId: number,
+  color: string
+}
+
 let MAX_PAPERS_PER_YEAR = 40
 
 const PapersChart = ({
@@ -35,7 +40,7 @@ const PapersChart = ({
   currentPaperRefs
 }: CustomProps) => {
 
-  const [highlightSeries, setHighlight] = useState(null)
+  const [highlightSeries, setHighlight] = useState<Hightlight[]>([])
   const [currentPaper, setCurrentPaper] = useState<number | null>(null)
   const [XDomain, setXDomain] = useState<number[]>([0, 0])
   const [years, setYears] = useState<Years>({
@@ -80,7 +85,6 @@ const PapersChart = ({
           x: idx * TICK_SPACE,
           y: 0,
           label: ''
-          // id: year
         }]
       }
     })
@@ -151,19 +155,6 @@ const PapersChart = ({
     return `${years.set[index]}`
   }
 
-  const getElementStroke = (id: number) => {
-    if (id === currentPaper)
-      return 'blue'
-    else if (id === highlightSeries)
-      return 'black'
-    else if (citedPapers.includes(id))
-      return 'green'
-    else if (citedBy.includes(id))
-      return 'red'
-
-    return 'none'
-  }
-
   const FlexibleXYPlot = makeVisFlexible(XYPlot)
 
   return (
@@ -190,17 +181,14 @@ const PapersChart = ({
           const dataPoints = chartData[year]
           return <CustomLabelSeries
             key={`${year}-${index}`}
-            style={{
-              pointerEvents: "auto",
-              // stroke: 'black'
-              // stroke: el.id && getElementStroke(el.id),
-              // opacity: (el.id === highlightSeries || el.id === currentPaper ? 1.0 : 0.6)
-            }}
             data={dataPoints}
-            // onValueMouseOver={(paperElement: DataPoint) => paperElement.id && setHighlight(paperElement.id)}
-            // onValueMouseOut={(paperElement: DataPoint) => setHighlight(null)}
-            onValueClick={(paperElement: DataPoint) => paperElement.id && openPaperDescription(paperElement.id)}
-            // onValueClick={(val: any) => console.log(val)}
+            onValueMouseOver={(paperElement: DataPoint) => {}}
+            onValueMouseOut={(paperElement: DataPoint) => {}}
+            onValueClick={(paperElement: DataPoint) => {
+              openPaperDescription(paperElement.id!)
+              setHighlight([...highlightSeries, { paperId: paperElement.id!, color: 'blue' }])
+            }}
+            highlights={highlightSeries}
             textMaxWidth={columnsMaxWidth}
           >
           </CustomLabelSeries>

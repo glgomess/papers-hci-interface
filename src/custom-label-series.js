@@ -50,7 +50,8 @@ export class CustomLabelSeries extends AbstractSeries {
       yRange,
       labelAnchorX,
       labelAnchorY,
-      textMaxWidth
+      textMaxWidth,
+      highlights
     } = this.props;
     if (!data) {
       return null;
@@ -65,12 +66,13 @@ export class CustomLabelSeries extends AbstractSeries {
     return (
       <g
         // className={"rv-xy-plot__series rv-xy-plot__series--label"}
+        className={"rv-xy-plot__series "}
         id={"label-series"}
         transform={`translate(${marginLeft},${marginTop})`}
         style={style}
       >
         {data.reduce((res, d, i) => {
-          const {style: markStyle, xOffset, yOffset} = d;
+          const { style: markStyle, xOffset, yOffset, id } = d;
           if (!getLabel(d)) {
             return res;
           }
@@ -88,6 +90,9 @@ export class CustomLabelSeries extends AbstractSeries {
 
           const hasRotationValueSet = d.rotation === 0 || d.rotation;
           const labelRotation = hasRotationValueSet ? d.rotation : rotation;
+
+          const hightlightedElement = highlights.find(el => el.paperId == id)
+
           const attrs = {
             dominantBaseline: getDominantBaseline(labelAnchorY, aboveMiddle),
             className: 'rv-xy-plot__series--label-text',
@@ -97,10 +102,8 @@ export class CustomLabelSeries extends AbstractSeries {
             onMouseOver: e => this._valueMouseOverHandler(d, e),
             onMouseOut: e => this._valueMouseOutHandler(d, e),
             textAnchor: getTextAnchor(labelAnchorX, leftOfMiddle),
-            // x,
-            // y,
-            // transform: `rotate(${labelRotation},${x + 50},${y + 50})`,
-            ...markStyle
+            ...markStyle,
+            style: hightlightedElement ? { color: hightlightedElement.color } : {}
           };
           const foreignObjAttrs = {
             x,
@@ -143,6 +146,7 @@ CustomLabelSeries.propTypes = {
   labelAnchorY: PropTypes.string,
   textMaxWidth: PropTypes.string,
   verticalSpacing: PropTypes.number,
+  highlights: PropTypes.arrayOf(PropTypes.any)
 };
 CustomLabelSeries.defaultProps = {
   ...AbstractSeries.defaultProps,
