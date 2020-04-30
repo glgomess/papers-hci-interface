@@ -15,8 +15,8 @@ interface DataPoint {
   x: number,
   y: number,
   label: any,
-  id: number | string,
-  style: Object,
+  id?: number,
+  style?: Object,
   xOffset?: number,
   yOffset?: number,
 }
@@ -27,7 +27,7 @@ interface CustomProps {
   currentPaperRefs: PaperRefsResponse
 }
 
-const MAX_PAPERS_PER_YEAR = 50
+let MAX_PAPERS_PER_YEAR = 40
 
 const PapersChart = ({
   data,
@@ -43,8 +43,7 @@ const PapersChart = ({
     last: 2018,
     set: []
   })
-  const [chartData, setChartData] = useState<DataPoint[]>([])
-  const [maxPapersPerYear, setMaxPapersPerYear] = useState(MAX_PAPERS_PER_YEAR)
+  const [chartData, setChartData] = useState<{ [year: number]: DataPoint[] }>({})
   const [ticks, setTicks] = useState<Ticks>({
     all: [],
     visible: []
@@ -56,34 +55,32 @@ const PapersChart = ({
   const HEIGHT_MARGIN = 2
 
   const buildChartData = (newData: any) => {
-    const newChartData: DataPoint[] = []
-    setMaxPapersPerYear(MAX_PAPERS_PER_YEAR)
-
+    const newChartData: { [year: number]: DataPoint[] } = {}
     years.set.map((year: number, idx: number) => {
       const papers = newData[year.toString()]
       if (papers) {
-        if (papers.length > maxPapersPerYear) {
-          setMaxPapersPerYear(papers.length)
+        if (papers.length > MAX_PAPERS_PER_YEAR) {
+          MAX_PAPERS_PER_YEAR = papers.length // TODO
         }
+        newChartData[year] = []
         papers.map(([paper_id, paper_title]: [number, string], index: number) => {
-          newChartData.push({
+          newChartData[year].push({
             x: idx * TICK_SPACE,
             y: index * 2,
             label: paper_title,
             id: paper_id,
-            style: { fontSize: 14, textAnchor: 'start' },
-            xOffset: -200,
-            yOffset: -20,
+            style: { textAnchor: 'start' },
+            xOffset: -200
+            // yOffset: -20,
           })
         })
       } else { // Fill out empty, years with no papers
-        newChartData.push({
+        newChartData[year] = [{
           x: idx * TICK_SPACE,
           y: 0,
-          label: '',
-          id: '#' + year,
-          style: { fontSize: 10 }
-        })
+          label: ''
+          // id: year
+        }]
       }
     })
     return newChartData
@@ -170,11 +167,16 @@ const PapersChart = ({
     <div className="pr3" id="chartDIV">
       <FlexibleXYPlot
         xDomain={XDomain}
-        yDomain={[0, 110]}
+        yDomain={[0, MAX_PAPERS_PER_YEAR * 2]}
         height={850}
       >
-        <VerticalGridLines />
-        <HorizontalGridLines />
+        {/* <VerticalGridLines /> */}
+        <HorizontalGridLines
+          tickValues={
+            Array.from(Array(MAX_PAPERS_PER_YEAR * 2).keys()).reduce((prev: number[], next: number) =>
+              next % 10 == 0? [...prev, next] : [...prev], [])
+          }
+        />
         <XAxis
           tickValues={ticks.visible}
           tickFormat={getVisibleLabels}
@@ -182,21 +184,25 @@ const PapersChart = ({
         <YAxis
           tickFormat={(tick: any) => tick % 2 == 0 ? `${tick / 2}` : ''}
         />
-        {chartData.map((el: any) => {
+        {Object.keys(chartData).map((year: any, index: number) => {
+          const dataPoints = chartData[year]
           return <CustomLabelSeries
-            key={el.id}
+            key={`${year}-${index}`}
             style={{
-              pointerEvents: 'stroke',
-              stroke: getElementStroke(el.id),
-              opacity: (el.id === highlightSeries || el.id === currentPaper ? 1.0 : 0.6)
+              pointerEvents: "auto",
+              // stroke: 'black'
+              // stroke: el.id && getElementStroke(el.id),
+              // opacity: (el.id === highlightSeries || el.id === currentPaper ? 1.0 : 0.6)
             }}
-            data={[el]}
-            // onValueMouseOver={() => setHighlight(el.id)}
-            // onValueMouseOut={() => setHighlight(null)}
-            onValueClick={() => openPaperDescription(el.id)}
+            data={dataPoints}
+            // onValueMouseOver={(paperElement: DataPoint) => paperElement.id && setHighlight(paperElement.id)}
+            // onValueMouseOut={(paperElement: DataPoint) => setHighlight(null)}
+            onValueClick={(paperElement: DataPoint) => paperElement.id && openPaperDescription(paperElement.id)}
+            // onValueClick={(val: any) => console.log(val)}
             textMaxWidth={"400px"}
           >
           </CustomLabelSeries>
+
         })}
       </FlexibleXYPlot>
       <br />

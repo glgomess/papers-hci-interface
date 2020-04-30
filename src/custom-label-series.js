@@ -59,9 +59,13 @@ export class CustomLabelSeries extends AbstractSeries {
     const xFunctor = this._getAttributeFunctor('x');
     const yFunctor = this._getAttributeFunctor('y');
 
+    const FONTSIZE = 14
+    const Y_OFFSET = -16
+
     return (
       <g
-        className={"rv-xy-plot__series rv-xy-plot__series--label"}
+        // className={"rv-xy-plot__series rv-xy-plot__series--label"}
+        id={"label-series"}
         transform={`translate(${marginLeft},${marginTop})`}
         style={style}
       >
@@ -80,7 +84,7 @@ export class CustomLabelSeries extends AbstractSeries {
             (allowOffsetToBeReversed && leftOfMiddle ? -1 : 1) * (xOffset || 0);
           const y =
             yVal +
-            (allowOffsetToBeReversed && aboveMiddle ? -1 : 1) * (yOffset || 0);
+            (allowOffsetToBeReversed && aboveMiddle ? -1 : 1) * (Y_OFFSET || 0);
 
           const hasRotationValueSet = d.rotation === 0 || d.rotation;
           const labelRotation = hasRotationValueSet ? d.rotation : rotation;
@@ -103,7 +107,8 @@ export class CustomLabelSeries extends AbstractSeries {
             y,
             key: i,
             width: textMaxWidth,
-            height: d.style.fontSize + 4,
+            height: FONTSIZE + 4,
+            fontSize: FONTSIZE + 'px',
           }
           const textContent = getLabel(_data ? _data[i] : d);
           return res.concat([<foreignObject {...foreignObjAttrs}><text {...attrs}>{textContent}</text></foreignObject>]);
@@ -136,7 +141,8 @@ CustomLabelSeries.propTypes = {
   yRange: PropTypes.arrayOf(PropTypes.number),
   labelAnchorX: PropTypes.string,
   labelAnchorY: PropTypes.string,
-  textMaxWidth: PropTypes.string
+  textMaxWidth: PropTypes.string,
+  verticalSpacing: PropTypes.number,
 };
 CustomLabelSeries.defaultProps = {
   ...AbstractSeries.defaultProps,
