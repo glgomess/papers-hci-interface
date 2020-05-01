@@ -5,6 +5,7 @@ import '../../node_modules/react-vis/dist/style.css'
 import { PaperRefsResponse } from '../Constants'
 import { CustomLabelSeries } from '../custom-label-series.js'
 import RangeSlider from './RangeSlider'
+import { CURRENT_PAPER_COLOR, CITED_PAPERS_COLOR, CITED_BY_PAPERS_COLOR } from '../utils/constants'
 
 interface Ticks {
   all: number[],
@@ -40,7 +41,6 @@ const PapersChart = ({
   currentPaperRefs
 }: CustomProps) => {
 
-  const [highlightSeries, setHighlight] = useState<Hightlight[]>([])
   const [currentPaper, setCurrentPaper] = useState<number | null>(null)
   const [XDomain, setXDomain] = useState<number[]>([0, 0])
   const [years, setYears] = useState<Years>({
@@ -58,7 +58,6 @@ const PapersChart = ({
   const [columnsMaxWidth, setColumnsMaxWidth] = useState<string>()
 
   const TICK_SPACE = 4
-  const HEIGHT_MARGIN = 2
 
   const buildChartData = (newData: any) => {
     const newChartData: { [year: number]: DataPoint[] } = {}
@@ -66,7 +65,7 @@ const PapersChart = ({
       const papers = newData[year.toString()]
       if (papers) {
         if (papers.length > MAX_PAPERS_PER_YEAR) {
-          MAX_PAPERS_PER_YEAR = papers.length // TODO
+          MAX_PAPERS_PER_YEAR = papers.length
         }
         newChartData[year] = []
         papers.map(([paper_id, paper_title]: [number, string], index: number) => {
@@ -182,13 +181,14 @@ const PapersChart = ({
           return <CustomLabelSeries
             key={`${year}-${index}`}
             data={dataPoints}
-            onValueMouseOver={(paperElement: DataPoint) => {}}
-            onValueMouseOut={(paperElement: DataPoint) => {}}
-            onValueClick={(paperElement: DataPoint) => {
-              openPaperDescription(paperElement.id!)
-              setHighlight([...highlightSeries, { paperId: paperElement.id!, color: 'blue' }])
-            }}
-            highlights={highlightSeries}
+            onValueMouseOver={(paperElement: DataPoint) => { }}
+            onValueMouseOut={(paperElement: DataPoint) => { }}
+            onValueClick={(paperElement: DataPoint) => openPaperDescription(paperElement.id!)}
+            highlights={[
+              { paperId: currentPaper, color: CURRENT_PAPER_COLOR },
+              ...citedPapers.map(paperId => { return { paperId, color: CITED_PAPERS_COLOR } }),
+              ...citedBy.map(paperId => { return { paperId, color: CITED_BY_PAPERS_COLOR } })
+            ]}
             textMaxWidth={columnsMaxWidth}
           >
           </CustomLabelSeries>
@@ -200,7 +200,7 @@ const PapersChart = ({
         years={years}
         handleRangeInput={handleRangeInput}
       />
-    </div>
+    </div >
   )
 }
 
