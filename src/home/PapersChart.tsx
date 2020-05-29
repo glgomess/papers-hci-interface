@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from 'react'
 import { HorizontalGridLines, makeVisFlexible, VerticalGridLines, XAxis, XYPlot, YAxis } from 'react-vis'
 import '../../node_modules/react-vis/dist/style.css'
-import { PaperRefsResponse } from '../Constants'
 import { CustomLabelSeries } from '../custom-label-series.js'
 import RangeSlider from './RangeSlider'
 import { CURRENT_PAPER_COLOR, CITED_PAPERS_COLOR, CITED_BY_PAPERS_COLOR } from '../utils/constants'
