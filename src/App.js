@@ -1,5 +1,4 @@
 import React from 'react';
-import './App.css';
 import TopBar from './topbar';
 import {
   BrowserRouter,

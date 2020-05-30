@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react'
 import { HorizontalGridLines, makeVisFlexible, VerticalGridLines, XAxis, XYPlot, YAxis } from 'react-vis'
 import '../../node_modules/react-vis/dist/style.css'
-import { CustomLabelSeries } from '../custom-label-series.js'
+import { CustomLabelSeries } from '../articles-chart/custom-label-series.js'
 import RangeSlider from './RangeSlider'
 import { CURRENT_PAPER_COLOR, CITED_PAPERS_COLOR, CITED_BY_PAPERS_COLOR } from '../utils/constants'
 
@@ -67,12 +67,12 @@ const PapersChart = ({
           MAX_PAPERS_PER_YEAR = papers.length
         }
         newChartData[year] = []
-        papers.map(([paper_id, paper_title]: [number, string], index: number) => {
+        papers.map((paper: any, index: number) => {
           newChartData[year].push({
             x: idx * TICK_SPACE,
             y: index * 2,
-            label: paper_title,
-            id: paper_id,
+            label: paper.paper_title,
+            id: paper.paper_id,
             style: { textAnchor: 'start' },
             xOffset: -200
             // yOffset: -20,

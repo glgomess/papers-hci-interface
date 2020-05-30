@@ -1,7 +1,6 @@
 import { Typography, Link, Card, CardHeader, CardContent } from '@material-ui/core'
 import Skeleton from '@material-ui/lab/Skeleton'
 import React, { useEffect, useState } from 'react'
-import { PaperInfoResponse, PaperRefsResponse } from '../Constants'
 import ServiceWorker from '../serviceWorker/index'
 
 interface CustomProps {

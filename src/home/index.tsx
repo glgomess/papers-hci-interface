@@ -1,15 +1,22 @@
 import React, { useState, useEffect } from 'react'
 import PapersChart from './PapersChart'
 import PaperInfo from './PaperInfo'
-import { PaperRefsResponse } from '../Constants'
 import TextField from '@material-ui/core/TextField'
 import ServiceWorker from '../serviceWorker/index'
+import gql from 'graphql-tag';
+import { useQuery } from 'react-apollo'
+
+const GET_PAPERS = gql`{
+  papers {
+    paper_id
+    paper_title
+  }
+}`
 
 const Home = () => {
 
   const service = ServiceWorker.getInstance()
 
-  const [papers, setPapers] = useState({})
   const [currentPaperRefs, setCurrentPaperRefs] = useState<any>()
   const [currentPaperId, setCurrentPaperId] = useState<number>()
 
@@ -19,10 +26,7 @@ const Home = () => {
     service.getPaperReferences(id).then(paperRefs => setCurrentPaperRefs(paperRefs))
   }
 
-  // When component starts, fetch papers data once
-  useEffect(() => {
-    service.getPapers().then(papers => setPapers(papers))
-  }, [])
+  const { data: dataPapers } = useQuery(GET_PAPERS)
 
   return (
     <>
@@ -38,7 +42,7 @@ const Home = () => {
           </form>
         </div>
         <div className='w-100 mv4'>
-          <PapersChart data={papers} handlePaperId={handleCurrentPaper} currentPaperRefs={currentPaperRefs} />
+          <PapersChart data={dataPapers ? { '1998': dataPapers.papers, "1999": [] } : {}} handlePaperId={handleCurrentPaper} currentPaperRefs={currentPaperRefs} />
         </div>
         <div className='w-100 mv2'>
           <PaperInfo id={currentPaperId} references={currentPaperRefs} />
