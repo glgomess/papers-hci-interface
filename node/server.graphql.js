@@ -1,5 +1,5 @@
-const { makeExecutableSchema } = require('graphql-tools');
-const { papers } = require('./resolvers/papers');
+const { makeExecutableSchema } = require('graphql-tools')
+const { getAllPapers } = require('./resolvers/papers')
 
 const SCHEMA_GRAPHQL = `
 type Paper {
@@ -19,13 +19,13 @@ type Paper {
 type Query {
   papers: [Paper]
 }
-`;
+`
 
 module.exports = makeExecutableSchema({
-  "typeDefs": [SCHEMA_GRAPHQL],
-  "resolvers": {
+  typeDefs: [SCHEMA_GRAPHQL],
+  resolvers: {
     Query: {
-      papers
-    }
-  }
-});
+      getAllPapers,
+    },
+  },
+})

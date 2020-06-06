@@ -1,9 +1,9 @@
 const { ElasticSearchClient } = require('../server.elasticsearch');
-const elasticSearchSchema = require('../server.es.schema');
+const ES_SCHEMA = require('../server.es.schema');
 
-function papers() {
+function getAllPapers() {
   return new Promise((resolve, reject) => {
-    ElasticSearchClient({ ...elasticSearchSchema })
+    ElasticSearchClient(ES_SCHEMA.ALL_PAPERS)
       .then(r => {
         let _source = r['hits']['hits'];
         _source.map((item, i) => _source[i] = item._source);
@@ -13,5 +13,5 @@ function papers() {
 };
 
 module.exports = {
-  papers
+  getAllPapers
 };
