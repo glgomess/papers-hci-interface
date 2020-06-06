@@ -1,11 +1,10 @@
 import React from 'react'
 
 class ServiceWorker {
-
   /* Singleton */
 
   // Constructor with a private access modifier, so that it isn’t accessible outside of the class body
-  private constructor() { }
+  private constructor() {}
 
   // Reference the single instance of the class
   private static instance: ServiceWorker
@@ -16,18 +15,18 @@ class ServiceWorker {
       ServiceWorker.instance = new ServiceWorker()
     }
 
-    return ServiceWorker.instance;
+    return ServiceWorker.instance
   }
 
   /* End Singleton */
 
   getPapers = async () => {
     const headers = new Headers()
-    headers.append("Content-Type", "application/json")
+    headers.append('Content-Type', 'application/json')
     const init: RequestInit = {
       method: 'GET',
       headers: headers,
-      credentials: "same-origin"
+      credentials: 'same-origin',
     }
     const request = new Request('/papers', init)
     const response = await fetch(request)
@@ -37,11 +36,11 @@ class ServiceWorker {
 
   getPaperReferences = async (id: number) => {
     const headers = new Headers()
-    headers.append("Content-Type", "application/json")
+    headers.append('Content-Type', 'application/json')
     const init: RequestInit = {
       method: 'GET',
       headers: headers,
-      credentials: "same-origin"
+      credentials: 'same-origin',
     }
     const request = new Request(`/papers/${id}/references`, init)
     const response = await fetch(request)
@@ -51,11 +50,11 @@ class ServiceWorker {
 
   fetchPaperInfo = async (id: number) => {
     const headers = new Headers()
-    headers.append("Content-Type", "application/json")
+    headers.append('Content-Type', 'application/json')
     const init: RequestInit = {
       method: 'GET',
       headers: headers,
-      credentials: "same-origin"
+      credentials: 'same-origin',
     }
     const request = new Request(`/papers/${id}`, init)
     const response = await fetch(request)

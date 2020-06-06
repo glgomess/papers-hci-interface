@@ -7,50 +7,45 @@ import RangeSlider from './RangeSlider'
 import { CURRENT_PAPER_COLOR, CITED_PAPERS_COLOR, CITED_BY_PAPERS_COLOR } from '../utils/constants'
 
 interface Ticks {
-  all: number[],
+  all: number[]
   visible: number[]
 }
 
 interface DataPoint {
-  x: number,
-  y: number,
-  label: any,
-  id?: number,
-  style?: Object,
-  xOffset?: number,
-  yOffset?: number,
+  x: number
+  y: number
+  label: any
+  id?: number
+  style?: Object
+  xOffset?: number
+  yOffset?: number
 }
 
 interface CustomProps {
-  data: any,
-  handlePaperId: Function,
+  data: any
+  handlePaperId: Function
   currentPaperRefs: PaperRefsResponse
 }
 
 interface Hightlight {
-  paperId: number,
+  paperId: number
   color: string
 }
 
 let MAX_PAPERS_PER_YEAR = 40
 
-const PapersChart = ({
-  data,
-  handlePaperId,
-  currentPaperRefs
-}: CustomProps) => {
-
+const PapersChart = ({ data, handlePaperId, currentPaperRefs }: CustomProps) => {
   const [currentPaper, setCurrentPaper] = useState<number | null>(null)
   const [XDomain, setXDomain] = useState<number[]>([0, 0])
   const [years, setYears] = useState<Years>({
     first: 1998,
     last: 2018,
-    set: []
+    set: [],
   })
   const [chartData, setChartData] = useState<{ [year: number]: DataPoint[] }>({})
   const [ticks, setTicks] = useState<Ticks>({
     all: [],
-    visible: []
+    visible: [],
   })
   const [citedPapers, setCitedPapers] = useState<number[]>([])
   const [citedBy, setCitedBy] = useState<number[]>([])
@@ -74,22 +69,25 @@ const PapersChart = ({
             label: paper.paper_title,
             id: paper.paper_id,
             style: { textAnchor: 'start' },
-            xOffset: -200
+            xOffset: -200,
             // yOffset: -20,
           })
         })
-      } else { // Fill out empty, years with no papers
-        newChartData[year] = [{
-          x: idx * TICK_SPACE,
-          y: 0,
-          label: ''
-        }]
+      } else {
+        // Fill out empty, years with no papers
+        newChartData[year] = [
+          {
+            x: idx * TICK_SPACE,
+            y: 0,
+            label: '',
+          },
+        ]
       }
     })
     return newChartData
   }
 
-  const handleRangeInput = ({ start, end }: { start: number, end: number }) => {
+  const handleRangeInput = ({ start, end }: { start: number; end: number }) => {
     const startIndex = years.set.findIndex((el: any) => el == start)
     const endIndex = years.set.findIndex((el: any) => el == end)
 
@@ -101,9 +99,9 @@ const PapersChart = ({
     setXDomain([startX, endX])
     setTicks({
       ...ticks,
-      visible: visibleTicks
+      visible: visibleTicks,
     })
-    setColumnsMaxWidth((100 / visibleTicks.length ** 1.2) + '%')
+    setColumnsMaxWidth(100 / visibleTicks.length ** 1.2 + '%')
   }
 
   const openPaperDescription = (id: number) => {
@@ -119,11 +117,11 @@ const PapersChart = ({
     setYears({
       first,
       last,
-      set: fullYearsSet
+      set: fullYearsSet,
     })
     handleRangeInput({
       start: last - 1,
-      end: last
+      end: last,
     })
   }, [data])
 
@@ -131,7 +129,7 @@ const PapersChart = ({
     setChartData(buildChartData(data))
     setTicks({
       ...ticks,
-      all: Array.from(Array(years.set.length).keys()).map(el => el * TICK_SPACE)
+      all: Array.from(Array(years.set.length).keys()).map((el) => el * TICK_SPACE),
     })
   }, [years])
 
@@ -157,49 +155,41 @@ const PapersChart = ({
 
   return (
     <div className="pr3" id="chartDIV">
-      <FlexibleXYPlot
-        xDomain={XDomain}
-        yDomain={[0, MAX_PAPERS_PER_YEAR * 2]}
-        height={850}
-      >
+      <FlexibleXYPlot xDomain={XDomain} yDomain={[0, MAX_PAPERS_PER_YEAR * 2]} height={850}>
         <HorizontalGridLines
-          tickValues={
-            Array.from(Array(MAX_PAPERS_PER_YEAR * 2).keys()).reduce((prev: number[], next: number) =>
-              next % 10 == 0 ? [...prev, next] : [...prev], [])
-          }
+          tickValues={Array.from(Array(MAX_PAPERS_PER_YEAR * 2).keys()).reduce(
+            (prev: number[], next: number) => (next % 10 == 0 ? [...prev, next] : [...prev]),
+            []
+          )}
         />
-        <XAxis
-          tickValues={ticks.visible}
-          tickFormat={getVisibleLabels}
-        />
-        <YAxis
-          tickFormat={(tick: any) => tick % 2 == 0 ? `${tick / 2}` : ''}
-        />
+        <XAxis tickValues={ticks.visible} tickFormat={getVisibleLabels} />
+        <YAxis tickFormat={(tick: any) => (tick % 2 == 0 ? `${tick / 2}` : '')} />
         {Object.keys(chartData).map((year: any, index: number) => {
           const dataPoints = chartData[year]
-          return <CustomLabelSeries
-            key={`${year}-${index}`}
-            data={dataPoints}
-            onValueMouseOver={(paperElement: DataPoint) => { }}
-            onValueMouseOut={(paperElement: DataPoint) => { }}
-            onValueClick={(paperElement: DataPoint) => openPaperDescription(paperElement.id!)}
-            highlights={[
-              { paperId: currentPaper, color: CURRENT_PAPER_COLOR },
-              ...citedPapers.map(paperId => { return { paperId, color: CITED_PAPERS_COLOR } }),
-              ...citedBy.map(paperId => { return { paperId, color: CITED_BY_PAPERS_COLOR } })
-            ]}
-            textMaxWidth={columnsMaxWidth}
-          >
-          </CustomLabelSeries>
-
+          return (
+            <CustomLabelSeries
+              key={`${year}-${index}`}
+              data={dataPoints}
+              onValueMouseOver={(paperElement: DataPoint) => {}}
+              onValueMouseOut={(paperElement: DataPoint) => {}}
+              onValueClick={(paperElement: DataPoint) => openPaperDescription(paperElement.id!)}
+              highlights={[
+                { paperId: currentPaper, color: CURRENT_PAPER_COLOR },
+                ...citedPapers.map((paperId) => {
+                  return { paperId, color: CITED_PAPERS_COLOR }
+                }),
+                ...citedBy.map((paperId) => {
+                  return { paperId, color: CITED_BY_PAPERS_COLOR }
+                }),
+              ]}
+              textMaxWidth={columnsMaxWidth}
+            ></CustomLabelSeries>
+          )
         })}
       </FlexibleXYPlot>
       <br />
-      <RangeSlider
-        years={years}
-        handleRangeInput={handleRangeInput}
-      />
-    </div >
+      <RangeSlider years={years} handleRangeInput={handleRangeInput} />
+    </div>
   )
 }
 

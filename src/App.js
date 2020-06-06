@@ -1,10 +1,6 @@
-import React from 'react';
-import TopBar from './topbar';
-import {
-  BrowserRouter,
-  Switch,
-  Route
-} from "react-router-dom";
+import React from 'react'
+import TopBar from './topbar'
+import { BrowserRouter, Switch, Route } from 'react-router-dom'
 import AboutUs from './aboutus/index'
 import Home from './home/index'
 
@@ -26,7 +22,7 @@ function App() {
         </Switch>
       </BrowserRouter>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App

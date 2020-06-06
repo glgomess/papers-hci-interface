@@ -1,14 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import Typography from '@material-ui/core/Typography';
-import Slider from '@material-ui/core/Slider';
+import React, { useEffect, useState } from 'react'
+import Typography from '@material-ui/core/Typography'
+import Slider from '@material-ui/core/Slider'
 
 interface CustomProps {
-  years: Years,
+  years: Years
   handleRangeInput: Function
 }
 
 const RangeSlider = (props: CustomProps) => {
-
   const { handleRangeInput, years } = props
 
   const [viewRange, setViewRange] = useState<number[]>([years.last - 1, years.last])
@@ -18,7 +17,7 @@ const RangeSlider = (props: CustomProps) => {
     setViewRange(range)
     handleRangeInput({
       start: range[0],
-      end: range[range.length - 1]
+      end: range[range.length - 1],
     })
   }
 
@@ -41,7 +40,7 @@ const RangeSlider = (props: CustomProps) => {
         step={1}
       />
     </div>
-  );
+  )
 }
 
 export default RangeSlider
