@@ -17,8 +17,14 @@ type Paper {
   paper_theme: String,
   paper_language: String
   paper_authors: [String],
-  paper_references: String
+  paper_references: [Reference]
 }
+
+type Reference {
+  paper_reference: String,
+  paper_reference_id: Int
+}
+
 type Query {
   getAllPapers: [Paper],
   getYearsRange: [Int]
