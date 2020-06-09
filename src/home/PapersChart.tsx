@@ -56,13 +56,13 @@ const PapersChart = ({ data, handlePaperId, currentPaperRefs }: CustomProps) => 
   const buildChartData = (newData: any) => {
     const newChartData: { [year: number]: DataPoint[] } = {}
     years.set.map((year: number, idx: number) => {
-      const papers = newData[year.toString()]
-      if (papers) {
-        if (papers.length > MAX_PAPERS_PER_YEAR) {
-          MAX_PAPERS_PER_YEAR = papers.length
+      const dt = newData.find((dt: any) => dt.year == year)
+      if (dt) {
+        if (dt.total > MAX_PAPERS_PER_YEAR) {
+          MAX_PAPERS_PER_YEAR = dt.total
         }
         newChartData[year] = []
-        papers.map((paper: any, index: number) => {
+        dt.papers.map((paper: any, index: number) => {
           newChartData[year].push({
             x: idx * TICK_SPACE,
             y: index * 2,
@@ -84,6 +84,7 @@ const PapersChart = ({ data, handlePaperId, currentPaperRefs }: CustomProps) => 
         ]
       }
     })
+    console.log(newChartData)
     return newChartData
   }
 
@@ -110,7 +111,8 @@ const PapersChart = ({ data, handlePaperId, currentPaperRefs }: CustomProps) => 
   }
 
   useEffect(() => {
-    const yearsWithPapers = Object.keys(data).map((year: string) => parseInt(year))
+    if (!data) return
+    const yearsWithPapers = data.reverse().map(({ year }: any) => year)
     const first = yearsWithPapers[0] || 1998
     const last = yearsWithPapers[yearsWithPapers.length - 1] || 2018
     const fullYearsSet = Array.from(Array(last - first + 1).keys()).map((curr: any) => curr + first)
@@ -170,8 +172,8 @@ const PapersChart = ({ data, handlePaperId, currentPaperRefs }: CustomProps) => 
             <CustomLabelSeries
               key={`${year}-${index}`}
               data={dataPoints}
-              onValueMouseOver={(paperElement: DataPoint) => {}}
-              onValueMouseOut={(paperElement: DataPoint) => {}}
+              onValueMouseOver={(paperElement: DataPoint) => { }}
+              onValueMouseOut={(paperElement: DataPoint) => { }}
               onValueClick={(paperElement: DataPoint) => openPaperDescription(paperElement.id!)}
               highlights={[
                 { paperId: currentPaper, color: CURRENT_PAPER_COLOR },

@@ -6,12 +6,15 @@ import ServiceWorker from '../serviceWorker/index'
 import gql from 'graphql-tag'
 import { useQuery } from 'react-apollo'
 
-const GET_PAPERS = gql`
+const GET_PAPERS_BY_YEAR = gql`
   {
-    papers {
-      paper_id
-      paper_title
-      paper_year
+    getPapersByYear  {
+      year,
+      total,
+      papers {
+        paper_id
+        paper_title
+      }
     }
   }
 `
@@ -28,7 +31,7 @@ const Home = () => {
     service.getPaperReferences(id).then((paperRefs) => setCurrentPaperRefs(paperRefs))
   }
 
-  const { data: dataPapers } = useQuery(GET_PAPERS)
+  const { data: dataPapers } = useQuery(GET_PAPERS_BY_YEAR)
 
   return (
     <>
@@ -40,7 +43,7 @@ const Home = () => {
         </div>
         <div className="w-100 mv4">
           <PapersChart
-            data={dataPapers ? dataPapers.papers : {}}
+            data={dataPapers?.getPapersByYear}
             handlePaperId={handleCurrentPaper}
             currentPaperRefs={currentPaperRefs}
           />
