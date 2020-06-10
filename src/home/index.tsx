@@ -61,7 +61,11 @@ const Home = () => {
           />
         </div>
         <div className="w-100 mv2">
-          <PaperInfo paper={selectedPaper?.getPaper} loading={loadingSelectedPaper} />
+          <PaperInfo
+            paper={selectedPaper?.getPaper}
+            loading={loadingSelectedPaper}
+            handleCurrentPaper={handleCurrentPaper}
+          />
         </div>
       </div>
     </>

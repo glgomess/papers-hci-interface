@@ -5,10 +5,11 @@ import ServiceWorker from '../serviceWorker/index'
 
 interface CustomProps {
   paper?: any,
-  loading: boolean
+  loading: boolean,
+  handleCurrentPaper: Function
 }
 
-const PaperInfo = ({ paper, loading }: CustomProps) => {
+const PaperInfo = ({ paper, loading, handleCurrentPaper }: CustomProps) => {
 
   return (
     <Card className="flex flex-column justify-center ma5 pa4">
@@ -140,7 +141,10 @@ const PaperInfo = ({ paper, loading }: CustomProps) => {
                     <span key={index} className="flex pb2">
                       {
                         reference.paper_reference_id
-                          ? <Link href={`#${reference.paper_reference_id}`} onClick={() => console.log('what now?')}>
+                          ? <Link
+                            href={`#${reference.paper_reference_id}`}
+                            onClick={() => handleCurrentPaper(reference.paper_reference_id)}
+                          >
                             {reference.paper_reference}
                           </Link>
                           : <span>{reference.paper_reference}</span>
