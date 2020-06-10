@@ -2,6 +2,7 @@ const { makeExecutableSchema } = require('graphql-tools')
 const { getAllPapers } = require('./resolvers/getAllPapers')
 const { getYearsRange } = require('./resolvers/getYearsRange')
 const { getPapersByYear } = require('./resolvers/getPapersByYear')
+const { getPaper } = require('./resolvers/getPaper')
 
 const SCHEMA_GRAPHQL = `
 type Paper {
@@ -36,6 +37,7 @@ type Query {
   getAllPapers: [Paper],
   getYearsRange: [Int],
   getPapersByYear: [PaperGroup],
+  getPaper(id: Int): Paper,
 }
 `
 
@@ -45,7 +47,8 @@ module.exports = makeExecutableSchema({
     Query: {
       getAllPapers,
       getYearsRange,
-      getPapersByYear
+      getPapersByYear,
+      getPaper: (_, args) => getPaper(args['id'])
     },
   },
 })

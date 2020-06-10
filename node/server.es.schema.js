@@ -51,9 +51,20 @@ const PAPERS_BY_YEAR = {
   }
 };
 
+const GET_PAPER = (id) => {
+  return {
+    "query": {
+      "match": {
+        "paper_id": id
+      }
+    }
+  }
+};
+
 
 module.exports = {
   ALL_PAPERS,
   YEARS_RANGE,
-  PAPERS_BY_YEAR
+  PAPERS_BY_YEAR,
+  GET_PAPER
 };

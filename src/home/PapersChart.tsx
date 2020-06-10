@@ -24,7 +24,7 @@ interface DataPoint {
 interface CustomProps {
   data: any
   handlePaperId: Function
-  currentPaperRefs: PaperRefsResponse
+  selectedPaper: any
 }
 
 interface Hightlight {
@@ -34,8 +34,7 @@ interface Hightlight {
 
 let MAX_PAPERS_PER_YEAR = 40
 
-const PapersChart = ({ data, handlePaperId, currentPaperRefs }: CustomProps) => {
-  const [currentPaper, setCurrentPaper] = useState<number | null>(null)
+const PapersChart = ({ data, handlePaperId, selectedPaper }: CustomProps) => {
   const [XDomain, setXDomain] = useState<number[]>([0, 0])
   const [years, setYears] = useState<Years>({
     first: 1998,
@@ -47,8 +46,8 @@ const PapersChart = ({ data, handlePaperId, currentPaperRefs }: CustomProps) => 
     all: [],
     visible: [],
   })
-  const [citedPapers, setCitedPapers] = useState<number[]>([])
-  const [citedBy, setCitedBy] = useState<number[]>([])
+  const [citedPapers, setCitedPapers] = useState<any[]>([])
+  const [citedBy, setCitedBy] = useState<any[]>([])
   const [columnsMaxWidth, setColumnsMaxWidth] = useState<string>()
 
   const TICK_SPACE = 4
@@ -105,13 +104,7 @@ const PapersChart = ({ data, handlePaperId, currentPaperRefs }: CustomProps) => 
     setColumnsMaxWidth(100 / visibleTicks.length ** 1.2 + '%')
   }
 
-  const openPaperDescription = (id: number) => {
-    setCurrentPaper(id)
-    handlePaperId(id)
-  }
-
   useEffect(() => {
-    if (!data) return
     const yearsWithPapers = data.reverse().map(({ year }: any) => year)
     const first = yearsWithPapers[0] || 1998
     const last = yearsWithPapers[yearsWithPapers.length - 1] || 2018
@@ -136,17 +129,18 @@ const PapersChart = ({ data, handlePaperId, currentPaperRefs }: CustomProps) => 
   }, [years])
 
   useEffect(() => {
-    if (currentPaperRefs) {
-      if (currentPaperRefs.cited) {
-        const cited: number[] = currentPaperRefs.cited.map(([paper_id, paper_title]: [number, string]) => paper_id)
+    if (selectedPaper) {
+      if (selectedPaper.paper_references) {
+        const cited: number[] = selectedPaper.paper_references.filter((reference: any) => reference.paper_reference_id !== null)
+        console.log(cited)
         setCitedPapers(cited)
       }
-      if (currentPaperRefs.citedBy) {
-        const citedBy: number[] = currentPaperRefs.citedBy.map(([paper_id, paper_title]: [number, string]) => paper_id)
-        setCitedBy(citedBy)
-      }
+      // if (currentPaperRefs.citedBy) {
+      //   const citedBy: number[] = currentPaperRefs.citedBy.map(([paper_id, paper_title]: [number, string]) => paper_id)
+      //   setCitedBy(citedBy)
+      // }
     }
-  }, [currentPaperRefs])
+  }, [selectedPaper])
 
   const getVisibleLabels = (tick: any) => {
     const index = tick / TICK_SPACE
@@ -174,14 +168,14 @@ const PapersChart = ({ data, handlePaperId, currentPaperRefs }: CustomProps) => 
               data={dataPoints}
               onValueMouseOver={(paperElement: DataPoint) => { }}
               onValueMouseOut={(paperElement: DataPoint) => { }}
-              onValueClick={(paperElement: DataPoint) => openPaperDescription(paperElement.id!)}
+              onValueClick={(paperElement: any) => handlePaperId(parseInt(paperElement.id!))}
               highlights={[
-                { paperId: currentPaper, color: CURRENT_PAPER_COLOR },
-                ...citedPapers.map((paperId) => {
-                  return { paperId, color: CITED_PAPERS_COLOR }
+                { paperId: selectedPaper?.paper_id, color: CURRENT_PAPER_COLOR },
+                ...citedPapers.map((reference) => {
+                  return { paperId: reference.paper_reference_id, color: CITED_PAPERS_COLOR }
                 }),
-                ...citedBy.map((paperId) => {
-                  return { paperId, color: CITED_BY_PAPERS_COLOR }
+                ...citedBy.map((reference) => {
+                  return { paperId: reference.paper_reference_id, color: CITED_BY_PAPERS_COLOR }
                 }),
               ]}
               textMaxWidth={columnsMaxWidth}

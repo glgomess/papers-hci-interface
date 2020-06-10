@@ -4,34 +4,11 @@ import React, { useEffect, useState } from 'react'
 import ServiceWorker from '../serviceWorker/index'
 
 interface CustomProps {
-  id?: number
-  references: PaperInfoResponse
+  paper?: any,
+  loading: boolean
 }
 
-const PaperInfo = (props: CustomProps) => {
-  const service = ServiceWorker.getInstance()
-
-  const [loading, setLoading] = useState(false)
-  const [paperInfo, setPaperInfo]: any = useState<PaperInfoResponse>({} as PaperInfoResponse)
-  const [paperReferences, setPaperReferences]: any = useState<PaperRefsResponse>({} as PaperRefsResponse)
-
-  // Fetch paper info when receives new paper id
-  useEffect(() => {
-    if (props.id) {
-      setLoading(true)
-      service.fetchPaperInfo(props.id).then((paperInfo) => {
-        setPaperInfo({
-          ...paperInfo,
-          abstract_PT: paperInfo.abstract_PT !== 'NA' ? paperInfo.abstract_PT : null,
-        })
-        setLoading(false)
-      })
-    }
-  }, [props.id])
-
-  useEffect(() => {
-    setPaperReferences(props.references)
-  }, [props.references])
+const PaperInfo = ({ paper, loading }: CustomProps) => {
 
   return (
     <Card className="flex flex-column justify-center ma5 pa4">
@@ -43,7 +20,7 @@ const PaperInfo = (props: CustomProps) => {
         }}
       />
       <CardContent>
-        {props.id == undefined && (
+        {!paper && !loading && (
           <Typography variant="subtitle1" color="textSecondary">
             Nenhum artigo selecionado
           </Typography>
@@ -114,11 +91,11 @@ const PaperInfo = (props: CustomProps) => {
             </div>
           </>
         )}
-        {!(props.id == undefined) && !loading && paperInfo && paperReferences && (
+        {paper && !loading && (
           <>
             <div className="flex-auto pt2 pb4">
               <Typography variant="h4" gutterBottom>
-                {paperInfo.title}
+                {paper.paper_title}
               </Typography>
             </div>
             <div className="flex flex-row pb3">
@@ -126,60 +103,64 @@ const PaperInfo = (props: CustomProps) => {
                 <Typography variant="h6" gutterBottom>
                   Resumo
                 </Typography>
-                {paperInfo.abstract_PT ? (
+                {paper.paper_abstract_pt ? (
                   <Typography variant="body1" gutterBottom>
-                    {paperInfo.abstract_PT}
+                    {paper.paper_abstract_pt}
                   </Typography>
                 ) : (
-                  <Typography variant="body1" color="textSecondary" gutterBottom>
-                    Nenhum
-                  </Typography>
-                )}
+                    <Typography variant="body1" color="textSecondary" gutterBottom>
+                      Nenhum
+                    </Typography>
+                  )}
               </div>
               <div className="flex-auto flex-column w-20">
                 <Typography variant="h6" gutterBottom>
                   Autores
                 </Typography>
-                {paperInfo.authors && paperInfo.authors.length ? (
+                {paper.paper_authors?.length ? (
                   <Typography variant="body1" display="block" gutterBottom>
-                    {paperInfo.authors.map((author: string) => (
+                    {paper.paper_authors.map((author: string) => (
                       <span className="flex pb2">{author}</span>
                     ))}
                   </Typography>
                 ) : (
-                  <Typography variant="body1" color="textSecondary" gutterBottom>
-                    Nenhum
-                  </Typography>
-                )}
+                    <Typography variant="body1" color="textSecondary" gutterBottom>
+                      Nenhum
+                    </Typography>
+                  )}
               </div>
             </div>
             <div className="flex flex-column pb3 w-80">
               <Typography variant="h6" gutterBottom>
                 Artigos referenciados
               </Typography>
-              {paperReferences.cited && paperReferences.cited.length ? (
+              {paper.paper_references?.length ? (
                 <Typography variant="body1" gutterBottom>
-                  {paperReferences.cited.map(([paper_id, paper_title]: [number, string]) => (
-                    <span key={paper_id} className="flex pb2">
-                      <Link href={`#${paper_id}`} onClick={() => console.log(paper_id)}>
-                        {paper_title}
-                      </Link>
+                  {paper.paper_references.map((reference: any, index: any) => (
+                    <span key={index} className="flex pb2">
+                      {
+                        reference.paper_reference_id
+                          ? <Link href={`#${reference.paper_reference_id}`} onClick={() => console.log('what now?')}>
+                            {reference.paper_reference}
+                          </Link>
+                          : <span>{reference.paper_reference}</span>
+                      }
                     </span>
                   ))}
                 </Typography>
               ) : (
-                <Typography variant="body1" color="textSecondary" gutterBottom>
-                  Nenhum
-                </Typography>
-              )}
+                  <Typography variant="body1" color="textSecondary" gutterBottom>
+                    Nenhum
+                  </Typography>
+                )}
             </div>
-            <div className="flex flex-column pb3 w-80">
+            {/* <div className="flex flex-column pb3 w-80">
               <Typography variant="h6" gutterBottom>
                 Referência em
               </Typography>
-              {paperReferences.citedBy && paperReferences.citedBy.length ? (
+              {paper.paper_references.citedBy && paper.paper_references.citedBy.length ? (
                 <Typography variant="body1" gutterBottom>
-                  {paperReferences.citedBy.map(([paper_id, paper_title]: [number, string]) => (
+                  {paper.paper_references.citedBy.map(([paper_id, paper_title]: [number, string]) => (
                     <span key={paper_id} className="flex pb2">
                       <Link href={`#${paper_id}`} onClick={() => console.log(paper_id)}>
                         {paper_title}
@@ -188,11 +169,11 @@ const PaperInfo = (props: CustomProps) => {
                   ))}
                 </Typography>
               ) : (
-                <Typography variant="body1" color="textSecondary" gutterBottom>
-                  Nenhum
-                </Typography>
-              )}
-            </div>
+                  <Typography variant="body1" color="textSecondary" gutterBottom>
+                    Nenhum
+                  </Typography>
+                )}
+            </div> */}
           </>
         )}
       </CardContent>

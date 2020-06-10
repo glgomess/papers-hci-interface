@@ -4,7 +4,7 @@ import PaperInfo from './PaperInfo'
 import TextField from '@material-ui/core/TextField'
 import ServiceWorker from '../serviceWorker/index'
 import gql from 'graphql-tag'
-import { useQuery } from 'react-apollo'
+import { useQuery, useLazyQuery } from 'react-apollo'
 
 const GET_PAPERS_BY_YEAR = gql`
   {
@@ -19,19 +19,31 @@ const GET_PAPERS_BY_YEAR = gql`
   }
 `
 
+const GET_PAPER = gql`
+  query getPaper($id: Int) {
+    getPaper(id: $id) {
+      paper_id
+      paper_title
+      paper_language
+      paper_abstract_pt
+      paper_abstract_en
+      paper_abstract_es
+      paper_authors
+      paper_references {
+        paper_reference,
+        paper_reference_id
+      }
+    }
+  }
+`
+
 const Home = () => {
-  const service = ServiceWorker.getInstance()
-
-  const [currentPaperRefs, setCurrentPaperRefs] = useState<any>()
-  const [currentPaperId, setCurrentPaperId] = useState<number>()
-
   const handleCurrentPaper = (id: number) => {
-    console.log('# handle paper: ', id)
-    setCurrentPaperId(id)
-    service.getPaperReferences(id).then((paperRefs) => setCurrentPaperRefs(paperRefs))
+    getPaper({ variables: { id: id } })
   }
 
   const { data: dataPapers } = useQuery(GET_PAPERS_BY_YEAR)
+  const [getPaper, { data: selectedPaper, loading: loadingSelectedPaper }] = useLazyQuery(GET_PAPER)
 
   return (
     <>
@@ -43,13 +55,13 @@ const Home = () => {
         </div>
         <div className="w-100 mv4">
           <PapersChart
-            data={dataPapers?.getPapersByYear}
+            data={dataPapers?.getPapersByYear || []}
             handlePaperId={handleCurrentPaper}
-            currentPaperRefs={currentPaperRefs}
+            selectedPaper={selectedPaper?.getPaper}
           />
         </div>
         <div className="w-100 mv2">
-          <PaperInfo id={currentPaperId} references={currentPaperRefs} />
+          <PaperInfo paper={selectedPaper?.getPaper} loading={loadingSelectedPaper} />
         </div>
       </div>
     </>
