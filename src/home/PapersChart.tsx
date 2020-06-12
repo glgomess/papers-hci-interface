@@ -147,7 +147,7 @@ const PapersChart = ({ data, handlePaperId, selectedPaper }: CustomProps) => {
   const FlexibleXYPlot = makeVisFlexible(XYPlot)
 
   return (
-    <div className="pr3" id="chartDIV">
+    <div className="mw9 mh4" id="chartDIV">
       <FlexibleXYPlot xDomain={XDomain} yDomain={[0, MAX_PAPERS_PER_YEAR * 2]} height={850}>
         <HorizontalGridLines
           tickValues={Array.from(Array(MAX_PAPERS_PER_YEAR * 2).keys()).reduce(
