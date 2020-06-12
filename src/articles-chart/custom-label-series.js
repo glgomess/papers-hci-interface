@@ -46,8 +46,9 @@ export class CustomLabelSeries extends AbstractSeries {
       yRange,
       labelAnchorX,
       labelAnchorY,
-      textMaxWidth,
       highlights,
+      startX,
+      endX
     } = this.props
     if (!data) {
       return null
@@ -97,21 +98,21 @@ export class CustomLabelSeries extends AbstractSeries {
             ...markStyle,
             style: hightlightedElement ? { color: hightlightedElement.color } : {},
           }
-          const foreignObjAttrs = {
-            x,
-            y,
-            key: i,
-            width: textMaxWidth,
-            height: FONTSIZE + 4,
-            fontSize: FONTSIZE + 'px',
-          }
           const textContent = getLabel(_data ? _data[i] : d)
           return res.concat([
-            <foreignObject {...foreignObjAttrs}>
+            <foreignObject
+              x={x}
+              y={y}
+              key={i}
+              width={`${Math.abs(xFunctor({ x: startX }) - xFunctor({ x: endX })) * 0.90}px`}
+              height={FONTSIZE + 4}
+              fontSize={FONTSIZE + 'px'}
+            >
               <text {...attrs}>{textContent}</text>
-            </foreignObject>,
+            </foreignObject>
           ])
         }, [])}
+
       </g>
     )
   }
@@ -140,14 +141,14 @@ CustomLabelSeries.propTypes = {
   yRange: PropTypes.arrayOf(PropTypes.number),
   labelAnchorX: PropTypes.string,
   labelAnchorY: PropTypes.string,
-  textMaxWidth: PropTypes.string,
   verticalSpacing: PropTypes.number,
   highlights: PropTypes.arrayOf(PropTypes.any),
+  startX: PropTypes.number,
+  endX: PropTypes.number,
 }
 CustomLabelSeries.defaultProps = {
   ...AbstractSeries.defaultProps,
   rotation: 0,
   getLabel: (d) => d.label,
-  textMaxWidth: '200px',
 }
 CustomLabelSeries.displayName = 'CustomLabelSeries'

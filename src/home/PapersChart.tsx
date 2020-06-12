@@ -48,7 +48,6 @@ const PapersChart = ({ data, handlePaperId, selectedPaper }: CustomProps) => {
   })
   const [citedPapers, setCitedPapers] = useState<any[]>([])
   const [citedBy, setCitedBy] = useState<any[]>([])
-  const [columnsMaxWidth, setColumnsMaxWidth] = useState<string>()
 
   const TICK_SPACE = 4
 
@@ -68,8 +67,7 @@ const PapersChart = ({ data, handlePaperId, selectedPaper }: CustomProps) => {
             label: paper.paper_title,
             id: paper.paper_id,
             style: { textAnchor: 'start' },
-            xOffset: -200,
-            // yOffset: -20,
+            xOffset: 10,
           })
         })
       } else {
@@ -92,8 +90,8 @@ const PapersChart = ({ data, handlePaperId, selectedPaper }: CustomProps) => {
     const endIndex = years.set.findIndex((el: any) => el == end)
 
     // Scale start/end years and add padding
-    const startX = startIndex * TICK_SPACE - TICK_SPACE / 2
-    const endX = endIndex * TICK_SPACE + TICK_SPACE / 2
+    const startX = startIndex * TICK_SPACE
+    const endX = endIndex * TICK_SPACE + TICK_SPACE
 
     const visibleTicks = ticks.all.slice(startIndex, endIndex + 1)
     setXDomain([startX, endX])
@@ -101,7 +99,6 @@ const PapersChart = ({ data, handlePaperId, selectedPaper }: CustomProps) => {
       ...ticks,
       visible: visibleTicks,
     })
-    setColumnsMaxWidth(100 / visibleTicks.length ** 1.2 + '%')
   }
 
   useEffect(() => {
@@ -165,6 +162,8 @@ const PapersChart = ({ data, handlePaperId, selectedPaper }: CustomProps) => {
           return (
             <CustomLabelSeries
               key={`${year}-${index}`}
+              startX={index * TICK_SPACE}
+              endX={(index + 1) * TICK_SPACE}
               data={dataPoints}
               onValueMouseOver={(paperElement: DataPoint) => { }}
               onValueMouseOut={(paperElement: DataPoint) => { }}
@@ -178,7 +177,6 @@ const PapersChart = ({ data, handlePaperId, selectedPaper }: CustomProps) => {
                   return { paperId: reference.paper_reference_id, color: CITED_BY_PAPERS_COLOR }
                 }),
               ]}
-              textMaxWidth={columnsMaxWidth}
             ></CustomLabelSeries>
           )
         })}
