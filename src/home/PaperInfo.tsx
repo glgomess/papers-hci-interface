@@ -1,7 +1,6 @@
-import { Typography, Link, Card, CardHeader, CardContent } from '@material-ui/core'
-import Skeleton from '@material-ui/lab/Skeleton'
-import React, { useEffect, useState } from 'react'
-import ServiceWorker from '../serviceWorker/index'
+import { Card, CardContent, CardHeader, Link, Typography } from '@material-ui/core'
+import React from 'react'
+import PaperInfoLoading from './PaperInfoLoading'
 
 interface CustomProps {
   paper?: any,
@@ -26,72 +25,7 @@ const PaperInfo = ({ paper, loading, handleCurrentPaper }: CustomProps) => {
             Nenhum artigo selecionado
           </Typography>
         )}
-        {loading && (
-          <>
-            {/* Title */}
-            <div className="flex-auto w-50 pt2 pb4">
-              <Skeleton variant="text" animation={loading ? 'wave' : false} height={35} />
-            </div>
-            <div className="flex flex-row pb5">
-              <div className="flex-auto flex-column w-80">
-                {/* Abstract */}
-                <div className="flex-auto w-20">
-                  <Skeleton variant="text" animation={loading ? 'wave' : false} height={30} />
-                </div>
-                <div className="flex-auto w-80">
-                  <Skeleton variant="text" animation={loading ? 'wave' : false} />
-                </div>
-                <div className="flex-auto w-80">
-                  <Skeleton variant="text" animation={loading ? 'wave' : false} />
-                </div>
-                <div className="flex-auto w-80">
-                  <Skeleton variant="text" animation={loading ? 'wave' : false} />
-                </div>
-                <div className="flex-auto w-70">
-                  <Skeleton variant="text" animation={loading ? 'wave' : false} />
-                </div>
-              </div>
-              <div className="flex-auto flex-column w-20">
-                {/* Authors */}
-                <div className="flex-auto w-60">
-                  <Skeleton variant="text" animation={loading ? 'wave' : false} height={30} />
-                </div>
-                <div className="flex-auto w-90">
-                  <Skeleton variant="text" animation={loading ? 'wave' : false} />
-                </div>
-                <div className="flex-auto w-80">
-                  <Skeleton variant="text" animation={loading ? 'wave' : false} />
-                </div>
-                <div className="flex-auto">
-                  <Skeleton variant="text" animation={loading ? 'wave' : false} />
-                </div>
-              </div>
-            </div>
-            {/* Cited */}
-            <div className="flex-auto w-20">
-              <Skeleton variant="text" animation={loading ? 'wave' : false} height={30} />
-            </div>
-            <div className="flex-auto w-40">
-              <Skeleton variant="text" animation={loading ? 'wave' : false} />
-            </div>
-            <div className="flex-auto w-30">
-              <Skeleton variant="text" animation={loading ? 'wave' : false} />
-            </div>
-            <div className="flex-auto w-40 pb4">
-              <Skeleton variant="text" animation={loading ? 'wave' : false} />
-            </div>
-            {/* Cited By */}
-            <div className="flex-auto w-20">
-              <Skeleton variant="text" animation={loading ? 'wave' : false} height={30} />
-            </div>
-            <div className="flex-auto w-30">
-              <Skeleton variant="text" animation={loading ? 'wave' : false} />
-            </div>
-            <div className="flex-auto w-40">
-              <Skeleton variant="text" animation={loading ? 'wave' : false} />
-            </div>
-          </>
-        )}
+        {loading && <PaperInfoLoading />}
         {paper && !loading && (
           <>
             <div className="flex-auto pt2 pb4">

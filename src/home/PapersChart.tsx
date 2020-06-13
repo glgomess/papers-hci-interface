@@ -1,10 +1,10 @@
 /// <reference types="react-vis-types" />
 import React, { useEffect, useState } from 'react'
-import { HorizontalGridLines, makeVisFlexible, VerticalGridLines, XAxis, XYPlot, YAxis } from 'react-vis'
+import { HorizontalGridLines, makeVisFlexible, XAxis, XYPlot, YAxis } from 'react-vis'
 import '../../node_modules/react-vis/dist/style.css'
 import { CustomLabelSeries } from '../articles-chart/custom-label-series.js'
+import { CITED_BY_PAPERS_COLOR, CITED_PAPERS_COLOR, CURRENT_PAPER_COLOR } from '../utils/constants'
 import RangeSlider from './RangeSlider'
-import { CURRENT_PAPER_COLOR, CITED_PAPERS_COLOR, CITED_BY_PAPERS_COLOR } from '../utils/constants'
 
 interface Ticks {
   all: number[]

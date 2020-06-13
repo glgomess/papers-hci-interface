@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react'
-import Typography from '@material-ui/core/Typography'
 import Slider from '@material-ui/core/Slider'
+import Typography from '@material-ui/core/Typography'
+import React, { useState } from 'react'
 
 interface CustomProps {
   years: Years
