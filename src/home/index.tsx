@@ -60,7 +60,7 @@ const Home = () => {
         <div className="w-100 mv4">
           <PapersChart
             data={dataPapers?.getPapersByYear || []}
-            handlePaperId={handleCurrentPaper}
+            handleCurrentPaper={handleCurrentPaper}
             selectedPaper={selectedPaper}
           />
         </div>

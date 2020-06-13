@@ -23,7 +23,7 @@ interface DataPoint {
 
 interface CustomProps {
   data: any
-  handlePaperId: Function
+  handleCurrentPaper: Function
   selectedPaper: any
 }
 
@@ -34,7 +34,7 @@ interface Hightlight {
 
 let MAX_PAPERS_PER_YEAR = 40
 
-const PapersChart = ({ data, handlePaperId, selectedPaper }: CustomProps) => {
+const PapersChart = ({ data, handleCurrentPaper, selectedPaper }: CustomProps) => {
   const [XDomain, setXDomain] = useState<number[]>([0, 0])
   const [years, setYears] = useState<Years>({
     first: 1998,
@@ -162,7 +162,7 @@ const PapersChart = ({ data, handlePaperId, selectedPaper }: CustomProps) => {
               data={dataPoints}
               onValueMouseOver={(paperElement: DataPoint) => { }}
               onValueMouseOut={(paperElement: DataPoint) => { }}
-              onValueClick={(paperElement: any) => handlePaperId(paperElement.id!)}
+              onValueClick={(paperElement: any) => handleCurrentPaper(paperElement.id!)}
               highlights={[
                 { paperId: selectedPaper?.getPaper?.paper_id, color: CURRENT_PAPER_COLOR },
                 ...citedPapers.map((reference) => {
