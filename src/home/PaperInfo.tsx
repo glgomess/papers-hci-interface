@@ -1,5 +1,5 @@
-import { Card, CardContent, CardHeader, Link, Typography } from '@material-ui/core'
-import React from 'react'
+import { Card, CardContent, CardHeader, Link, Typography, Button } from '@material-ui/core'
+import React, { useState, useEffect } from 'react'
 import PaperInfoLoading from './PaperInfoLoading'
 
 interface CustomProps {
@@ -9,6 +9,29 @@ interface CustomProps {
 }
 
 const PaperInfo = ({ paper, loading, handleCurrentPaper }: CustomProps) => {
+
+  const LANGUAGES = [
+    {
+      label: 'PT',
+      value: 'pt'
+    },
+    {
+      label: 'EN',
+      value: 'en'
+    },
+    {
+      label: 'ES',
+      value: 'es'
+    },
+  ]
+
+  const [selectedLanguage, setSelectedLanguage] = useState<string>('pt')
+  const abstract = paper?.getPaper[`paper_abstract_${selectedLanguage}`]
+
+  useEffect(() => {
+    const defaultLanguage = paper?.getPaper.paper_language.split('-')[0].toLowerCase()
+    if (LANGUAGES.find(l => l.value == defaultLanguage)) setSelectedLanguage(defaultLanguage)
+  }, [paper])
 
   return (
     <Card className="flex flex-column justify-center ma5 pa4">
@@ -28,25 +51,41 @@ const PaperInfo = ({ paper, loading, handleCurrentPaper }: CustomProps) => {
         {loading && <PaperInfoLoading />}
         {paper && !loading && (
           <>
-            <div className="flex-auto pt2 pb4">
+            <div className="flex flex-auto pt2 pb4">
               <Typography variant="h4" gutterBottom>
                 {paper.getPaper.paper_title}
               </Typography>
             </div>
             <div className="flex flex-row pb3">
               <div className="flex-auto flex-column w-80 pr5">
-                <Typography variant="h6" gutterBottom>
-                  Resumo
+                <div className="flex flex-row mb3">
+                  <div className="flex flex-auto">
+                    <Typography variant="h6">
+                      Resumo
                 </Typography>
-                {paper.getPaper.paper_abstract_pt ? (
-                  <Typography variant="body1" gutterBottom>
-                    {paper.getPaper.paper_abstract_pt}
+                  </div>
+                  <div className="flex flex-end">
+                    {LANGUAGES.map((option, index) =>
+                      <Button
+                        key={index}
+                        color="primary"
+                        variant={selectedLanguage == option.value ? 'outlined' : 'text'}
+                        disabled={!paper}
+                        onClick={() => setSelectedLanguage(option.value)}>{option.label}
+                      </Button>
+                    )}
+                  </div>
+                </div>
+                {!abstract || abstract == 'NA' ? (
+                  <Typography variant="body1" color="textSecondary" gutterBottom>
+                    Nenhum
                   </Typography>
                 ) : (
-                    <Typography variant="body1" color="textSecondary" gutterBottom>
-                      Nenhum
+                    <Typography variant="body1" gutterBottom>
+                      {abstract}
                     </Typography>
-                  )}
+                  )
+                }
               </div>
               <div className="flex-auto flex-column w-20">
                 <Typography variant="h6" gutterBottom>
@@ -54,8 +93,8 @@ const PaperInfo = ({ paper, loading, handleCurrentPaper }: CustomProps) => {
                 </Typography>
                 {paper.getPaper.paper_authors?.length ? (
                   <Typography variant="body1" display="block" gutterBottom>
-                    {paper.getPaper.paper_authors.map((author: string) => (
-                      <span className="flex pb2">{author}</span>
+                    {paper.getPaper.paper_authors.map((author: string, index: number) => (
+                      <span key={index} className="flex pb2">{author}</span>
                     ))}
                   </Typography>
                 ) : (

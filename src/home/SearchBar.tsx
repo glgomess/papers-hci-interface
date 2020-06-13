@@ -64,6 +64,7 @@ const SearchBar = ({ handleCurrentPaper }: SearchProps) => {
             <div className="ba b--gray bg-white br3 bw1 pv2">
               {searchResult?.searchPaper.map((paper: any) =>
                 <div
+                  key={paper.paper_id}
                   className="flex flex-row bg-animate bg-white hover-bg-light-gray ph3 items-center pointer"
                   onClick={() => {
                     handleCurrentPaper(paper.paper_id)
