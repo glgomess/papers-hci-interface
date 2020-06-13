@@ -37,6 +37,10 @@ const GET_PAPER = gql`
         paper_reference_id
       }
     }
+    getReferencedByPapers(id: $id) {
+      paper_id,
+      paper_title
+    }
   }
 `
 
@@ -124,12 +128,12 @@ const Home = () => {
           <PapersChart
             data={dataPapers?.getPapersByYear || []}
             handlePaperId={handleCurrentPaper}
-            selectedPaper={selectedPaper?.getPaper}
+            selectedPaper={selectedPaper}
           />
         </div>
         <div className="w-100 mv2">
           <PaperInfo
-            paper={selectedPaper?.getPaper}
+            paper={selectedPaper}
             loading={loadingSelectedPaper}
             handleCurrentPaper={handleCurrentPaper}
           />

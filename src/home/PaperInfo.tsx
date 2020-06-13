@@ -96,7 +96,7 @@ const PaperInfo = ({ paper, loading, handleCurrentPaper }: CustomProps) => {
           <>
             <div className="flex-auto pt2 pb4">
               <Typography variant="h4" gutterBottom>
-                {paper.paper_title}
+                {paper.getPaper.paper_title}
               </Typography>
             </div>
             <div className="flex flex-row pb3">
@@ -104,9 +104,9 @@ const PaperInfo = ({ paper, loading, handleCurrentPaper }: CustomProps) => {
                 <Typography variant="h6" gutterBottom>
                   Resumo
                 </Typography>
-                {paper.paper_abstract_pt ? (
+                {paper.getPaper.paper_abstract_pt ? (
                   <Typography variant="body1" gutterBottom>
-                    {paper.paper_abstract_pt}
+                    {paper.getPaper.paper_abstract_pt}
                   </Typography>
                 ) : (
                     <Typography variant="body1" color="textSecondary" gutterBottom>
@@ -118,9 +118,9 @@ const PaperInfo = ({ paper, loading, handleCurrentPaper }: CustomProps) => {
                 <Typography variant="h6" gutterBottom>
                   Autores
                 </Typography>
-                {paper.paper_authors?.length ? (
+                {paper.getPaper.paper_authors?.length ? (
                   <Typography variant="body1" display="block" gutterBottom>
-                    {paper.paper_authors.map((author: string) => (
+                    {paper.getPaper.paper_authors.map((author: string) => (
                       <span className="flex pb2">{author}</span>
                     ))}
                   </Typography>
@@ -135,9 +135,9 @@ const PaperInfo = ({ paper, loading, handleCurrentPaper }: CustomProps) => {
               <Typography variant="h6" gutterBottom>
                 Artigos referenciados
               </Typography>
-              {paper.paper_references?.length ? (
+              {paper.getPaper.paper_references?.length ? (
                 <Typography variant="body1" gutterBottom>
-                  {paper.paper_references.map((reference: any, index: any) => (
+                  {paper.getPaper.paper_references.map((reference: any, index: any) => (
                     <span key={index} className="flex pb2">
                       {
                         reference.paper_reference_id
@@ -158,16 +158,19 @@ const PaperInfo = ({ paper, loading, handleCurrentPaper }: CustomProps) => {
                   </Typography>
                 )}
             </div>
-            {/* <div className="flex flex-column pb3 w-80">
+            <div className="flex flex-column pb3 w-80">
               <Typography variant="h6" gutterBottom>
                 Referência em
               </Typography>
-              {paper.paper_references.citedBy && paper.paper_references.citedBy.length ? (
+              {paper.getReferencedByPapers?.length ? (
                 <Typography variant="body1" gutterBottom>
-                  {paper.paper_references.citedBy.map(([paper_id, paper_title]: [number, string]) => (
-                    <span key={paper_id} className="flex pb2">
-                      <Link href={`#${paper_id}`} onClick={() => console.log(paper_id)}>
-                        {paper_title}
+                  {paper.getReferencedByPapers.map((referenceBy: any, index: any) => (
+                    <span key={index} className="flex pb2">
+                      <Link
+                        href={`#${referenceBy.paper_id}`}
+                        onClick={() => handleCurrentPaper(referenceBy.paper_id)}
+                      >
+                        {referenceBy.paper_title}
                       </Link>
                     </span>
                   ))}
@@ -177,7 +180,7 @@ const PaperInfo = ({ paper, loading, handleCurrentPaper }: CustomProps) => {
                     Nenhum
                   </Typography>
                 )}
-            </div> */}
+            </div>
           </>
         )}
       </CardContent>

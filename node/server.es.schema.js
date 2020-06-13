@@ -74,11 +74,24 @@ const SEARCH_BY_TITLE = (title) => {
   }
 };
 
+// [Query] Get papers thats used this paper as reference. Search by paper id.
+// Setting a limit of up to 100 reference by results.
+const GET_REFERENCED_BY_PAPERS = (id) => {
+  return {
+    size: 100,
+    query: {
+      match: {
+        "paper_references.paper_reference_id": id
+      }
+    }
+  }
+};
 
 module.exports = {
   ALL_PAPERS,
   YEARS_RANGE,
   PAPERS_BY_YEAR,
   GET_PAPER,
-  SEARCH_BY_TITLE
+  SEARCH_BY_TITLE,
+  GET_REFERENCED_BY_PAPERS
 };

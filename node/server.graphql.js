@@ -4,6 +4,7 @@ const { getYearsRange } = require('./resolvers/getYearsRange')
 const { getPapersByYear } = require('./resolvers/getPapersByYear')
 const { getPaper } = require('./resolvers/getPaper')
 const { searchPaper } = require('./resolvers/searchPaper')
+const { getReferencedByPapers } = require('./resolvers/getReferencedByPapers')
 
 const SCHEMA_GRAPHQL = `
 type Paper {
@@ -43,7 +44,8 @@ type Query {
   getYearsRange: [Int],
   getPapersByYear: [PaperGroup],
   getPaper(id: Int): Paper,
-  searchPaper(props: SearchProps): [Paper]
+  searchPaper(props: SearchProps): [Paper],
+  getReferencedByPapers(id: Int): [Paper],
 }
 `
 
@@ -55,7 +57,8 @@ module.exports = makeExecutableSchema({
       getYearsRange,
       getPapersByYear,
       getPaper: (_, args) => getPaper(args),
-      searchPaper: (_, args) => searchPaper(args.props)
+      searchPaper: (_, args) => searchPaper(args.props),
+      getReferencedByPapers: (_, args) => getReferencedByPapers(args),
     },
   },
 })

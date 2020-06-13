@@ -125,15 +125,12 @@ const PapersChart = ({ data, handlePaperId, selectedPaper }: CustomProps) => {
   }, [years])
 
   useEffect(() => {
-    if (selectedPaper) {
-      if (selectedPaper.paper_references) {
-        const cited: number[] = selectedPaper.paper_references.filter((reference: any) => reference.paper_reference_id !== null)
-        setCitedPapers(cited)
-      }
-      // if (currentPaperRefs.citedBy) {
-      //   const citedBy: number[] = currentPaperRefs.citedBy.map(([paper_id, paper_title]: [number, string]) => paper_id)
-      //   setCitedBy(citedBy)
-      // }
+    if (selectedPaper?.getPaper?.paper_references) {
+      const cited: number[] = selectedPaper.getPaper.paper_references.filter((reference: any) => reference.paper_reference_id !== null)
+      setCitedPapers(cited)
+    }
+    if (selectedPaper?.getReferencedByPapers) {
+      setCitedBy(selectedPaper.getReferencedByPapers)
     }
   }, [selectedPaper])
 
@@ -165,14 +162,14 @@ const PapersChart = ({ data, handlePaperId, selectedPaper }: CustomProps) => {
               data={dataPoints}
               onValueMouseOver={(paperElement: DataPoint) => { }}
               onValueMouseOut={(paperElement: DataPoint) => { }}
-              onValueClick={(paperElement: any) => handlePaperId(parseInt(paperElement.id!))}
+              onValueClick={(paperElement: any) => handlePaperId(paperElement.id!)}
               highlights={[
-                { paperId: selectedPaper?.paper_id, color: CURRENT_PAPER_COLOR },
+                { paperId: selectedPaper?.getPaper?.paper_id, color: CURRENT_PAPER_COLOR },
                 ...citedPapers.map((reference) => {
                   return { paperId: reference.paper_reference_id, color: CITED_PAPERS_COLOR }
                 }),
-                ...citedBy.map((reference) => {
-                  return { paperId: reference.paper_reference_id, color: CITED_BY_PAPERS_COLOR }
+                ...citedBy.map((referencedBy) => {
+                  return { paperId: referencedBy.paper_id, color: CITED_BY_PAPERS_COLOR }
                 }),
               ]}
             ></CustomLabelSeries>
