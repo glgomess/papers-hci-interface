@@ -1,17 +1,17 @@
 const { ElasticSearchClient } = require('../server.elasticsearch');
 const ES_SCHEMA = require('../server.es.schema');
 
-function getPaper({ id }) {
+function searchPaper({ title }) {
   return new Promise((resolve, reject) => {
-    ElasticSearchClient(ES_SCHEMA.GET_PAPER(id))
+    ElasticSearchClient(ES_SCHEMA.SEARCH_BY_TITLE(title))
       .then(r => {
-        if (r['hits']['total']['value'] == 0) reject('Not found')
-        let _source = r['hits']['hits'][0]['_source'];
+        let _source = r['hits']['hits'];
+        _source.map((item, i) => _source[i] = item._source);
         resolve(_source);
       });
   });
 };
 
 module.exports = {
-  getPaper
+  searchPaper
 };

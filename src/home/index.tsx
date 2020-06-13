@@ -5,6 +5,8 @@ import TextField from '@material-ui/core/TextField'
 import ServiceWorker from '../serviceWorker/index'
 import gql from 'graphql-tag'
 import { useQuery, useLazyQuery } from 'react-apollo'
+import { debounce } from '../utils/functions'
+import { Box } from '@material-ui/core'
 
 const GET_PAPERS_BY_YEAR = gql`
   {
@@ -37,6 +39,15 @@ const GET_PAPER = gql`
   }
 `
 
+const SEARCH_PAPER = gql`
+  query searchPaper($props: SearchProps) {
+    searchPaper(props: $props) {
+      paper_id
+      paper_title
+    }
+  }
+`
+
 const Home = () => {
   const handleCurrentPaper = (id: number) => {
     getPaper({ variables: { id: id } })
@@ -44,14 +55,42 @@ const Home = () => {
 
   const { data: dataPapers } = useQuery(GET_PAPERS_BY_YEAR)
   const [getPaper, { data: selectedPaper, loading: loadingSelectedPaper }] = useLazyQuery(GET_PAPER)
+  const [searchPaper, { data: searchResult }] = useLazyQuery(SEARCH_PAPER)
 
   return (
     <>
       <div className="ma4">
-        <div className="flex w-100">
-          <form noValidate autoComplete="off" className="w-50">
-            <TextField id="outlined-read-only-input" variant="outlined" placeholder="Search..." fullWidth />
-          </form>
+        <div className="flex flex-column w-100 mh5">
+          <div className="mw8 flex-auto">
+            <TextField
+              id="input-search"
+              label="Pesquisar"
+              style={{ margin: 8 }}
+              placeholder="Ex: Young Adults Perspective on Managing Digital Legacy"
+              helperText="Digite o nome de um artigo!"
+              fullWidth
+              margin="normal"
+              InputLabelProps={{
+                shrink: true,
+              }}
+              variant="outlined"
+              onChange={(e) => {
+                const inputText = e.target.value
+                debounce(
+                  (inputText: string) => searchPaper({ variables: { props: { title: inputText } } }),
+                  inputText,
+                  250
+                )
+              }}
+            />
+          </div>
+          <Box>
+            {searchResult?.searchPaper.map((value: any) =>
+              <div>
+                {value.paper_title}
+              </div>
+            )}
+          </Box>
         </div>
         <div className="w-100 mv4">
           <PapersChart

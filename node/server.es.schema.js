@@ -51,11 +51,24 @@ const PAPERS_BY_YEAR = {
   }
 };
 
+// [Query] Get paper by id.
 const GET_PAPER = (id) => {
   return {
-    "query": {
-      "match": {
+    query: {
+      match: {
         "paper_id": id
+      }
+    }
+  }
+};
+
+// [Query] Search for paper by paper title. Get top 5 papers.
+const SEARCH_BY_TITLE = (title) => {
+  return {
+    size: 5,
+    query: {
+      match: {
+        "paper_title": title
       }
     }
   }
@@ -66,5 +79,6 @@ module.exports = {
   ALL_PAPERS,
   YEARS_RANGE,
   PAPERS_BY_YEAR,
-  GET_PAPER
+  GET_PAPER,
+  SEARCH_BY_TITLE
 };
