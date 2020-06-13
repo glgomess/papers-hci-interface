@@ -6,7 +6,8 @@ import ServiceWorker from '../serviceWorker/index'
 import gql from 'graphql-tag'
 import { useQuery, useLazyQuery } from 'react-apollo'
 import { debounce } from '../utils/functions'
-import { Box } from '@material-ui/core'
+import { Box, Typography } from '@material-ui/core'
+import SearchIcon from '@material-ui/icons/Search'
 
 const GET_PAPERS_BY_YEAR = gql`
   {
@@ -49,13 +50,19 @@ const SEARCH_PAPER = gql`
 `
 
 const Home = () => {
-  const handleCurrentPaper = (id: number) => {
+  const handleCurrentPaper = (paper_id: number | string) => {
+    const id = typeof (paper_id) === 'string' ? parseInt(paper_id) : paper_id
     getPaper({ variables: { id: id } })
   }
 
   const { data: dataPapers } = useQuery(GET_PAPERS_BY_YEAR)
   const [getPaper, { data: selectedPaper, loading: loadingSelectedPaper }] = useLazyQuery(GET_PAPER)
   const [searchPaper, { data: searchResult }] = useLazyQuery(SEARCH_PAPER)
+
+  const [openSearchResults, setOpenSearchResults] = useState<boolean>(false)
+  useEffect(() => {
+    searchResult?.searchPaper?.length ? setOpenSearchResults(true) : setOpenSearchResults(false)
+  }, [searchResult])
 
   return (
     <>
@@ -82,15 +89,36 @@ const Home = () => {
                   250
                 )
               }}
+              onFocus={() => {
+                searchResult?.searchPaper?.length && setOpenSearchResults(true)
+              }}
+              onBlur={() => {
+                setTimeout(() => setOpenSearchResults(false), 250)
+              }}
             />
           </div>
-          <Box>
-            {searchResult?.searchPaper.map((value: any) =>
-              <div>
-                {value.paper_title}
+          {openSearchResults &&
+            <div className="relative z-1">
+              <div className="absolute ma2">
+                <div className="ba b--gray bg-white br3 bw1 pv2">
+                  {searchResult?.searchPaper.map((paper: any) =>
+                    <div
+                      className="flex flex-row bg-animate bg-white hover-bg-light-gray ph3 items-center pointer"
+                      onClick={() => {
+                        handleCurrentPaper(paper.paper_id)
+                        setOpenSearchResults(false)
+                      }}
+                    >
+                      <div className="mr1 flex"><SearchIcon /></div>
+                      <Typography>
+                        {paper.paper_title}
+                      </Typography>
+                    </div>
+                  )}
+                </div>
               </div>
-            )}
-          </Box>
+            </div>
+          }
         </div>
         <div className="w-100 mv4">
           <PapersChart

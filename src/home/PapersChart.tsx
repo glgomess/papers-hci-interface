@@ -81,7 +81,6 @@ const PapersChart = ({ data, handlePaperId, selectedPaper }: CustomProps) => {
         ]
       }
     })
-    console.log(newChartData)
     return newChartData
   }
 
@@ -129,7 +128,6 @@ const PapersChart = ({ data, handlePaperId, selectedPaper }: CustomProps) => {
     if (selectedPaper) {
       if (selectedPaper.paper_references) {
         const cited: number[] = selectedPaper.paper_references.filter((reference: any) => reference.paper_reference_id !== null)
-        console.log(cited)
         setCitedPapers(cited)
       }
       // if (currentPaperRefs.citedBy) {
