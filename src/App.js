@@ -1,7 +1,7 @@
 import React from 'react'
 import TopBar from './topbar'
 import { BrowserRouter, Switch, Route } from 'react-router-dom'
-import AboutUs from './aboutus/index'
+import ProjectPage from './other-pages/ProjectPage'
 import Home from './home/index'
 
 function App() {
@@ -16,8 +16,8 @@ function App() {
           <Route exact path="/">
             <Home />
           </Route>
-          <Route path="/aboutus">
-            <AboutUs />
+          <Route path="/projeto">
+            <ProjectPage />
           </Route>
         </Switch>
       </BrowserRouter>

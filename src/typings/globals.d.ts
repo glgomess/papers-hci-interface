@@ -14,3 +14,8 @@ interface PaperRefsResponse {
   cited: Array<[number, string]>
   citedBy: Array<[number, string]>
 }
+
+interface IconProps {
+  width?: number,
+  height?: number
+}

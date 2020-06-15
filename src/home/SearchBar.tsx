@@ -28,7 +28,7 @@ const SearchBar = ({ handleCurrentPaper }: SearchProps) => {
 
   return (
     <>
-      <div className="mw8 flex-auto">
+      <div className="mw7 flex-auto">
         <TextField
           id="input-search"
           label="Pesquisar"

@@ -4,7 +4,7 @@ import HomeRounded from '@material-ui/icons/HomeRounded'
 import GitHub from '@material-ui/icons/GitHub'
 
 const TopBar = () => {
-  const title = 'IHC Papers'
+  const title = 'Artigos de IHC'
 
   return (
     <AppBar position="static">
@@ -15,8 +15,8 @@ const TopBar = () => {
         <Typography variant="h6" className="flex-grow-1">
           {title}
         </Typography>
-        <Button color="inherit" className="mv2 mr2" href="/aboutus">
-          {'ABOUT'}
+        <Button color="inherit" className="mv2 mr2" href="/projeto">
+          {'SOBRE O PROJETO'}
         </Button>
         <IconButton
           aria-label="account of current user"
