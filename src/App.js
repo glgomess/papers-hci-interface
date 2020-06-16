@@ -1,6 +1,6 @@
 import React from 'react'
 import TopBar from './topbar'
-import { BrowserRouter, Switch, Route } from 'react-router-dom'
+import { HashRouter, Switch, Route } from 'react-router-dom'
 import ProjectPage from './other-pages/ProjectPage'
 import Home from './home/index'
 
@@ -13,8 +13,8 @@ function App() {
       <link href="https://icons8.com/icon/aGBLcugRkYpT/elasticsearch"></link>
       <link href="https://icons8.com/icon/fdBWYEwusJbm/react"></link>
 
-      <TopBar />
-      <BrowserRouter>
+      <HashRouter basename="/">
+        <TopBar />
         <Switch>
           <Route exact path="/">
             <Home />
@@ -23,7 +23,7 @@ function App() {
             <ProjectPage />
           </Route>
         </Switch>
-      </BrowserRouter>
+      </HashRouter>
     </div>
   )
 }

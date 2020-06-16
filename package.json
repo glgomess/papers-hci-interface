@@ -36,7 +36,9 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "server": "node ./node/server.js",
-    "dev": "run-p server start"
+    "dev": "run-p server start",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -53,5 +55,9 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "http://localhost:9100"
+  "proxy": "http://localhost:9100",
+  "homepage": "https://gabibguti.github.io/papers-ihc-interface",
+  "devDependencies": {
+    "gh-pages": "^3.0.0"
+  }
 }
