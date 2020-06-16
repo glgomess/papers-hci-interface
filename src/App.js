@@ -9,6 +9,9 @@ function App() {
     <div>
       <link rel="stylesheet" href="https://unpkg.com/tachyons@4/css/tachyons.min.css"></link>
       <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
+      <link href="https://icons8.com/icon/22813/docker"></link>
+      <link href="https://icons8.com/icon/aGBLcugRkYpT/elasticsearch"></link>
+      <link href="https://icons8.com/icon/fdBWYEwusJbm/react"></link>
 
       <TopBar />
       <BrowserRouter>
