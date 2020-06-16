@@ -1,23 +1,23 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "4e68bb08b1275f7547137870e66c2c5e",
+    "revision": "c9dd5054ba2dc263a56a802e634d67fd",
     "url": "/papers-ihc-interface/index.html"
   },
   {
-    "revision": "66a52f65749ee3a8ed8a",
+    "revision": "7e8ffe0f8f313a8cd49f",
     "url": "/papers-ihc-interface/static/css/2.5a2f7233.chunk.css"
   },
   {
-    "revision": "66a52f65749ee3a8ed8a",
-    "url": "/papers-ihc-interface/static/js/2.4ea0712c.chunk.js"
+    "revision": "7e8ffe0f8f313a8cd49f",
+    "url": "/papers-ihc-interface/static/js/2.6c4ad0e8.chunk.js"
   },
   {
     "revision": "838a4ecec6fd2deba776839f12d1ea8a",
-    "url": "/papers-ihc-interface/static/js/2.4ea0712c.chunk.js.LICENSE.txt"
+    "url": "/papers-ihc-interface/static/js/2.6c4ad0e8.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "7144d545f86833a1e459",
-    "url": "/papers-ihc-interface/static/js/main.9c289147.chunk.js"
+    "revision": "2129a8d7a4bd996d02f3",
+    "url": "/papers-ihc-interface/static/js/main.d44e1a28.chunk.js"
   },
   {
     "revision": "3a024ba66ef727f21032",
