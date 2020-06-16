@@ -101,9 +101,9 @@ const PapersChart = ({ data, handleCurrentPaper, selectedPaper }: CustomProps) =
   }
 
   useEffect(() => {
-    const yearsWithPapers = data.reverse().map(({ year }: any) => year)
-    const first = yearsWithPapers[0] || 1998
-    const last = yearsWithPapers[yearsWithPapers.length - 1] || 2018
+    const yearsWithPapers = data.map(({ year }: any) => year)
+    const first = yearsWithPapers[yearsWithPapers.length - 1] ?? 1998
+    const last = yearsWithPapers[0] ?? 2018
     const fullYearsSet = Array.from(Array(last - first + 1).keys()).map((curr: any) => curr + first)
     setYears({
       first,
