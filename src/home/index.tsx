@@ -1,5 +1,5 @@
 import gql from 'graphql-tag'
-import React from 'react'
+import React, { useState } from 'react'
 import { useLazyQuery, useQuery } from 'react-apollo'
 import PaperInfo from './PaperInfo'
 import PapersChart from './PapersChart'
@@ -46,7 +46,12 @@ const Home = () => {
     getPaper({ variables: { id: id } })
   }
 
-  const { data: dataPapers } = useQuery(GET_PAPERS_BY_YEAR)
+  const [papers, setPapers] = useState<any>([])
+  useQuery(GET_PAPERS_BY_YEAR, {
+    onCompleted(data) {
+      setPapers(data.getPapersByYear)
+    }
+  })
   const [getPaper, { data: selectedPaper, loading: loadingSelectedPaper }] = useLazyQuery(GET_PAPER)
 
   return (
@@ -59,7 +64,7 @@ const Home = () => {
         </div>
         <div className="w-100 mv4">
           <PapersChart
-            data={dataPapers?.getPapersByYear || []}
+            data={papers || []}
             handleCurrentPaper={handleCurrentPaper}
             selectedPaper={selectedPaper}
           />
