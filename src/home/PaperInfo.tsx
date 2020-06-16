@@ -114,10 +114,7 @@ const PaperInfo = ({ paper, loading, handleCurrentPaper }: CustomProps) => {
                     <span key={index} className="flex pb2">
                       {
                         reference.paper_reference_id
-                          ? <Link
-                            href={`#${reference.paper_reference_id}`}
-                            onClick={() => handleCurrentPaper(reference.paper_reference_id)}
-                          >
+                          ? <Link onClick={() => handleCurrentPaper(reference.paper_reference_id)}>
                             {reference.paper_reference}
                           </Link>
                           : <span>{reference.paper_reference}</span>
@@ -139,10 +136,7 @@ const PaperInfo = ({ paper, loading, handleCurrentPaper }: CustomProps) => {
                 <Typography variant="body1" gutterBottom>
                   {paper.getReferencedByPapers.map((referenceBy: any, index: any) => (
                     <span key={index} className="flex pb2">
-                      <Link
-                        href={`#${referenceBy.paper_id}`}
-                        onClick={() => handleCurrentPaper(referenceBy.paper_id)}
-                      >
+                      <Link onClick={() => handleCurrentPaper(referenceBy.paper_id)}>
                         {referenceBy.paper_title}
                       </Link>
                     </span>
