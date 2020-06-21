@@ -5,9 +5,6 @@ const path = require('path')
 const { ApolloServer } = require('apollo-server-express')
 const makeExecutableSchema = require('./server.graphql')
 
-// Define running server port
-const PORT = 9100
-
 const server = new ApolloServer({
   schema: makeExecutableSchema,
   playground: true,
@@ -17,7 +14,7 @@ const server = new ApolloServer({
 app.use(bodyParser.json())
 
 // Set port for the app to listen on
-app.set('port', process.env.PORT || 3001)
+app.set('port', process.env.PORT || 9100)
 
 // Set path to serve static files
 app.use(express.static(path.join(__dirname, 'public')))
