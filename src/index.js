@@ -7,7 +7,7 @@ import { createHttpLink } from 'apollo-link-http'
 import { InMemoryCache } from 'apollo-cache-inmemory'
 
 const DEV_HOST = 'http://localhost:9100/graphql'
-const LIVE_HOST = 'https://568ebf33eee1.ngrok.io/graphql'
+const LIVE_HOST = 'https://f0fae20ab7d7.ngrok.io/graphql'
 
 const httpLink = createHttpLink({
   uri: LIVE_HOST,
