@@ -15,6 +15,6 @@ Front-end application to give an interface to the articles published in the Braz
 4. Run `npm install`
 5. Run `npm run dev`
 
-The project should be up and running!
-The React App should start automatically at: `http://localhost:3000/papers-ihc-interface/#/`
+The project should be up and running! \
+The React App should start automatically at: `http://localhost:3000/papers-ihc-interface/#/` \
 Check API at: `http://localhost:9100/graphql`
