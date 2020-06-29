@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/papers-ihc-interface/precache-manifest.39af6322c8337713dfa0f501f814a58c.js"
+  "/papers-ihc-interface/precache-manifest.c2601ecbec096e004c2819f2ed19f41b.js"
 );
 
 self.addEventListener('message', (event) => {

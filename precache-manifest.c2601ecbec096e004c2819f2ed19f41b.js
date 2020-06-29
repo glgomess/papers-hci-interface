@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "367b7a1a3b670096f9bcb1705debf592",
+    "revision": "6539a8a468ec630f981ffeba85686360",
     "url": "/papers-ihc-interface/index.html"
   },
   {
@@ -16,8 +16,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/papers-ihc-interface/static/js/2.70cf0b6d.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "97a4e5c4bc5e91f11f16",
-    "url": "/papers-ihc-interface/static/js/main.d704c3d9.chunk.js"
+    "revision": "091761e1bbb3ec66fe98",
+    "url": "/papers-ihc-interface/static/js/main.f49466e9.chunk.js"
   },
   {
     "revision": "6f77b915a5b72cd47c03",
