@@ -10,7 +10,7 @@ const DEV_HOST = 'http://localhost:9100/graphql'
 const LIVE_HOST = 'https://f0fae20ab7d7.ngrok.io/graphql'
 
 const httpLink = createHttpLink({
-  uri: LIVE_HOST,
+  uri: DEV_HOST,
 })
 
 const client = new ApolloClient({
