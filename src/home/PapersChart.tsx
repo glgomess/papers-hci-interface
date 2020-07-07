@@ -164,7 +164,11 @@ const PapersChart = ({ data, handleCurrentPaper, selectedPaper }: CustomProps) =
               onValueMouseOut={(paperElement: DataPoint) => { }}
               onValueClick={(paperElement: any) => handleCurrentPaper(paperElement.id!)}
               highlights={[
-                { paperId: selectedPaper?.getPaper?.paper_id, color: CURRENT_PAPER_COLOR },
+                { 
+                  paperId: selectedPaper?.getPaper?.paper_id, 
+                  color: CURRENT_PAPER_COLOR,
+                  fontWeight: "bold"
+                },
                 ...citedPapers.map((reference) => {
                   return { paperId: reference.paper_reference_id, color: CITED_PAPERS_COLOR }
                 }),

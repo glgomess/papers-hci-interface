@@ -84,7 +84,7 @@ export class CustomLabelSeries extends AbstractSeries {
           const hasRotationValueSet = d.rotation === 0 || d.rotation
           const labelRotation = hasRotationValueSet ? d.rotation : rotation
 
-          const hightlightedElement = highlights.find((el) => el.paperId == id)
+          const { paperId, ...hightlightedProps } = highlights.find((el) => el.paperId == id) ?? {}
 
           const attrs = {
             dominantBaseline: getDominantBaseline(labelAnchorY, aboveMiddle),
@@ -96,7 +96,7 @@ export class CustomLabelSeries extends AbstractSeries {
             onMouseOut: (e) => this._valueMouseOutHandler(d, e),
             textAnchor: getTextAnchor(labelAnchorX, leftOfMiddle),
             ...markStyle,
-            style: hightlightedElement ? { color: hightlightedElement.color } : {},
+            style: hightlightedProps ?? {},
           }
           const textContent = getLabel(_data ? _data[i] : d)
           return res.concat([
