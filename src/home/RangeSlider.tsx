@@ -10,7 +10,7 @@ interface CustomProps {
 const RangeSlider = (props: CustomProps) => {
   const { handleRangeInput, years } = props
 
-  const [viewRange, setViewRange] = useState<number[]>([years.last - 1, years.last])
+  const [viewRange, setViewRange] = useState<number[]>([years.last - 5, years.last])
 
   const handleChange = (event: any, newRange: number | number[]) => {
     const range = newRange as number[]

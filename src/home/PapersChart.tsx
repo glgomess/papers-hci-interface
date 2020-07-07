@@ -111,7 +111,7 @@ const PapersChart = ({ data, handleCurrentPaper, selectedPaper }: CustomProps) =
       set: fullYearsSet,
     })
     handleRangeInput({
-      start: last - 1,
+      start: last - 5,
       end: last,
     })
   }, [data])
