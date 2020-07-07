@@ -106,7 +106,7 @@ const PaperInfo = ({ paper, loading, handleCurrentPaper }: CustomProps) => {
             </div>
             <div className="flex flex-column pb3 w-80">
               <Typography variant="h6" gutterBottom>
-                Artigos referenciados
+                Referências
               </Typography>
               {paper.getPaper.paper_references?.length ? (
                 <Typography variant="body1" gutterBottom>
@@ -130,7 +130,7 @@ const PaperInfo = ({ paper, loading, handleCurrentPaper }: CustomProps) => {
             </div>
             <div className="flex flex-column pb3 w-80">
               <Typography variant="h6" gutterBottom>
-                Referência em
+                Citações
               </Typography>
               {paper.getReferencedByPapers?.length ? (
                 <Typography variant="body1" gutterBottom>
