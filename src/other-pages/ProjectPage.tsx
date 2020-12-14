@@ -41,6 +41,12 @@ const CONTRIBUITORS = [
     img_src: "https://github.com/gabibguti.png"
   },
   {
+    name: "Livia Aloise",
+    resume: "Estudante de Engenharia da Computação na PUC-Rio.",
+    profile_src: "https://www.linkedin.com/in/livia-aloise-85576a17a/",
+    img_src: "https://github.com/liviaaloise.png"
+  },
+  {
     name: "Simone D J Barbosa",
     resume: "Professora do Departamento de Informática da PUC-Rio.",
     img_src: "http://www-di.inf.puc-rio.br/~simone/images/SimoneDJBarbosa150.jpg"

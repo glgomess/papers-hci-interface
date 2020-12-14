@@ -35,6 +35,8 @@ interface Hightlight {
 let MAX_PAPERS_PER_YEAR = 40
 
 const PapersChart = ({ data, handleCurrentPaper, selectedPaper }: CustomProps) => {
+  // console.log('PapersData',data);
+
   const [XDomain, setXDomain] = useState<number[]>([0, 0])
   const [years, setYears] = useState<Years>({
     first: 1998,
@@ -81,18 +83,24 @@ const PapersChart = ({ data, handleCurrentPaper, selectedPaper }: CustomProps) =
         ]
       }
     })
+    console.log('newChartData', newChartData);
     return newChartData
   }
 
   const handleRangeInput = ({ start, end }: { start: number; end: number }) => {
+    console.log('handleRange', start, end, years);
     const startIndex = years.set.findIndex((el: any) => el == start)
     const endIndex = years.set.findIndex((el: any) => el == end)
 
     // Scale start/end years and add padding
     const startX = startIndex * TICK_SPACE
     const endX = endIndex * TICK_SPACE + TICK_SPACE
+    console.log('startX', startX);
+    console.log('endX', endX);
+
 
     const visibleTicks = ticks.all.slice(startIndex, endIndex + 1)
+    console.log('visibleTicks', visibleTicks);
     setXDomain([startX, endX])
     setTicks({
       ...ticks,
@@ -101,10 +109,13 @@ const PapersChart = ({ data, handleCurrentPaper, selectedPaper }: CustomProps) =
   }
 
   useEffect(() => {
+    console.log("useEffect", data);
     const yearsWithPapers = data.map(({ year }: any) => year)
     const first = yearsWithPapers[yearsWithPapers.length - 1] ?? 1998
     const last = yearsWithPapers[0] ?? 2018
     const fullYearsSet = Array.from(Array(last - first + 1).keys()).map((curr: any) => curr + first)
+    console.log('fullYearsSet', fullYearsSet);
+
     setYears({
       first,
       last,
@@ -122,6 +133,8 @@ const PapersChart = ({ data, handleCurrentPaper, selectedPaper }: CustomProps) =
       ...ticks,
       all: Array.from(Array(years.set.length).keys()).map((el) => el * TICK_SPACE),
     })
+    console.log('years', years);
+    console.log('ticks', ticks);
   }, [years])
 
   useEffect(() => {
@@ -135,7 +148,11 @@ const PapersChart = ({ data, handleCurrentPaper, selectedPaper }: CustomProps) =
   }, [selectedPaper])
 
   const getVisibleLabels = (tick: any) => {
-    const index = tick / TICK_SPACE
+    // console.log('tick', tick)
+    const index = tick / TICK_SPACE;
+    // console.log('years', years);
+    // console.log('index', index);
+    // console.log('years.set', years.set[index]);
     return `${years.set[index]}`
   }
 
@@ -154,6 +171,7 @@ const PapersChart = ({ data, handleCurrentPaper, selectedPaper }: CustomProps) =
         <YAxis tickFormat={(tick: any) => (tick % 2 == 0 ? `${tick / 2}` : '')} />
         {Object.keys(chartData).map((year: any, index: number) => {
           const dataPoints = chartData[year]
+
           return (
             <CustomLabelSeries
               key={`${year}-${index}`}

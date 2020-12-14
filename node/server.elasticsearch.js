@@ -13,9 +13,9 @@ client.ping(
   }
 )
 
-function ElasticSearchClient(body) {
+function ElasticSearchClient(body, index) {
   // perform the actual search passing in the index, the search query and the type
-  return client.search({ index: 'papers', body: body })
+  return client.search({ index: index, body: body })
 }
 
 module.exports = {

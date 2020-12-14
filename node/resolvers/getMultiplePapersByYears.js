@@ -1,12 +1,12 @@
 const { ElasticSearchClient } = require('../server.elasticsearch');
 const ES_SCHEMA = require('../server.es.schema');
 
-function getPapersByYear() {
+function getMultiplePapersByYears({ ids }) {
   return new Promise((resolve, reject) => {
-    ElasticSearchClient(ES_SCHEMA.PAPERS_BY_YEAR, "papers")
+    ElasticSearchClient(ES_SCHEMA.GET_MULTIPLE_PAPERS_BY_YEARS(ids), "papers")
       .then(r => {
         let buckets = r['aggregations']['papers_by_year']['buckets'];
-        // console.log('bucket', buckets);
+        // console.log('buckets', buckets)
         buckets = buckets.reduce((prev, curr) => {
           return [
             ...prev,
@@ -23,5 +23,5 @@ function getPapersByYear() {
 };
 
 module.exports = {
-  getPapersByYear
+  getMultiplePapersByYears
 };

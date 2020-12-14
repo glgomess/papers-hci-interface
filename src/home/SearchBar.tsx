@@ -4,6 +4,7 @@ import gql from 'graphql-tag'
 import React, { useEffect, useState } from 'react'
 import { useLazyQuery } from "react-apollo"
 import { debounce } from '../utils/functions'
+import Select from "@material-ui/core/Select"
 
 const SEARCH_PAPER = gql`
   query searchPaper($props: SearchProps) {
@@ -26,8 +27,10 @@ const SearchBar = ({ handleCurrentPaper }: SearchProps) => {
     searchResult?.searchPaper?.length ? setOpenSearchResults(true) : setOpenSearchResults(false)
   }, [searchResult])
 
+
   return (
     <>
+
       <div className="mw7 flex-auto">
         <TextField
           id="input-search"
@@ -55,7 +58,7 @@ const SearchBar = ({ handleCurrentPaper }: SearchProps) => {
           onBlur={() => {
             setTimeout(() => setOpenSearchResults(false), 250)
           }}
-        />
+        />  
       </div>
       {
         openSearchResults &&
