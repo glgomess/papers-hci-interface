@@ -121,31 +121,36 @@ const Home = () => {
 
   return (
     <>
-      <div className="ma4">
-        <div className="flex flex-row w-100 mh5">
-          <SearchBar
-            handleCurrentPaper={handleCurrentPaper}
-          />
-
-          <AuthorsSelection 
-              authors = {authors || []}
-              getMultiplePapers = { getMultiplePapers}
+      <div className="ma4 flex">
+        <div style={{backgroundColor: "aquamarine"}}>
+            <p>
+              Author:
+            </p>
+            <AuthorsSelection
+              authors={authors || []}
+              getMultiplePapers={getMultiplePapers}
             />
-          
         </div>
-        <div className="w-100 mv4">
-          <PapersChart
-            data={papers || []}
-            handleCurrentPaper={handleCurrentPaper}
-            selectedPaper={selectedPaper}
-          />
-        </div>
-        <div className="w-100 mv2">
-          <PaperInfo
-            paper={selectedPaper}
-            loading={loadingSelectedPaper}
-            handleCurrentPaper={handleCurrentPaper}
-          />
+        <div className="w-70">
+          <div className="flex flex-row w-100 mh5">
+            <SearchBar
+              handleCurrentPaper={handleCurrentPaper}
+            />
+          </div>
+          <div className="w-100 mv4">
+            <PapersChart
+              data={papers || []}
+              handleCurrentPaper={handleCurrentPaper}
+              selectedPaper={selectedPaper}
+            />
+          </div>
+          <div className="w-100 mv2">
+            <PaperInfo
+              paper={selectedPaper}
+              loading={loadingSelectedPaper}
+              handleCurrentPaper={handleCurrentPaper}
+            />
+          </div>
         </div>
       </div>
     </>

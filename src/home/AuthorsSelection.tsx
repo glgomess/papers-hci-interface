@@ -36,7 +36,7 @@ const AuthorsSelection = ({ authors, getMultiplePapers }: any) => {
         <>
 
        
-            <FormControl className="mh5"  style={{minWidth: "200px"}}>
+            <FormControl className="mh1"  style={{minWidth: "200px"}}>
                 <InputLabel id="authorSelect" > Selecione o autor</InputLabel>
                 <Select
                     labelId="authorSelect"
