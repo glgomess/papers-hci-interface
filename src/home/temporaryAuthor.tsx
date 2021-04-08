@@ -6,7 +6,7 @@ import { Multiselect} from 'multiselect-react-dropdown';
 //import '../utils/style.css';
 
 
-const AuthorsSelection = ({ authors, getMultiplePapers }: any) => {
+const AuthorsSelection2 = ({ authors, getMultiplePapers }: any) => {
 
     const [selectedAuthor, setSelectedAuthor] = useState<any>([]);
 
@@ -27,7 +27,6 @@ const AuthorsSelection = ({ authors, getMultiplePapers }: any) => {
         <>
         <div className="authors-dropdown">
             <Multiselect 
-                    singleSelect
                     options = { authors}
                     displayValue = "person_name"
                     placeholder = "Selecione autor"
@@ -42,5 +41,5 @@ const AuthorsSelection = ({ authors, getMultiplePapers }: any) => {
     )
 }
 
-export default AuthorsSelection
+export default AuthorsSelection2
 
