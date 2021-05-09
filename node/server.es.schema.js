@@ -21,6 +21,21 @@ const ALL_AUTHORS = {
   ]
 };
 
+// [Query] Retrieve all keywords by matching any paper and setting a big limit of up to 1000 results.
+const ALL_KEYWORDS = {
+  size: 2000,
+  query: {
+    match_all: {},
+  },  
+  sort: [
+    {
+      "keywords_list.keyword": {
+        order: "asc"
+      }
+    }
+  ]
+};
+
 // [Query] All papers have a year of publication. Here we retrieve all the unique year values.
 // We do this using agregation. Setting a big limit of up to 50 results.
 // And ordering descending, so the greater year values come before minor year values.
@@ -153,6 +168,7 @@ const GET_REFERENCED_BY_PAPERS = (id) => {
 module.exports = {
   ALL_PAPERS,
   ALL_AUTHORS,
+  ALL_KEYWORDS,
   YEARS_RANGE,
   PAPERS_BY_YEAR,
   GET_PAPER,

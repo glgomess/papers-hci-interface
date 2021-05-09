@@ -1,6 +1,7 @@
 const { makeExecutableSchema } = require('graphql-tools')
 const { getAllPapers } = require('./resolvers/getAllPapers')
 const { getAllAuthors } = require('./resolvers/getAllAuthors')
+const { getAllKeywords } = require('./resolvers/getAllKeywords')
 const { getYearsRange } = require('./resolvers/getYearsRange')
 const { getPapersByYear } = require('./resolvers/getPapersByYear')
 const { getMultiplePapersByYears } = require('./resolvers/getMultiplePapersByYears')
@@ -45,6 +46,12 @@ type Author {
   papers_list: [Int]
 }
 
+type Keyword {
+  keywords_list: [String],
+  keyword_id: Int,
+  papers_list: [Int]
+}
+
 input SearchProps {
   title: String
 }
@@ -52,6 +59,7 @@ input SearchProps {
 type Query {
   getAllPapers: [Paper],
   getAllAuthors: [Author],
+  getAllKeywords: [Keyword],
   getYearsRange: [Int],
   getPapersByYear: [PaperGroup],
   getPaper(id: Int): Paper,
@@ -68,6 +76,7 @@ module.exports = makeExecutableSchema({
     Query: {
       getAllPapers,
       getAllAuthors,
+      getAllKeywords,
       getYearsRange,
       getPapersByYear,
       getPaper: (_, args) => getPaper(args),
