@@ -29,7 +29,7 @@ const ALL_KEYWORDS = {
   },  
   sort: [
     {
-      "keywords_list.keyword": {
+      "keyword_en.keyword": {
         order: "asc"
       }
     }

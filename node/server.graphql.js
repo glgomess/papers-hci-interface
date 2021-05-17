@@ -47,7 +47,7 @@ type Author {
 }
 
 type Keyword {
-  keywords_list: [String],
+  keyword_en: String,
   keyword_id: Int,
   papers_list: [Int]
 }
