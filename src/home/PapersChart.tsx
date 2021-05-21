@@ -87,6 +87,7 @@ const PapersChart = ({ data, handleCurrentPaper, selectedPaper }: CustomProps) =
     return newChartData
   }
 
+  //O QUE VAI TER NO RANGE
   const handleRangeInput = ({ start, end }: { start: number; end: number }) => {
     console.log('handleRange', start, end, years);
     const startIndex = years.set.findIndex((el: any) => el == start)
@@ -101,7 +102,7 @@ const PapersChart = ({ data, handleCurrentPaper, selectedPaper }: CustomProps) =
 
     const visibleTicks = ticks.all.slice(startIndex, endIndex + 1)
     console.log('visibleTicks', visibleTicks);
-    setXDomain([startX, endX])
+    setXDomain([startX, endX])// a parte do grafico que esta vendo
     setTicks({
       ...ticks,
       visible: visibleTicks,
@@ -121,6 +122,7 @@ const PapersChart = ({ data, handleCurrentPaper, selectedPaper }: CustomProps) =
       last,
       set: fullYearsSet,
     })
+    //VER AQUI !!!!!!!
     handleRangeInput({
       start: last - 5,
       end: last,

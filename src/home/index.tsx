@@ -5,6 +5,7 @@ import PaperInfo from './PaperInfo'
 import PapersChart from './PapersChart'
 import SearchBar from './SearchBar'
 import AuthorsSelection from "./AuthorsSelection"
+import KeywordSelection from "./KeywordsSelection"
 
 const GET_PAPERS_BY_YEAR = gql`
   {
@@ -85,6 +86,16 @@ const GET_AUTHORS = gql`
 }
 `
 
+const GET_KEYWORDS = gql`
+{
+  getAllKeywords  {
+    keyword_en
+    keyword_id
+    papers_list
+  }
+}
+`
+
 const Home = () => {
   const handleCurrentPaper = (paper_id: number | string) => {
     const id = typeof (paper_id) === 'string' ? parseInt(paper_id) : paper_id
@@ -98,8 +109,40 @@ const Home = () => {
     }
   })
 
-  function getMultiplePapers(papers_ids: []) {
-    getPapers({ variables: { ids: papers_ids } })
+  const [keywords, setKeywords] = useState<any>([])
+  useQuery(GET_KEYWORDS, {
+    onCompleted(data) {
+      setKeywords(data.getAllKeywords)
+      //console.log("keywords", data.getAllKeywords)
+    }
+  })
+
+  function getMultiplePapers(papers_ids: any = []) {
+    //console.log("getMultiple", papers_ids)
+    let finalPapersIds: any = [];
+
+    if(papers_ids.authors){
+      papers_ids.authors.forEach( id =>{
+        finalPapersIds.push(id);
+      });
+    }
+    
+    if(papers_ids.keywords){
+      papers_ids.keywords.forEach( id =>{
+        if(finalPapersIds.indexOf(id) == -1){
+          finalPapersIds.push(id);
+        }
+      });
+    }
+
+    //select all papers
+    if(finalPapersIds.length == 0){
+      getAllPapers({});
+    }
+    else{
+      getPapers({ variables: { ids: finalPapersIds } })
+
+    }
   }
 
   const [papers, setPapers] = useState<any>([])
@@ -109,13 +152,21 @@ const Home = () => {
     }
   })
 
+  const [papersList, setPapersList] = useState<any>([])
+
   const [getPaper, { data: selectedPaper, loading: loadingSelectedPaper }] = useLazyQuery(GET_PAPER);
   const [getPapers, { data: selectedPapers }] = useLazyQuery(GET_MULTIPLE_PAPERS_BY_YEAR , {
     onCompleted: (data) =>{
       // console.log('papers', papers);
-      console.log('data.getMultiplePapersByYears', data);
+      //console.log('data.getMultiplePapersByYears', data);
       setPapers(data.getMultiplePapersByYears);
       // console.log('papers', papers);
+    }
+  });
+
+  const [getAllPapers] = useLazyQuery(GET_PAPERS_BY_YEAR , {
+    onCompleted: (data) =>{
+      setPapers(data.getPapersByYear);
     }
   });
 
@@ -129,10 +180,22 @@ const Home = () => {
             <AuthorsSelection
               authors={authors || []}
               getMultiplePapers={getMultiplePapers}
+              papersList = {papersList || []} 
+              setPapersList = {setPapersList}
+            />
+
+            <p>
+              Keywords:
+            </p>
+            <KeywordSelection
+              keywords={keywords || []}
+              getMultiplePapers={getMultiplePapers}
+              papersList = {papersList || []} 
+              setPapersList = {setPapersList}
             />
         </div>
         <div className="w-70">
-          <div className="flex flex-row w-100 mh5">
+          <div className="flex flex-column w-100 mh5">
             <SearchBar
               handleCurrentPaper={handleCurrentPaper}
             />

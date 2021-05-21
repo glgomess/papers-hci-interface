@@ -56,7 +56,7 @@ const SearchBar = ({ handleCurrentPaper }: SearchProps) => {
             searchResult?.searchPaper?.length && setOpenSearchResults(true)
           }}
           onBlur={() => {
-            setTimeout(() => setOpenSearchResults(false), 250)
+            //setTimeout(() => setOpenSearchResults(false), 250)
           }}
         />  
       </div>

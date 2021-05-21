@@ -10,6 +10,9 @@ interface CustomProps {
 
 const PaperInfo = ({ paper, loading, handleCurrentPaper }: CustomProps) => {
 
+
+  // console.log("paper", paper)
+
   const LANGUAGES = [
     {
       label: 'PT',
