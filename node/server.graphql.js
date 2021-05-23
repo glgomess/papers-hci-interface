@@ -25,7 +25,8 @@ type Paper {
   paper_theme: String,
   paper_language: String
   paper_authors: [String],
-  paper_references: [Reference]
+  paper_references: [Reference],
+  paper_keywords: [String]
 }
 
 type Reference {

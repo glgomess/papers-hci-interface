@@ -49,6 +49,7 @@ const GET_PAPER = gql`
         paper_reference,
         paper_reference_id
       }
+      paper_keywords
     }
     getReferencedByPapers(id: $id) {
       paper_id,

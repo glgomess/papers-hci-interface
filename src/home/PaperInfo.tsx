@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader, Link, Typography, Button } from '@material-ui/core'
 import React, { useState, useEffect } from 'react'
 import PaperInfoLoading from './PaperInfoLoading'
+import { toTitleCase } from '../utils/functions'
 
 interface CustomProps {
   paper?: any,
@@ -9,9 +10,6 @@ interface CustomProps {
 }
 
 const PaperInfo = ({ paper, loading, handleCurrentPaper }: CustomProps) => {
-
-
-  // console.log("paper", paper)
 
   const LANGUAGES = [
     {
@@ -98,6 +96,20 @@ const PaperInfo = ({ paper, loading, handleCurrentPaper }: CustomProps) => {
                   <Typography variant="body1" display="block" gutterBottom>
                     {paper.getPaper.paper_authors.map((author: string, index: number) => (
                       <span key={index} className="flex pb2">{author}</span>
+                    ))}
+                  </Typography>
+                ) : (
+                    <Typography variant="body1" color="textSecondary" gutterBottom>
+                      Nenhum
+                    </Typography>
+                  )}
+                   <Typography variant="h6" gutterBottom>
+                  Keywords
+                </Typography>
+                {paper.getPaper.paper_keywords?.length ? (
+                  <Typography variant="body1" display="block" gutterBottom>
+                    {paper.getPaper.paper_keywords.map((keywords: string, index: number) => (
+                      <span key={index} className="flex pb2">{toTitleCase(keywords)}</span>
                     ))}
                   </Typography>
                 ) : (
