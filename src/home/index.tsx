@@ -1,5 +1,5 @@
 import gql from 'graphql-tag'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useLazyQuery, useQuery } from 'react-apollo'
 import PaperInfo from './PaperInfo'
 import PapersChart from './PapersChart'
@@ -119,7 +119,6 @@ const Home = () => {
   })
 
   function getMultiplePapers(papers_ids: any = []) {
-    //console.log("getMultiple", papers_ids)
     let finalPapersIds: any = [];
 
     if(papers_ids.authors){
@@ -161,7 +160,6 @@ const Home = () => {
       // console.log('papers', papers);
       //console.log('data.getMultiplePapersByYears', data);
       setPapers(data.getMultiplePapersByYears);
-      // console.log('papers', papers);
     }
   });
 

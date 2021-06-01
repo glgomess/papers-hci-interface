@@ -89,19 +89,19 @@ const PapersChart = ({ data, handleCurrentPaper, selectedPaper }: CustomProps) =
 
   //O QUE VAI TER NO RANGE
   const handleRangeInput = ({ start, end }: { start: number; end: number }) => {
-    console.log('handleRange', start, end, years);
+    //console.log('handleRange', start, end, years);
     const startIndex = years.set.findIndex((el: any) => el == start)
     const endIndex = years.set.findIndex((el: any) => el == end)
 
     // Scale start/end years and add padding
     const startX = startIndex * TICK_SPACE
     const endX = endIndex * TICK_SPACE + TICK_SPACE
-    console.log('startX', startX);
-    console.log('endX', endX);
+    //console.log('startX', startX);
+    //console.log('endX', endX);
 
 
     const visibleTicks = ticks.all.slice(startIndex, endIndex + 1)
-    console.log('visibleTicks', visibleTicks);
+    //console.log('visibleTicks', visibleTicks);
     setXDomain([startX, endX])// a parte do grafico que esta vendo
     setTicks({
       ...ticks,
@@ -110,33 +110,33 @@ const PapersChart = ({ data, handleCurrentPaper, selectedPaper }: CustomProps) =
   }
 
   useEffect(() => {
-    console.log("useEffect", data);
+    //console.log("useEffect", data);
     const yearsWithPapers = data.map(({ year }: any) => year)
-    const first = yearsWithPapers[yearsWithPapers.length - 1] ?? 1998
-    const last = yearsWithPapers[0] ?? 2018
-    const fullYearsSet = Array.from(Array(last - first + 1).keys()).map((curr: any) => curr + first)
-    console.log('fullYearsSet', fullYearsSet);
+    let first = yearsWithPapers[yearsWithPapers.length - 1] ?? 1998
+    let last = yearsWithPapers[0] ?? 2018
+    let fullYearsSet = Array.from(Array(last - first + 1).keys()).map((curr: any) => curr + first)
+
+    if(fullYearsSet.length == 1){
+
+      fullYearsSet = [first-1, first, last+1];
+      first -=1;
+      last+=1;
+    }
 
     setYears({
       first,
       last,
       set: fullYearsSet,
     })
-    //VER AQUI !!!!!!!
-    handleRangeInput({
-      start: last - 5,
-      end: last,
-    })
   }, [data])
 
   useEffect(() => {
+    handleRangeInput({start: years.last -5, end: years.last})
     setChartData(buildChartData(data))
     setTicks({
       ...ticks,
       all: Array.from(Array(years.set.length).keys()).map((el) => el * TICK_SPACE),
     })
-    console.log('years', years);
-    console.log('ticks', ticks);
   }, [years])
 
   useEffect(() => {
@@ -150,11 +150,9 @@ const PapersChart = ({ data, handleCurrentPaper, selectedPaper }: CustomProps) =
   }, [selectedPaper])
 
   const getVisibleLabels = (tick: any) => {
-    // console.log('tick', tick)
+
     const index = tick / TICK_SPACE;
-    // console.log('years', years);
-    // console.log('index', index);
-    // console.log('years.set', years.set[index]);
+
     return `${years.set[index]}`
   }
 
