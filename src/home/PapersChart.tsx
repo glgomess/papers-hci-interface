@@ -83,7 +83,7 @@ const PapersChart = ({ data, handleCurrentPaper, selectedPaper }: CustomProps) =
         ]
       }
     })
-    console.log('newChartData', newChartData);
+    //console.log('newChartData', newChartData);
     return newChartData
   }
 

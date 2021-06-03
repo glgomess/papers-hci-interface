@@ -6,6 +6,8 @@ import PapersChart from './PapersChart'
 import SearchBar from './SearchBar'
 import AuthorsSelection from "./AuthorsSelection"
 import KeywordSelection from "./KeywordsSelection"
+import ToggleButton from 'react-toggle-button';
+import "../assets/css/index.css";
 
 const GET_PAPERS_BY_YEAR = gql`
   {
@@ -121,18 +123,33 @@ const Home = () => {
   function getMultiplePapers(papers_ids: any = []) {
     let finalPapersIds: any = [];
 
-    if(papers_ids.authors){
-      papers_ids.authors.forEach( id =>{
-        finalPapersIds.push(id);
-      });
-    }
     
-    if(papers_ids.keywords){
-      papers_ids.keywords.forEach( id =>{
-        if(finalPapersIds.indexOf(id) == -1){
+    if(isAnd){
+      if( !papers_ids.authors  || !papers_ids.keywords){
+        finalPapersIds = !papers_ids.authors ? papers_ids.keywords : papers_ids.authors;
+      }
+      else{
+        papers_ids.keywords.forEach( id =>{
+          if(papers_ids.authors.indexOf(id) != -1){
+            finalPapersIds.push(id);
+          }
+        });
+      }
+    }
+    else{
+      if(papers_ids.authors){
+        papers_ids.authors.forEach( id =>{
           finalPapersIds.push(id);
-        }
-      });
+        });
+      }
+      
+      if(papers_ids.keywords){
+        papers_ids.keywords.forEach( id =>{
+          if(finalPapersIds.indexOf(id) == -1){
+            finalPapersIds.push(id);
+          }
+        });
+      }
     }
 
     //select all papers
@@ -169,29 +186,48 @@ const Home = () => {
     }
   });
 
+  const [isAnd, setIsAnd] = useState<boolean>(false);
+
   return (
     <>
       <div className="ma4 flex">
-        <div style={{backgroundColor: "aquamarine"}}>
-            <p>
-              Author:
-            </p>
-            <AuthorsSelection
-              authors={authors || []}
-              getMultiplePapers={getMultiplePapers}
-              papersList = {papersList || []} 
-              setPapersList = {setPapersList}
-            />
+        <div style={{ backgroundColor: "aquamarine" }}>
+          <p>
+            Filtros
+            <span className="toggle">
+              <ToggleButton
+                inactiveLabel="OR"
+                activeLabel="AND"
+                value={isAnd}
+                onToggle={(value) => {
+                  setIsAnd(!value)
+                }} />
+            </span>
 
-            <p>
-              Keywords:
+
+          </p>
+
+          <p>
+            Author:
             </p>
-            <KeywordSelection
-              keywords={keywords || []}
-              getMultiplePapers={getMultiplePapers}
-              papersList = {papersList || []} 
-              setPapersList = {setPapersList}
-            />
+          <AuthorsSelection
+            authors={authors || []}
+            getMultiplePapers={getMultiplePapers}
+            papersList={papersList || []}
+            setPapersList={setPapersList}
+            isAnd = {isAnd}
+          />
+
+          <p>
+            Keywords:
+            </p>
+          <KeywordSelection
+            keywords={keywords || []}
+            getMultiplePapers={getMultiplePapers}
+            papersList={papersList || []}
+            setPapersList={setPapersList}
+            isAnd = {isAnd}
+          />
         </div>
         <div className="w-70">
           <div className="flex flex-column w-100 mh5">
