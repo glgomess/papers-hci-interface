@@ -8,6 +8,10 @@ import AuthorsSelection from "./AuthorsSelection"
 import KeywordSelection from "./KeywordsSelection"
 import ToggleButton from 'react-toggle-button';
 import "../assets/css/index.css";
+import ToggleButtonUi from '@material-ui/lab/ToggleButton';
+import ViewListIcon from '@material-ui/icons/ViewList';
+import InsertChartOutlinedOutlinedIcon from '@material-ui/icons/InsertChartOutlinedOutlined';
+import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 
 const GET_PAPERS_BY_YEAR = gql`
   {
@@ -187,6 +191,14 @@ const Home = () => {
   });
 
   const [isAnd, setIsAnd] = useState<boolean>(false);
+  const [isGraph, setIsGraph] =useState<boolean>(true);
+
+  const handleChange = (event: React.MouseEvent<HTMLElement>, nextView: boolean) => {
+    console.log("nextView", nextView);
+    if (nextView != null) {
+      setIsGraph(nextView);
+    }
+  };
 
   return (
     <>
@@ -231,16 +243,29 @@ const Home = () => {
         </div>
         <div className="w-70">
           <div className="flex flex-column w-100 mh5">
+            <div className= "flex flex-row mr-5">
             <SearchBar
               handleCurrentPaper={handleCurrentPaper}
             />
+
+            <ToggleButtonGroup size="medium" value={isGraph} exclusive onChange={handleChange} className="view-button">
+              <ToggleButtonUi value={false} >
+                <ViewListIcon />
+              </ToggleButtonUi>
+              <ToggleButtonUi value={true}>
+                <InsertChartOutlinedOutlinedIcon />
+              </ToggleButtonUi>
+
+            </ToggleButtonGroup>
+            </div>
+            
           </div>
           <div className="w-100 mv4">
-            <PapersChart
+            {isGraph && <PapersChart
               data={papers || []}
               handleCurrentPaper={handleCurrentPaper}
               selectedPaper={selectedPaper}
-            />
+            />}
           </div>
           <div className="w-100 mv2">
             <PaperInfo
