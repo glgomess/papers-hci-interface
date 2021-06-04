@@ -12,6 +12,7 @@ import ToggleButtonUi from '@material-ui/lab/ToggleButton';
 import ViewListIcon from '@material-ui/icons/ViewList';
 import InsertChartOutlinedOutlinedIcon from '@material-ui/icons/InsertChartOutlinedOutlined';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
+import PapersList from './PapersList'
 
 const GET_PAPERS_BY_YEAR = gql`
   {
@@ -161,8 +162,12 @@ const Home = () => {
       getAllPapers({});
     }
     else{
-      getPapers({ variables: { ids: finalPapersIds } })
-
+      if(isGraph){
+        getPapersByYear({ variables: { ids: finalPapersIds } });
+      }
+      else{
+        getPapers({ variables: { ids: finalPapersIds } });
+      }
     }
   }
 
@@ -173,16 +178,24 @@ const Home = () => {
     }
   })
 
-  const [papersList, setPapersList] = useState<any>([])
+  const [papersList, setPapersList] = useState<any>([]);
+
+  const [papersListView, setPapersListView] = useState<any>([]);
 
   const [getPaper, { data: selectedPaper, loading: loadingSelectedPaper }] = useLazyQuery(GET_PAPER);
-  const [getPapers, { data: selectedPapers }] = useLazyQuery(GET_MULTIPLE_PAPERS_BY_YEAR , {
+  const [getPapersByYear, { data: selectedPapersByYear }] = useLazyQuery(GET_MULTIPLE_PAPERS_BY_YEAR , {
     onCompleted: (data) =>{
-      // console.log('papers', papers);
-      //console.log('data.getMultiplePapersByYears', data);
       setPapers(data.getMultiplePapersByYears);
     }
   });
+
+  const [getPapers, { data: selectedPapers }] = useLazyQuery(GET_MULTIPLE_PAPERS , {
+    onCompleted: (data) =>{
+      //console.log('data.getMultiplePapers', data);
+      setPapersListView(data.getMultiplePapers);
+    }
+  });
+
 
   const [getAllPapers] = useLazyQuery(GET_PAPERS_BY_YEAR , {
     onCompleted: (data) =>{
@@ -193,8 +206,13 @@ const Home = () => {
   const [isAnd, setIsAnd] = useState<boolean>(false);
   const [isGraph, setIsGraph] =useState<boolean>(true);
 
+  useEffect( () =>{
+    getMultiplePapers(papersList);
+   
+}, [isGraph] );
+
+
   const handleChange = (event: React.MouseEvent<HTMLElement>, nextView: boolean) => {
-    console.log("nextView", nextView);
     if (nextView != null) {
       setIsGraph(nextView);
     }
@@ -208,8 +226,8 @@ const Home = () => {
             Filtros
             <span className="toggle">
               <ToggleButton
-                inactiveLabel="OR"
-                activeLabel="AND"
+                inactiveLabel="OU"
+                activeLabel="E"
                 value={isAnd}
                 onToggle={(value) => {
                   setIsAnd(!value)
@@ -266,6 +284,13 @@ const Home = () => {
               handleCurrentPaper={handleCurrentPaper}
               selectedPaper={selectedPaper}
             />}
+            {
+              !isGraph && <PapersList
+              data={papersListView || []}
+              handleCurrentPaper={handleCurrentPaper}
+              selectedPaper={selectedPaper}
+            />
+            }
           </div>
           <div className="w-100 mv2">
             <PaperInfo
