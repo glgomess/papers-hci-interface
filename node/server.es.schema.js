@@ -95,6 +95,7 @@ const GET_PAPER = (id) => {
 // [Query] Get paper by id.
 const GET_MULTIPLE_PAPERS = (ids) => {
   return {
+    size: 50,
     query: {
       bool: {
           filter: {

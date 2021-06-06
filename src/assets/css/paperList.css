@@ -1,0 +1,28 @@
+.selected {
+     /* padding: 4px 10px; */
+     padding: 1px;
+     /* margin-right: 5px;
+     margin-bottom: 5px;
+     border-radius: 10px; */
+     display: inline-flex;
+     align-items: center;
+     color: #fff;
+     white-space: nowrap;
+}
+
+
+.selected-author{
+    background: #3f51b5;
+}
+
+.selected-keyword{
+    background: #3fb5a3;
+}
+
+.add-opacity{
+    opacity: 90%;
+}
+
+.authors {
+    background-color: gray;
+}

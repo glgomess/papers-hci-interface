@@ -3,9 +3,8 @@ import { Multiselect} from 'multiselect-react-dropdown';
 import "../assets/css/authors.css";
 
 
-const AuthorsSelection = ({ authors, getMultiplePapers, papersList, setPapersList, isAnd }: any) => {
+const AuthorsSelection = ({ authors, getMultiplePapers, papersList, setPapersList, isAnd,selectedAuthor,setSelectedAuthor  }: any) => {
 
-    const [selectedAuthor, setSelectedAuthor] = useState<any>([]);
 
     const handleChange = (values: any) => {
         let paper_ids = papersList;

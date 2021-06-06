@@ -79,6 +79,7 @@ const GET_MULTIPLE_PAPERS = gql`
         paper_reference,
         paper_reference_id
       }
+      paper_keywords
     }
   }
 `
@@ -115,7 +116,9 @@ const Home = () => {
     onCompleted(data) {
       setAuthors(data.getAllAuthors)
     }
-  })
+  });
+  const [selectedAuthor, setSelectedAuthor] = useState<any>([]);
+
 
   const [keywords, setKeywords] = useState<any>([])
   useQuery(GET_KEYWORDS, {
@@ -124,10 +127,11 @@ const Home = () => {
       //console.log("keywords", data.getAllKeywords)
     }
   })
+  const [selectedKeywords, setSelectedKeywords] = useState<any>([]);
 
   function getMultiplePapers(papers_ids: any = []) {
     let finalPapersIds: any = [];
-
+    //console.log("PapersIds", papers_ids);
     
     if(isAnd){
       if( !papers_ids.authors  || !papers_ids.keywords){
@@ -166,6 +170,7 @@ const Home = () => {
         getPapersByYear({ variables: { ids: finalPapersIds } });
       }
       else{
+        //console.log("finalPapersIds", finalPapersIds)
         getPapers({ variables: { ids: finalPapersIds } });
       }
     }
@@ -246,6 +251,8 @@ const Home = () => {
             papersList={papersList || []}
             setPapersList={setPapersList}
             isAnd = {isAnd}
+            selectedAuthor={selectedAuthor}
+            setSelectedAuthor = {setSelectedAuthor}
           />
 
           <p>
@@ -257,6 +264,8 @@ const Home = () => {
             papersList={papersList || []}
             setPapersList={setPapersList}
             isAnd = {isAnd}
+            selectedKeywords={selectedKeywords}
+            setSelectedKeywords = {setSelectedKeywords}
           />
         </div>
         <div className="w-70">
@@ -289,6 +298,8 @@ const Home = () => {
               data={papersListView || []}
               handleCurrentPaper={handleCurrentPaper}
               selectedPaper={selectedPaper}
+              selectedAuthor={selectedAuthor}
+              selectedKeywords = {selectedKeywords}
             />
             }
           </div>

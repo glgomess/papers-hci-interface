@@ -3,14 +3,13 @@ import { Multiselect} from 'multiselect-react-dropdown';
 import "../assets/css/authors.css";
 
 
-const KeywordSelection = ({ keywords, getMultiplePapers, papersList, setPapersList, isAnd }: any) => {
+const KeywordSelection = ({ keywords, getMultiplePapers, papersList, setPapersList, isAnd, selectedKeywords, setSelectedKeywords }: any) => {
 
-    const [selectedKeywords, setselectedKeywords] = useState<any>([]);
 
     const handleChange = (values: any) => {
         let paper_ids = papersList;
         let keyword_papers: any = [];
-        setselectedKeywords(values);
+        setSelectedKeywords(values);
 
         if(isAnd){
             let aux: any = [];
