@@ -19,8 +19,6 @@ interface Hightlight {
 
 const PapersList = ({ data, handleCurrentPaper, selectedPaper, selectedAuthor, selectedKeywords }: any) => {
   console.log('PapersList', data);
-  //console.log("selectedAuthor", selectedAuthor);
-  //console.log("selectedKeywords", selectedKeywords);
 
   const [authorsList, setAuthorsList] = useState<any>([]);
 

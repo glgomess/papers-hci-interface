@@ -131,8 +131,8 @@ const Home = () => {
 
   function getMultiplePapers(papers_ids: any = []) {
     let finalPapersIds: any = [];
-    //console.log("PapersIds", papers_ids);
-    
+
+
     if(isAnd){
       if( !papers_ids.authors  || !papers_ids.keywords){
         finalPapersIds = !papers_ids.authors ? papers_ids.keywords : papers_ids.authors;
@@ -170,7 +170,6 @@ const Home = () => {
         getPapersByYear({ variables: { ids: finalPapersIds } });
       }
       else{
-        //console.log("finalPapersIds", finalPapersIds)
         getPapers({ variables: { ids: finalPapersIds } });
       }
     }
