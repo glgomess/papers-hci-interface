@@ -14,6 +14,18 @@ import InsertChartOutlinedOutlinedIcon from '@material-ui/icons/InsertChartOutli
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import PapersList from './PapersList'
 
+const GET_ALL_PAPERS = gql`
+  {
+    getAllPapers  {
+      paper_id
+      paper_title
+      paper_language
+      paper_authors
+      paper_keywords
+    }
+  }
+`
+
 const GET_PAPERS_BY_YEAR = gql`
   {
     getPapersByYear  {
@@ -111,6 +123,21 @@ const Home = () => {
     getPaper({ variables: { id: id } })
   }
 
+  const [allPapersByYear, setAllPapersByYear] = useState<any>([]);
+  useQuery(GET_PAPERS_BY_YEAR , {
+    onCompleted: (data) =>{
+      setAllPapersByYear(data.getPapersByYear);
+    }
+  });
+
+  const [allPapers, setAllPapers] = useState<any>([]);
+  useQuery(GET_ALL_PAPERS , {
+    onCompleted: (data) =>{
+      setAllPapers(data.getAllPapers);
+      setPapersListView(data.getAllPapers);
+    }
+  });
+
   const [authors, setAuthors] = useState<any>([])
   useQuery(GET_AUTHORS, {
     onCompleted(data) {
@@ -132,6 +159,7 @@ const Home = () => {
   function getMultiplePapers(papers_ids: any = []) {
     let finalPapersIds: any = [];
 
+    if(!papers_ids.authors && !papers_ids.keywords) return;
 
     if(isAnd){
       if( !papers_ids.authors  || !papers_ids.keywords){
@@ -163,7 +191,7 @@ const Home = () => {
 
     //select all papers
     if(finalPapersIds.length == 0){
-      getAllPapers({});
+      isGraph? setPapers(allPapersByYear) : setPapersListView(allPapers);
     }
     else{
       if(isGraph){

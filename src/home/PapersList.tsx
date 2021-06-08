@@ -17,10 +17,12 @@ interface Hightlight {
   color: string
 }
 
+const PAPERS_PER_PAGE = 10;
+
 const PapersList = ({ data, handleCurrentPaper, selectedPaper, selectedAuthor, selectedKeywords }: any) => {
   console.log('PapersList', data);
 
-  const [authorsList, setAuthorsList] = useState<any>([]);
+  const [currentPage, setCurrentPage] = useState(1);
 
   let authorsList2: any = [];
   let keywordList: any = [];
@@ -39,10 +41,24 @@ const PapersList = ({ data, handleCurrentPaper, selectedPaper, selectedAuthor, s
     handleCurrentPaper(value.paper_id);
   }
 
-  const pageChanged = (page: any) => {
+  const pageChanged = (event: object, page: number) => {
     console.log("page", page);
+    setCurrentPage(page);
+  }
+
+  const paginationConfig = () =>{
+    let numberPages = data.length / PAPERS_PER_PAGE;
+    const start = (currentPage -1) * PAPERS_PER_PAGE;
+    const end = start + PAPERS_PER_PAGE;
+    let shownPapers = data.slice(start, end);
+    console.log("numberPages", numberPages);
+    console.log("start", start);
+    console.log("end", end);
+    console.log("shown", shownPapers);
   }
   //console.log("authorsList2.length", authorsList2.length)
+
+  //paginationConfig();
 
   return (
         <div>
@@ -57,7 +73,7 @@ const PapersList = ({ data, handleCurrentPaper, selectedPaper, selectedAuthor, s
                         }}
                     />
                     <CardContent>
-                       Autores: [mostrar aqui os autores] (?) <br />
+                       Autores: <br />
                        <div className="authors add-opacity">
                         {d.paper_authors?.map((author: string, index: number) => 
                           (authorsList2.indexOf(author) != -1 ?
@@ -69,8 +85,8 @@ const PapersList = ({ data, handleCurrentPaper, selectedPaper, selectedAuthor, s
                        </div>
                        
                        {/* VERIFICAR CASO DE PAPERS SEM KEYWORDS */}
-                       Keywords: [mostrar aqui os Keywords] (?) <br />
-                       <div className="authors add-opacity">
+                       Keywords:<br />
+                       {d.paper_keywords && <div className="authors add-opacity">
                         {d.paper_keywords.map((keyword: string, index: number) => 
                           (keywordList.indexOf(keyword) != -1 ?
                             (<span key={index} className="selected selected-keyword" > {keyword}| </span>)
@@ -78,7 +94,7 @@ const PapersList = ({ data, handleCurrentPaper, selectedPaper, selectedAuthor, s
                           (<span key={index} className="pb2 mr2" > {keyword} | </span>)
 
                         ))}
-                       </div>
+                       </div>}
 
                     </CardContent>
                 </Card>

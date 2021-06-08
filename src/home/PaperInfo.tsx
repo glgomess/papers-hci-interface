@@ -34,6 +34,10 @@ const PaperInfo = ({ paper, loading, handleCurrentPaper }: CustomProps) => {
     if (LANGUAGES.find(l => l.value == defaultLanguage)) setSelectedLanguage(defaultLanguage)
   }, [paper])
 
+  const handleSelectedAuthor = (value: any) => {
+    console.log("value", value)
+  }
+
   return (
     <Card className="flex flex-column justify-center ma5 pa4">
       <CardHeader
@@ -95,7 +99,7 @@ const PaperInfo = ({ paper, loading, handleCurrentPaper }: CustomProps) => {
                 {paper.getPaper.paper_authors?.length ? (
                   <Typography variant="body1" display="block" gutterBottom>
                     {paper.getPaper.paper_authors.map((author: string, index: number) => (
-                      <span key={index} className="flex pb2">{author}</span>
+                      <span key={index} className="flex pb2" onClick={()=>handleSelectedAuthor(author)}>{author}</span>
                     ))}
                   </Typography>
                 ) : (
