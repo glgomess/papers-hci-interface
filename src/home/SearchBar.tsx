@@ -4,7 +4,6 @@ import gql from 'graphql-tag'
 import React, { useEffect, useState } from 'react'
 import { useLazyQuery } from "react-apollo"
 import { debounce } from '../utils/functions'
-import Select from "@material-ui/core/Select"
 
 const SEARCH_PAPER = gql`
   query searchPaper($props: SearchProps) {
