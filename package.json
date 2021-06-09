@@ -59,7 +59,7 @@
     ]
   },
   "proxy": "http://localhost:9100",
-  "homepage": "https://liviaaloise.gitlab.io/papers-ihc-interface/",
+  "homepage": "https://papers-ihc.gitlab.io/papers-ihc-interface/",
   "devDependencies": {
     "gh-pages": "^3.0.0"
   }
