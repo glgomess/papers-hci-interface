@@ -6,7 +6,7 @@ build:
   stage: build
   script:
     - npm install      # Run `npm install` and `npm build`
-    - npm build
+    - npm run build
   artifacts:
     paths:
       - build/          # Save the build result as an artfact
