@@ -1,4 +1,4 @@
-image: node:6.14.12
+image: node
 
 stages:
   - build
@@ -20,5 +20,3 @@ build-pages:
   artifacts:
     paths:
       - public
-#   only:
-    # - master
