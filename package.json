@@ -27,6 +27,7 @@
     "react-dom": "^16.10.2",
     "react-router-dom": "^5.1.2",
     "react-scripts": "^3.3.0",
+    "react-toggle-button": "^2.2.0",
     "react-vis": "^1.11.7",
     "react-vis-types": "^0.0.3",
     "tachyons": "^4.11.1",
@@ -58,7 +59,7 @@
     ]
   },
   "proxy": "http://localhost:9100",
-  "homepage": "https://gabibguti.github.io/papers-ihc-interface",
+  "homepage": ".",
   "devDependencies": {
     "gh-pages": "^3.0.0"
   }
