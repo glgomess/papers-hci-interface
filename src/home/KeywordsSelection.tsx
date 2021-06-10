@@ -48,7 +48,7 @@ const KeywordSelection = ({ keywords, getMultiplePapers, papersList, setPapersLi
                 <Multiselect 
                         options = { keywords}
                         displayValue = "keyword_en"
-                        placeholder = "Select keyword"
+                        placeholder = "Selecione palavra-chave"
                         onSelect = {handleChange}
                         onRemove = {handleChange}
                         avoidHighlightFirstOption = {true}

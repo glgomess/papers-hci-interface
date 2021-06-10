@@ -283,7 +283,7 @@ const Home = () => {
           />
 
           <p>
-            Keywords:
+            Palavra-chave:
             </p>
           <KeywordSelection
             keywords={keywords || []}
