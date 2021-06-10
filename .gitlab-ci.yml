@@ -1,0 +1,38 @@
+image: node    # Run the job in a `node` docker image
+
+stages:
+  - build
+  - test
+  - deploy
+
+build:
+  stage: build
+  cache:
+    paths:
+      - node_modules/
+  script:
+    - echo "Installing"
+    - CI=false npm install
+    - echo "building"
+    - CI=false npm run build 
+    - echo "Build successful"
+
+  artifacts:
+    paths:
+      - build/          # Save the build result as an artfact
+
+pages:
+  stage: deploy
+  script:
+    - rm -rf public
+    - cp build/index.html build/404.html
+    - mv build public
+  artifacts:
+    paths:
+      - public
+  only:
+    - master
+  
+ 
+  
+
