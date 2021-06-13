@@ -151,7 +151,7 @@ const Home = () => {
   useQuery(GET_KEYWORDS, {
     onCompleted(data) {
       setKeywords(data.getAllKeywords)
-      //console.log("keywords", data.getAllKeywords)
+      console.log("keywords", data.getAllKeywords)
     }
   })
   const [selectedKeywords, setSelectedKeywords] = useState<any>([]);
@@ -253,7 +253,7 @@ const Home = () => {
   return (
     <>
       <div className="ma4 flex">
-        <div style={{ backgroundColor: "aquamarine" }}>
+        <div className="filter-box" >
           <p>
             Filtros
             <span className="toggle">

@@ -9,3 +9,8 @@
     margin-left: 15px;
     margin-top: 8px;
 }
+
+.filter-box{
+    background-color: cornflowerblue;
+    max-height: 400px;
+}
