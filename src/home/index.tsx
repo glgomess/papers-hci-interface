@@ -337,6 +337,10 @@ const Home = () => {
               paper={selectedPaper}
               loading={loadingSelectedPaper}
               handleCurrentPaper={handleCurrentPaper}
+              setSelectedKeywords = {setSelectedKeywords}
+              selectedKeywords={selectedKeywords}
+              selectedAuthor={selectedAuthor}
+              setSelectedAuthor={setSelectedAuthor}
             />
           </div>
         </div>

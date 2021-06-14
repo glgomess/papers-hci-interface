@@ -8,7 +8,11 @@ import { useLazyQuery, useQuery } from 'react-apollo'
 interface CustomProps {
   paper?: any,
   loading: boolean,
-  handleCurrentPaper: Function
+  handleCurrentPaper: Function,
+  setSelectedKeywords: Function,
+  selectedKeywords: any,
+  setSelectedAuthor: Function,
+  selectedAuthor: any
 }
 
 const GET_PAPER_KEYWORDS = gql`
@@ -16,11 +20,23 @@ query getMultipleKeywords($ids: [Int]) {
   getMultipleKeywords(ids: $ids) {
     keyword_en
     keyword_id
+    papers_list
   }
 }
 `
 
-const PaperInfo = ({ paper, loading, handleCurrentPaper }: CustomProps) => {
+const GET_PAPER_AUTHORS = gql`
+query getMultipleAuthors($ids: [Int]) {
+  getMultipleAuthors(ids: $ids) {
+    person_name
+    person_name_in_ref
+    person_id
+    papers_list
+  }
+}
+`
+
+const PaperInfo = ({ paper, loading, handleCurrentPaper, setSelectedKeywords, selectedKeywords,setSelectedAuthor, selectedAuthor }: CustomProps) => {
 
   const LANGUAGES = [
     {
@@ -38,6 +54,7 @@ const PaperInfo = ({ paper, loading, handleCurrentPaper }: CustomProps) => {
   ]
 
   const [getKeywords, { data: keywords  } ] = useLazyQuery(GET_PAPER_KEYWORDS);
+  const [getAuthors, { data: authors } ] = useLazyQuery(GET_PAPER_AUTHORS);
 
   const [selectedLanguage, setSelectedLanguage] = useState<string>('pt')
   const abstract = paper?.getPaper[`paper_abstract_${selectedLanguage}`]
@@ -50,11 +67,22 @@ const PaperInfo = ({ paper, loading, handleCurrentPaper }: CustomProps) => {
       getKeywords({ variables: { ids: keywordsIds } });
     }
 
+    if(paper?.getPaper.paper_authors.length >0){
+      const authorsIds = paper.getPaper.paper_authors;
+      getAuthors({ variables: { ids: authorsIds } });
+    }
+
     if (LANGUAGES.find(l => l.value == defaultLanguage)) setSelectedLanguage(defaultLanguage)
   }, [paper])
 
   const handleSelectedAuthor = (value: any) => {
-    console.log("value", value)
+    const aux = [value, ...selectedAuthor];
+    setSelectedAuthor(aux);
+  }
+
+  const handleSelectedKeyword = (value: any) => {
+    const aux = [value, ...selectedKeywords];
+    setSelectedKeywords(aux);
   }
 
   return (
@@ -115,10 +143,10 @@ const PaperInfo = ({ paper, loading, handleCurrentPaper }: CustomProps) => {
                 <Typography variant="h6" gutterBottom>
                   Autores
                 </Typography>
-                {paper.getPaper.paper_authors?.length ? (
+                {authors?.getMultipleAuthors?.length ? (
                   <Typography variant="body1" display="block" gutterBottom>
-                    {paper.getPaper.paper_authors.map((author: string, index: number) => (
-                      <span key={index} className="flex pb2" onClick={()=>handleSelectedAuthor(author)}>{author}</span>
+                    {authors.getMultipleAuthors.map((author: any, index: number) => (
+                      <span key={index} className="flex pb2" onClick={()=>handleSelectedAuthor(author)}>{author.person_name}</span>
                     ))}
                   </Typography>
                 ) : (
@@ -132,7 +160,7 @@ const PaperInfo = ({ paper, loading, handleCurrentPaper }: CustomProps) => {
                 {keywords?.getMultipleKeywords?.length ? (
                   <Typography variant="body1" display="block" gutterBottom>
                     {keywords.getMultipleKeywords.map((keyword: any, index: number) => (
-                      <span key={index} className="flex pb2">{toTitleCase(keyword.keyword_en)}</span>
+                      <span key={index} className="flex pb2" onClick={()=>handleSelectedKeyword(keyword)}>{toTitleCase(keyword.keyword_en)}</span>
                     ))}
                   </Typography>
                 ) : (

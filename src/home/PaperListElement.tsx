@@ -17,11 +17,21 @@ query getMultipleKeywords($ids: [Int]) {
 `
 
 
+const GET_PAPER_AUTHORS = gql`
+query getMultipleAuthors($ids: [Int]) {
+  getMultipleAuthors(ids: $ids) {
+    person_name
+    person_id
+  }
+}
+`
+
+
 const PapersListElement = ({ paper, selectedAuthor, selectedKeywords, handleCurrentPaper }: any) => {
 
-  const [getKeywords, { data: keywords, loading: loading  } ] = useLazyQuery(GET_PAPER_KEYWORDS);
+  const [getKeywords, { data: keywords, loading: loadingKeywords  } ] = useLazyQuery(GET_PAPER_KEYWORDS);
 
-  const [state, setState] = useState({});
+  const [getAuthors, { data: authors, loading: loadingAuthors  } ] = useLazyQuery(GET_PAPER_AUTHORS);
 
   let authorsList2: any = [];
   let keywordList: any = [];
@@ -39,7 +49,9 @@ const PapersListElement = ({ paper, selectedAuthor, selectedKeywords, handleCurr
     //console.log("paper", paper);
     if (paper?.paper_keywords?.length > 0) {
         const keywordsIds = paper.paper_keywords;
+        const authorsIds = paper.paper_authors;
         getKeywords({ variables: { ids: keywordsIds } });
+        getAuthors({ variables: { ids: authorsIds } });
     }
     
 
@@ -52,7 +64,7 @@ const PapersListElement = ({ paper, selectedAuthor, selectedKeywords, handleCurr
         <div>
         {
             
-                !loading && 
+                !loadingKeywords && loadingAuthors  && 
                 <>
                 <Card className="flex flex-column justify-center mh5 mb3 pa1" style={{cursor: "pointer"}}  
                 onClick={()=>handleCurrentPaper(paper.paper_id)} data-tip="Clique para mais informações">

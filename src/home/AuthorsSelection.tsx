@@ -35,7 +35,7 @@ const AuthorsSelection = ({ authors, getMultiplePapers, papersList, setPapersLis
         if(selectedAuthor.length > 0){
             handleChange(selectedAuthor);
         }
-    }, [isAnd] );
+    }, [isAnd, selectedAuthor] );
 
 
     return (
@@ -51,6 +51,7 @@ const AuthorsSelection = ({ authors, getMultiplePapers, papersList, setPapersLis
                         onSelect = {handleChange}
                         onRemove = {handleChange}
                         avoidHighlightFirstOption = {true}
+                        selectedValues = {selectedAuthor}
                     />
             </div>
 

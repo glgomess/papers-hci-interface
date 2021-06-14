@@ -33,11 +33,11 @@ const KeywordSelection = ({ keywords, getMultiplePapers, papersList, setPapersLi
     }
 
     useEffect( () =>{
-        if(selectedKeywords.lenght > 0){
+        if(selectedKeywords.length > 0){
             handleChange(selectedKeywords);
         }
        
-    }, [isAnd] );
+    }, [isAnd, selectedKeywords] );
 
     return (
         <>
@@ -52,6 +52,7 @@ const KeywordSelection = ({ keywords, getMultiplePapers, papersList, setPapersLi
                         onSelect = {handleChange}
                         onRemove = {handleChange}
                         avoidHighlightFirstOption = {true}
+                        selectedValues = {selectedKeywords}
                     />
             </div>
 
