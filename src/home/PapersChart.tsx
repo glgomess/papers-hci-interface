@@ -174,6 +174,7 @@ const PapersChart = ({ data, handleCurrentPaper, selectedPaper }: CustomProps) =
 
           return (
             <CustomLabelSeries
+              style={{cursor: "pointer"}}   
               key={`${year}-${index}`}
               startX={index * TICK_SPACE}
               endX={(index + 1) * TICK_SPACE}

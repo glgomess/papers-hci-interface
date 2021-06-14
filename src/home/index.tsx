@@ -22,6 +22,7 @@ const GET_ALL_PAPERS = gql`
       paper_language
       paper_authors
       paper_keywords
+      paper_year
     }
   }
 `
@@ -64,6 +65,7 @@ const GET_PAPER = gql`
       paper_abstract_en
       paper_abstract_es
       paper_authors
+      paper_year
       paper_references {
         paper_reference,
         paper_reference_id
@@ -87,6 +89,7 @@ const GET_MULTIPLE_PAPERS = gql`
       paper_abstract_en
       paper_abstract_es
       paper_authors
+      paper_year
       paper_references {
         paper_reference,
         paper_reference_id
@@ -151,7 +154,7 @@ const Home = () => {
   useQuery(GET_KEYWORDS, {
     onCompleted(data) {
       setKeywords(data.getAllKeywords)
-      console.log("keywords", data.getAllKeywords)
+      //console.log("keywords", data.getAllKeywords)
     }
   })
   const [selectedKeywords, setSelectedKeywords] = useState<any>([]);

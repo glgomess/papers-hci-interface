@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader } from '@material-ui/core'
 import "../assets/css/paperList.css";
 import { useLazyQuery } from 'react-apollo'
 import gql from 'graphql-tag'
+import ReactTooltip from 'react-tooltip';
 
 
 const GET_PAPER_KEYWORDS = gql`
@@ -35,7 +36,8 @@ const PapersListElement = ({ paper, selectedAuthor, selectedKeywords, handleCurr
 
   useEffect( () =>{
 
-    if (paper.paper_keywords.length > 0) {
+    //console.log("paper", paper);
+    if (paper?.paper_keywords?.length > 0) {
         const keywordsIds = paper.paper_keywords;
         getKeywords({ variables: { ids: keywordsIds } });
     }
@@ -50,9 +52,12 @@ const PapersListElement = ({ paper, selectedAuthor, selectedKeywords, handleCurr
         <div>
         {
             
-                !loading && <Card className="flex flex-column justify-center ma5 pa1" style={{cursor: "pointer"}}  onClick={()=>handleCurrentPaper(paper.paper_id)}>
+                !loading && 
+                <>
+                <Card className="flex flex-column justify-center mh5 mb3 pa1" style={{cursor: "pointer"}}  
+                onClick={()=>handleCurrentPaper(paper.paper_id)} data-tip="Clique para mais informações">
                     <CardHeader
-                        title={paper.paper_title}
+                        title={paper.paper_title + " - " + paper.paper_year}
                         titleTypographyProps={{
                             color: 'textPrimary',
                             variant: 'h6',
@@ -84,7 +89,8 @@ const PapersListElement = ({ paper, selectedAuthor, selectedKeywords, handleCurr
 
                     </CardContent>
                 </Card>
-           
+                <ReactTooltip />
+                </>
         }
         </div>
 
