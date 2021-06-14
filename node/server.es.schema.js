@@ -21,6 +21,21 @@ const ALL_AUTHORS = {
   ]
 };
 
+const GET_MULTIPLE_AUTHORS = (ids) => {
+  return {
+    size: 50,
+    query: {
+      bool: {
+          filter: {
+              terms: {
+                  "person_id": ids
+              }
+          }
+      }
+  }
+  }
+};
+
 // [Query] Retrieve all keywords by matching any paper and setting a big limit of up to 1000 results.
 const ALL_KEYWORDS = {
   size: 2000,
@@ -190,6 +205,7 @@ module.exports = {
   GET_PAPER,
   GET_MULTIPLE_PAPERS,
   GET_MULTIPLE_KEYWORDS,
+  GET_MULTIPLE_AUTHORS,
   SEARCH_BY_TITLE,
   GET_REFERENCED_BY_PAPERS,
   GET_MULTIPLE_PAPERS_BY_YEARS
