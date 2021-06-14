@@ -162,7 +162,7 @@ const Home = () => {
     if (!papers_ids.authors && !papers_ids.keywords) return;
 
     if (isAnd) {
-      if (!papers_ids.authors || !papers_ids.keywords) {
+      if (!papers_ids.authors || !papers_ids.keywords || papers_ids.authors?.length == 0 || papers_ids.keywords?.length == 0) {
         finalPapersIds = !papers_ids.authors ? papers_ids.keywords : papers_ids.authors;
       }
       else {

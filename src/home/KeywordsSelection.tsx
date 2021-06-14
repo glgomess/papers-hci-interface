@@ -16,7 +16,7 @@ const KeywordSelection = ({ keywords, getMultiplePapers, papersList, setPapersLi
             values.forEach(value => {
                 aux.push(value.papers_list)
             });
-            keyword_papers = aux.reduce((a, b) => a.filter(c => b.includes(c)));
+            keyword_papers = aux.length != 0 ? aux.reduce((a, b) => a.filter(c => b.includes(c))) : aux ;
         }
         else{
             values.forEach(value => {

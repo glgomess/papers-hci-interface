@@ -16,7 +16,7 @@ const AuthorsSelection = ({ authors, getMultiplePapers, papersList, setPapersLis
             values.forEach(value => {
                 aux.push(value.papers_list)
             });
-            authors_papers = aux.reduce((a, b) => a.filter(c => b.includes(c)));
+            authors_papers = aux.length != 0 ? aux.reduce((a, b) => a.filter(c => b.includes(c))) : aux ;
         }
         else{
             values.forEach(value => {
