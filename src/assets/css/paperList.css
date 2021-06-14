@@ -26,3 +26,8 @@
 .authors {
     background-color: rgb(237, 229, 229);
 }
+
+.pagination{
+    display: flex;
+    justify-content: center;
+}

@@ -124,15 +124,15 @@ const Home = () => {
   }
 
   const [allPapersByYear, setAllPapersByYear] = useState<any>([]);
-  useQuery(GET_PAPERS_BY_YEAR , {
-    onCompleted: (data) =>{
+  useQuery(GET_PAPERS_BY_YEAR, {
+    onCompleted: (data) => {
       setAllPapersByYear(data.getPapersByYear);
     }
   });
 
   const [allPapers, setAllPapers] = useState<any>([]);
-  useQuery(GET_ALL_PAPERS , {
-    onCompleted: (data) =>{
+  useQuery(GET_ALL_PAPERS, {
+    onCompleted: (data) => {
       setAllPapers(data.getAllPapers);
       setPapersListView(data.getAllPapers);
     }
@@ -159,30 +159,30 @@ const Home = () => {
   function getMultiplePapers(papers_ids: any = []) {
     let finalPapersIds: any = [];
 
-    if(!papers_ids.authors && !papers_ids.keywords) return;
+    if (!papers_ids.authors && !papers_ids.keywords) return;
 
-    if(isAnd){
-      if( !papers_ids.authors  || !papers_ids.keywords){
+    if (isAnd) {
+      if (!papers_ids.authors || !papers_ids.keywords) {
         finalPapersIds = !papers_ids.authors ? papers_ids.keywords : papers_ids.authors;
       }
-      else{
-        papers_ids.keywords.forEach( id =>{
-          if(papers_ids.authors.indexOf(id) != -1){
+      else {
+        papers_ids.keywords.forEach(id => {
+          if (papers_ids.authors.indexOf(id) != -1) {
             finalPapersIds.push(id);
           }
         });
       }
     }
-    else{
-      if(papers_ids.authors){
-        papers_ids.authors.forEach( id =>{
+    else {
+      if (papers_ids.authors) {
+        papers_ids.authors.forEach(id => {
           finalPapersIds.push(id);
         });
       }
-      
-      if(papers_ids.keywords){
-        papers_ids.keywords.forEach( id =>{
-          if(finalPapersIds.indexOf(id) == -1){
+
+      if (papers_ids.keywords) {
+        papers_ids.keywords.forEach(id => {
+          if (finalPapersIds.indexOf(id) == -1) {
             finalPapersIds.push(id);
           }
         });
@@ -190,14 +190,14 @@ const Home = () => {
     }
 
     //select all papers
-    if(finalPapersIds.length == 0){
-      isGraph? setPapers(allPapersByYear) : setPapersListView(allPapers);
+    if (finalPapersIds.length == 0) {
+      isGraph ? setPapers(allPapersByYear) : setPapersListView(allPapers);
     }
-    else{
-      if(isGraph){
+    else {
+      if (isGraph) {
         getPapersByYear({ variables: { ids: finalPapersIds } });
       }
-      else{
+      else {
         getPapers({ variables: { ids: finalPapersIds } });
       }
     }
@@ -215,33 +215,33 @@ const Home = () => {
   const [papersListView, setPapersListView] = useState<any>([]);
 
   const [getPaper, { data: selectedPaper, loading: loadingSelectedPaper }] = useLazyQuery(GET_PAPER);
-  const [getPapersByYear, { data: selectedPapersByYear }] = useLazyQuery(GET_MULTIPLE_PAPERS_BY_YEAR , {
-    onCompleted: (data) =>{
+  const [getPapersByYear, { data: selectedPapersByYear }] = useLazyQuery(GET_MULTIPLE_PAPERS_BY_YEAR, {
+    onCompleted: (data) => {
       setPapers(data.getMultiplePapersByYears);
     }
   });
 
-  const [getPapers, { data: selectedPapers }] = useLazyQuery(GET_MULTIPLE_PAPERS , {
-    onCompleted: (data) =>{
+  const [getPapers, { data: selectedPapers }] = useLazyQuery(GET_MULTIPLE_PAPERS, {
+    onCompleted: (data) => {
       //console.log('data.getMultiplePapers', data);
       setPapersListView(data.getMultiplePapers);
     }
   });
 
 
-  const [getAllPapers] = useLazyQuery(GET_PAPERS_BY_YEAR , {
-    onCompleted: (data) =>{
+  const [getAllPapers] = useLazyQuery(GET_PAPERS_BY_YEAR, {
+    onCompleted: (data) => {
       setPapers(data.getPapersByYear);
     }
   });
 
   const [isAnd, setIsAnd] = useState<boolean>(false);
-  const [isGraph, setIsGraph] =useState<boolean>(true);
+  const [isGraph, setIsGraph] = useState<boolean>(true);
 
-  useEffect( () =>{
+  useEffect(() => {
     getMultiplePapers(papersList);
-   
-}, [isGraph] );
+
+  }, [isGraph]);
 
 
   const handleChange = (event: React.MouseEvent<HTMLElement>, nextView: boolean) => {
@@ -271,37 +271,37 @@ const Home = () => {
 
           <p>
             Author:
-            </p>
+          </p>
           <AuthorsSelection
             authors={authors || []}
             getMultiplePapers={getMultiplePapers}
             papersList={papersList || []}
             setPapersList={setPapersList}
-            isAnd = {isAnd}
+            isAnd={isAnd}
             selectedAuthor={selectedAuthor}
-            setSelectedAuthor = {setSelectedAuthor}
+            setSelectedAuthor={setSelectedAuthor}
           />
 
           <p>
             Palavra-chave:
-            </p>
+          </p>
           <KeywordSelection
             keywords={keywords || []}
             getMultiplePapers={getMultiplePapers}
             papersList={papersList || []}
             setPapersList={setPapersList}
-            isAnd = {isAnd}
+            isAnd={isAnd}
             selectedKeywords={selectedKeywords}
-            setSelectedKeywords = {setSelectedKeywords}
+            setSelectedKeywords={setSelectedKeywords}
           />
         </div>
         <div className="w-70">
-          <div className="flex flex-column w-100 mh5">
-            <div className= "flex flex-row mr-5">
-            <SearchBar
-              handleCurrentPaper={handleCurrentPaper}
-            />
-
+          <div className="flex flex-row mr-5">
+            <div className="flex flex-column w-100 mh5">
+              <SearchBar
+                handleCurrentPaper={handleCurrentPaper}
+              />
+            </div>
             <ToggleButtonGroup size="medium" value={isGraph} exclusive onChange={handleChange} className="view-button">
               <ToggleButtonUi value={false} >
                 <ViewListIcon />
@@ -311,8 +311,7 @@ const Home = () => {
               </ToggleButtonUi>
 
             </ToggleButtonGroup>
-            </div>
-            
+
           </div>
           <div className="w-100 mv4">
             {isGraph && <PapersChart
@@ -322,12 +321,12 @@ const Home = () => {
             />}
             {
               !isGraph && <PapersList
-              data={papersListView || []}
-              handleCurrentPaper={handleCurrentPaper}
-              selectedPaper={selectedPaper}
-              selectedAuthor={selectedAuthor}
-              selectedKeywords = {selectedKeywords}
-            />
+                data={papersListView || []}
+                handleCurrentPaper={handleCurrentPaper}
+                selectedPaper={selectedPaper}
+                selectedAuthor={selectedAuthor}
+                selectedKeywords={selectedKeywords}
+              />
             }
           </div>
           <div className="w-100 mv2">

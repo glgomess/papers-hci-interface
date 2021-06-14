@@ -2,12 +2,23 @@ import { Card, CardContent, CardHeader, Link, Typography, Button } from '@materi
 import React, { useState, useEffect } from 'react'
 import PaperInfoLoading from './PaperInfoLoading'
 import { toTitleCase } from '../utils/functions'
+import gql from 'graphql-tag'
+import { useLazyQuery, useQuery } from 'react-apollo'
 
 interface CustomProps {
   paper?: any,
   loading: boolean,
   handleCurrentPaper: Function
 }
+
+const GET_PAPER_KEYWORDS = gql`
+query getMultipleKeywords($ids: [Int]) {
+  getMultipleKeywords(ids: $ids) {
+    keyword_en
+    keyword_id
+  }
+}
+`
 
 const PaperInfo = ({ paper, loading, handleCurrentPaper }: CustomProps) => {
 
@@ -26,11 +37,19 @@ const PaperInfo = ({ paper, loading, handleCurrentPaper }: CustomProps) => {
     },
   ]
 
+  const [getKeywords, { data: keywords  } ] = useLazyQuery(GET_PAPER_KEYWORDS);
+
   const [selectedLanguage, setSelectedLanguage] = useState<string>('pt')
   const abstract = paper?.getPaper[`paper_abstract_${selectedLanguage}`]
 
   useEffect(() => {
     const defaultLanguage = paper?.getPaper.paper_language.split('-')[0].toLowerCase()
+
+    if(paper?.getPaper.paper_keywords.length >0){
+      const keywordsIds = paper.getPaper.paper_keywords;
+      getKeywords({ variables: { ids: keywordsIds } });
+    }
+
     if (LANGUAGES.find(l => l.value == defaultLanguage)) setSelectedLanguage(defaultLanguage)
   }, [paper])
 
@@ -110,10 +129,10 @@ const PaperInfo = ({ paper, loading, handleCurrentPaper }: CustomProps) => {
                    <Typography variant="h6" gutterBottom>
                   Keywords
                 </Typography>
-                {paper.getPaper.paper_keywords?.length ? (
+                {keywords?.getMultipleKeywords?.length ? (
                   <Typography variant="body1" display="block" gutterBottom>
-                    {paper.getPaper.paper_keywords.map((keywords: string, index: number) => (
-                      <span key={index} className="flex pb2">{toTitleCase(keywords)}</span>
+                    {keywords.getMultipleKeywords.map((keyword: any, index: number) => (
+                      <span key={index} className="flex pb2">{toTitleCase(keyword.keyword_en)}</span>
                     ))}
                   </Typography>
                 ) : (

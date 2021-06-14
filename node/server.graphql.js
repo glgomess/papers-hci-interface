@@ -7,6 +7,7 @@ const { getPapersByYear } = require('./resolvers/getPapersByYear')
 const { getMultiplePapersByYears } = require('./resolvers/getMultiplePapersByYears')
 const { getPaper } = require('./resolvers/getPaper')
 const { getMultiplePapers } = require('./resolvers/getMultiplePapers')
+const { getMultipleKeywords } = require('./resolvers/getMultipleKeywords')
 const { searchPaper } = require('./resolvers/searchPaper')
 const { getReferencedByPapers } = require('./resolvers/getReferencedByPapers')
 
@@ -26,7 +27,7 @@ type Paper {
   paper_language: String
   paper_authors: [String],
   paper_references: [Reference],
-  paper_keywords: [String]
+  paper_keywords: [Int]
 }
 
 type Reference {
@@ -65,6 +66,7 @@ type Query {
   getPapersByYear: [PaperGroup],
   getPaper(id: Int): Paper,
   getMultiplePapers(ids: [Int]): [Paper],
+  getMultipleKeywords(ids: [Int]): [Keyword],
   getMultiplePapersByYears(ids: [Int]): [PaperGroup],
   searchPaper(props: SearchProps): [Paper],
   getReferencedByPapers(id: Int): [Paper],
@@ -82,6 +84,7 @@ module.exports = makeExecutableSchema({
       getPapersByYear,
       getPaper: (_, args) => getPaper(args),
       getMultiplePapers: (_, args) => getMultiplePapers(args),
+      getMultipleKeywords: (_, args) => getMultipleKeywords(args),
       getMultiplePapersByYears: (_, args) => getMultiplePapersByYears(args),
       searchPaper: (_, args) => searchPaper(args.props),
       getReferencedByPapers: (_, args) => getReferencedByPapers(args),

@@ -36,6 +36,21 @@ const ALL_KEYWORDS = {
   ]
 };
 
+const GET_MULTIPLE_KEYWORDS = (ids) => {
+  return {
+    size: 50,
+    query: {
+      bool: {
+          filter: {
+              terms: {
+                  "keyword_id": ids
+              }
+          }
+      }
+  }
+  }
+};
+
 // [Query] All papers have a year of publication. Here we retrieve all the unique year values.
 // We do this using agregation. Setting a big limit of up to 50 results.
 // And ordering descending, so the greater year values come before minor year values.
@@ -92,7 +107,7 @@ const GET_PAPER = (id) => {
   }
 };
 
-// [Query] Get paper by id.
+// [Query] Get multiple paper by ids.
 const GET_MULTIPLE_PAPERS = (ids) => {
   return {
     size: 50,
@@ -174,6 +189,7 @@ module.exports = {
   PAPERS_BY_YEAR,
   GET_PAPER,
   GET_MULTIPLE_PAPERS,
+  GET_MULTIPLE_KEYWORDS,
   SEARCH_BY_TITLE,
   GET_REFERENCED_BY_PAPERS,
   GET_MULTIPLE_PAPERS_BY_YEARS
