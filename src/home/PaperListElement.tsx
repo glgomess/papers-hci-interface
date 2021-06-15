@@ -76,15 +76,15 @@ const PapersListElement = ({ paper, selectedAuthor, selectedKeywords, handleCurr
                     />
                     <CardContent>
                        Autores: <br />
-                       <div className="authors add-opacity">
-                        {paper.paper_authors?.map((author: string, index: number) => 
-                          (authorsList2.indexOf(author) != -1 ?
-                            (<span key={index} className="selected selected-author" > {author}| </span>)
+                       {paper.paper_authors && <div className="authors add-opacity">
+                        {authors?.getMultipleAuthors?.map((author: any, index: number) => 
+                          (authorsList2.indexOf(author.person_name) != -1 ?
+                            (<span key={index} className="selected selected-author" > {author.person_name}| </span>)
                           :
-                          (<span key={index} className="pb2 mr2" > {author} | </span>)
+                          (<span key={index} className="pb2 mr2" > {author.person_name} | </span>)
 
                         ))}
-                       </div>
+                       </div>}
                        
                        {/* VERIFICAR CASO DE PAPERS SEM KEYWORDS */}
                        Keywords:<br />
