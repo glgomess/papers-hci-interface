@@ -36,6 +36,26 @@ const GET_MULTIPLE_AUTHORS = (ids) => {
   }
 };
 
+const GET_MULTIPLE_PAPERS_BY_ID_SORTED = (ids, sortDirection) => {
+  return {
+    size: 50,
+    query: {
+      bool: {
+          filter: {
+              terms: {
+                  "paper_id": ids
+              }
+          }
+      }
+    },
+    sort: [
+      {
+        "paper_year": { order: sortDirection }
+      }
+    ]
+  }
+};
+
 // [Query] Retrieve all keywords by matching any paper and setting a big limit of up to 1000 results.
 const ALL_KEYWORDS = {
   size: 2000,
@@ -196,6 +216,21 @@ const GET_REFERENCED_BY_PAPERS = (id) => {
   }
 };
 
+// [Query] Retrieve all papers by matching any paper and setting a big limit of up to 1000 results, sorted by year
+const ALL_PAPERS_SORTED_BY_YEAR = (sortDirection) => {
+  return {
+    size: 1000,
+    query: {
+      match_all: {},
+    },
+    sort: [
+      {
+        "paper_year": { order: sortDirection }
+      }
+    ]
+  }
+};
+
 module.exports = {
   ALL_PAPERS,
   ALL_AUTHORS,
@@ -208,5 +243,7 @@ module.exports = {
   GET_MULTIPLE_AUTHORS,
   SEARCH_BY_TITLE,
   GET_REFERENCED_BY_PAPERS,
-  GET_MULTIPLE_PAPERS_BY_YEARS
+  GET_MULTIPLE_PAPERS_BY_YEARS,
+  GET_MULTIPLE_PAPERS_BY_ID_SORTED,
+  ALL_PAPERS_SORTED_BY_YEAR
 };

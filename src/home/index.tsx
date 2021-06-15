@@ -99,6 +99,46 @@ const GET_MULTIPLE_PAPERS = gql`
   }
 `
 
+const GET_MULTIPLE_PAPERS_SORTED = gql`
+  query getMultiplePapersSorted($ids: [Int], $sortDirection:String) {
+    getMultiplePapersSorted(ids: $ids, sortDirection: $sortDirection) {
+      paper_id
+      paper_title
+      paper_language
+      paper_abstract_pt
+      paper_abstract_en
+      paper_abstract_es
+      paper_authors
+      paper_year
+      paper_references {
+        paper_reference,
+        paper_reference_id
+      }
+      paper_keywords
+    }
+  }
+`
+
+const GET_ALL_PAPERS_SORTED = gql`
+  query getAllPapersSortedByYear( $sortDirection:String) {
+    getAllPapersSortedByYear(sortDirection: $sortDirection) {
+      paper_id
+      paper_title
+      paper_language
+      paper_abstract_pt
+      paper_abstract_en
+      paper_abstract_es
+      paper_authors
+      paper_year
+      paper_references {
+        paper_reference,
+        paper_reference_id
+      }
+      paper_keywords
+    }
+  }
+`
+
 const GET_AUTHORS = gql`
 {
   getAllAuthors  {
@@ -137,7 +177,7 @@ const Home = () => {
   useQuery(GET_ALL_PAPERS, {
     onCompleted: (data) => {
       setAllPapers(data.getAllPapers);
-      setPapersListView(data.getAllPapers);
+      //setPapersListView(data.getAllPapers);
     }
   });
 
@@ -201,7 +241,8 @@ const Home = () => {
         getPapersByYear({ variables: { ids: finalPapersIds } });
       }
       else {
-        getPapers({ variables: { ids: finalPapersIds } });
+        //getPapers({ variables: { ids: finalPapersIds } });
+        getPapersSorted({ variables: { ids: finalPapersIds, sortDirection: 'desc' } });
       }
     }
   }
@@ -230,6 +271,21 @@ const Home = () => {
       setPapersListView(data.getMultiplePapers);
     }
   });
+
+  const [getPapersSorted, { data: selectedPapersSorted }] = useLazyQuery(GET_MULTIPLE_PAPERS_SORTED, {
+    onCompleted: (data) => {
+      setPapersListView(data.getMultiplePapersSorted);
+    }
+  });
+
+  useQuery(GET_ALL_PAPERS_SORTED, {
+    variables: { sortDirection: 'desc'},
+    onCompleted: (data) => {
+      console.log("data", data);
+      setPapersListView(data.getAllPapersSortedByYear);
+    }
+  });
+
 
 
   const [getAllPapers] = useLazyQuery(GET_PAPERS_BY_YEAR, {

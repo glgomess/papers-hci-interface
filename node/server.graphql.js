@@ -11,6 +11,9 @@ const { getMultipleKeywords } = require('./resolvers/getMultipleKeywords')
 const { getMultipleAuthors } = require('./resolvers/getMultipleAuthors')
 const { searchPaper } = require('./resolvers/searchPaper')
 const { getReferencedByPapers } = require('./resolvers/getReferencedByPapers')
+const { getMultiplePapersSorted } = require('./resolvers/getMultiplePapersSorted')
+const { getAllPapersSortedByYear } = require('./resolvers/getAllPapersSorted')
+
 
 const SCHEMA_GRAPHQL = `
 type Paper {
@@ -72,6 +75,8 @@ type Query {
   getMultiplePapersByYears(ids: [Int]): [PaperGroup],
   searchPaper(props: SearchProps): [Paper],
   getReferencedByPapers(id: Int): [Paper],
+  getMultiplePapersSorted(ids: [Int], sortDirection:String): [Paper],
+  getAllPapersSortedByYear(sortDirection:String): [Paper],
 }
 `
 
@@ -91,6 +96,8 @@ module.exports = makeExecutableSchema({
       getMultiplePapersByYears: (_, args) => getMultiplePapersByYears(args),
       searchPaper: (_, args) => searchPaper(args.props),
       getReferencedByPapers: (_, args) => getReferencedByPapers(args),
+      getMultiplePapersSorted: (_, args) => getMultiplePapersSorted(args),
+      getAllPapersSortedByYear: (_, args) => getAllPapersSortedByYear(args),
     },
   },
 })

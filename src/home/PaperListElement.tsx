@@ -46,7 +46,6 @@ const PapersListElement = ({ paper, selectedAuthor, selectedKeywords, handleCurr
 
   useEffect( () =>{
 
-    //console.log("paper", paper);
     if (paper?.paper_keywords?.length > 0) {
         const keywordsIds = paper.paper_keywords;
         const authorsIds = paper.paper_authors;
@@ -64,7 +63,7 @@ const PapersListElement = ({ paper, selectedAuthor, selectedKeywords, handleCurr
         <div>
         {
             
-                !loadingKeywords && loadingAuthors  && 
+                !loadingKeywords && !loadingAuthors  && 
                 <>
                 <Card className="flex flex-column justify-center mh5 mb3 pa1" style={{cursor: "pointer"}}  
                 onClick={()=>handleCurrentPaper(paper.paper_id)} data-tip="Clique para mais informações">
