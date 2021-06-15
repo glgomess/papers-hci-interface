@@ -29,7 +29,7 @@ const TopBar = () => {
           aria-haspopup="true"
           onClick={() => console.log('go to github repo')}
           color="inherit"
-          href="https://github.com/gabibguti/papers-ihc-interface"
+          href="https://gitlab.com/papers-ihc/papers-ihc-interface"
           target="_blank"
           edge="end"
         >
