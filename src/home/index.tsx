@@ -1,5 +1,5 @@
 import gql from 'graphql-tag'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useLazyQuery, useQuery } from 'react-apollo'
 import PaperInfo from './PaperInfo'
 import PapersChart from './PapersChart'
@@ -303,6 +303,13 @@ const Home = () => {
   }, [isGraph]);
 
 
+  const paperInfoRef = useRef<HTMLInputElement>(null);
+  useEffect(() => {
+    if(selectedPaper && paperInfoRef.current){
+      paperInfoRef.current.scrollIntoView();
+    }
+  }, [selectedPaper]);
+
   const handleChange = (event: React.MouseEvent<HTMLElement>, nextView: boolean) => {
     if (nextView != null) {
       setIsGraph(nextView);
@@ -388,7 +395,7 @@ const Home = () => {
               />
             }
           </div>
-          <div className="w-100 mv2">
+          <div className="w-100 mv2" ref={paperInfoRef}>
             <PaperInfo
               paper={selectedPaper}
               loading={loadingSelectedPaper}
