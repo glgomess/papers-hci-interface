@@ -6,7 +6,7 @@ import { toTitleCase } from '../utils/functions'
 import ReactTooltip from 'react-tooltip';
 
 
-const PapersListElement = ({ paper, selectedAuthor, selectedKeywords, handleCurrentPaper }: any) => {
+const PapersListElement = ({ paper, selectedAuthor, selectedKeywords, handleCurrentPaper, setIsLoading }: any) => {
 
 
   let authorsList2: any = [];
@@ -55,7 +55,7 @@ const PapersListElement = ({ paper, selectedAuthor, selectedKeywords, handleCurr
               {paper.paper_keywords && <div className="authors add-opacity">
                 {paper.paper_keywords?.map((keyword: any, index: number) =>
                 (keywordList.indexOf(keyword.keyword) != -1 ?
-                  (<span key={index} className="selected selected-keyword" > {toTitleCase(keyword.keyword)}| </span>)
+                  (<span key={index} className="selected selected-author" > {toTitleCase(keyword.keyword)}| </span>)
                   :
                   (<span key={index} className="pb2 mr2" > {toTitleCase(keyword.keyword)} | </span>)
 

@@ -13,6 +13,7 @@ import ViewListIcon from '@material-ui/icons/ViewList';
 import InsertChartOutlinedOutlinedIcon from '@material-ui/icons/InsertChartOutlinedOutlined';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import PapersList from './PapersList'
+import ReactTooltip from 'react-tooltip'
 
 const GET_ALL_PAPERS = gql`
   {
@@ -203,11 +204,14 @@ const Home = () => {
     }
   });
 
+  const [isLoadingListPaper, setIsLoadingListPaper] = useState<boolean>(true);
   const [allPapers, setAllPapers] = useState<any>([]);
-  useQuery(GET_ALL_PAPERS, {
+   useQuery(GET_ALL_PAPERS_SORTED, {
+    variables: { sortDirection: 'desc'},
     onCompleted: (data) => {
-      setAllPapers(data.getAllPapers);
-      //setPapersListView(data.getAllPapers);
+      setAllPapers(data.getAllPapersSortedByYear);
+      setPapersListView(data.getAllPapersSortedByYear);
+      setIsLoadingListPaper(false);
     }
   });
 
@@ -264,7 +268,13 @@ const Home = () => {
 
     //select all papers
     if (finalPapersIds.length == 0) {
-      isGraph ? setPapers(allPapersByYear) : setPapersListView(allPapers);
+      //isGraph ? setPapers(allPapersByYear) : {setPapersListView(allPapers)};
+      if(isGraph){
+        setPapers(allPapersByYear);
+      }
+      else{
+        setPapersListView(allPapers);
+      }
     }
     else {
       if (isGraph) {
@@ -297,7 +307,6 @@ const Home = () => {
 
   const [getPapers, { data: selectedPapers }] = useLazyQuery(GET_MULTIPLE_PAPERS, {
     onCompleted: (data) => {
-      //console.log('data.getMultiplePapers', data);
       setPapersListView(data.getMultiplePapers);
     }
   });
@@ -308,13 +317,6 @@ const Home = () => {
     }
   });
 
-  useQuery(GET_ALL_PAPERS_SORTED, {
-    variables: { sortDirection: 'desc'},
-    onCompleted: (data) => {
-      console.log("data", data);
-      setPapersListView(data.getAllPapersSortedByYear);
-    }
-  });
 
 
 
@@ -399,13 +401,14 @@ const Home = () => {
               />
             </div>
             <ToggleButtonGroup size="medium" value={isGraph} exclusive onChange={handleChange} className="view-button">
-              <ToggleButtonUi value={false} >
+              <ToggleButtonUi value={false}  data-tip="Modo Lista">
                 <ViewListIcon />
               </ToggleButtonUi>
-              <ToggleButtonUi value={true}>
+              <ToggleButtonUi value={true} data-tip="Modo Gráfico">
                 <InsertChartOutlinedOutlinedIcon />
               </ToggleButtonUi>
 
+              <ReactTooltip type="light" />
             </ToggleButtonGroup>
 
           </div>
@@ -422,6 +425,7 @@ const Home = () => {
                 selectedPaper={selectedPaper}
                 selectedAuthor={selectedAuthor}
                 selectedKeywords={selectedKeywords}
+                isLoading = {isLoadingListPaper}
               />
             }
           </div>

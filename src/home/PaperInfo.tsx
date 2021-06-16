@@ -2,6 +2,7 @@ import { Card, CardContent, CardHeader, Link, Typography, Button } from '@materi
 import React, { useState, useEffect } from 'react'
 import PaperInfoLoading from './PaperInfoLoading'
 import { toTitleCase } from '../utils/functions'
+import ReactTooltip from 'react-tooltip'
 
 interface CustomProps {
   paper?: any,
@@ -111,7 +112,8 @@ const PaperInfo = ({ paper, loading, handleCurrentPaper, setSelectedKeywords, se
                 {paper.getPaper.paper_authors?.length ?  (
                   <Typography variant="body1" display="block" gutterBottom>
                     {paper.getPaper.paper_authors.map((author: any, index: number) => (
-                      <span key={index} className="flex pb2" onClick={()=>handleSelectedAuthor(author)}>{author.person_name}</span>
+                      <span key={index} className="flex pb2" style={{ cursor: "pointer" }} data-tip="Clique para adicionar ao filtro"
+                      onClick={()=>handleSelectedAuthor(author)}>{author.person_name}</span>
                     ))}
                   </Typography>
                 ) : (
@@ -125,7 +127,8 @@ const PaperInfo = ({ paper, loading, handleCurrentPaper, setSelectedKeywords, se
                 {paper.getPaper.paper_keywords?.length ? (
                   <Typography variant="body1" display="block" gutterBottom>
                     {paper.getPaper.paper_keywords.map((keyword: any, index: number) => (
-                      <span key={index} className="flex pb2" onClick={()=>handleSelectedKeyword(keyword)}>{toTitleCase(keyword.keyword)}</span>
+                      <span key={index} className="flex pb2" style={{ cursor: "pointer" }} data-tip="Clique para adicionar ao filtro"
+                       onClick={()=>handleSelectedKeyword(keyword)}>{toTitleCase(keyword.keyword)}</span>
                     ))}
                   </Typography>
                 ) : (
@@ -133,6 +136,7 @@ const PaperInfo = ({ paper, loading, handleCurrentPaper, setSelectedKeywords, se
                       Nenhum
                     </Typography>
                   )}
+                   <ReactTooltip />
               </div>
             </div>
             <div className="flex flex-column pb3 w-80">

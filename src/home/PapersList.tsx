@@ -3,11 +3,12 @@ import '../../node_modules/react-vis/dist/style.css'
 import Pagination from '@material-ui/lab/Pagination';
 import "../assets/css/paperList.css";
 import PaperListElement from "./PaperListElement";
+import RingLoader from "react-spinners/ClipLoader";
 
 
 const PAPERS_PER_PAGE = 5;
 
-const PapersList = ({ data, handleCurrentPaper, selectedPaper, selectedAuthor, selectedKeywords }: any) => {
+const PapersList = ({ data, handleCurrentPaper, selectedPaper, selectedAuthor, selectedKeywords, isLoading }: any) => {
   //console.log('PapersList', data);
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -46,18 +47,25 @@ const PapersList = ({ data, handleCurrentPaper, selectedPaper, selectedAuthor, s
 
 
   return (
-        <div>
-        {
-            shownPapers.length>0 && shownPapers.map((d:any, idx:number) => (
+    <div className="pagination">
+      {isLoading ? (<RingLoader  loading={isLoading} size={150} />)
+        :
+        (
+          <div>
+            {
+              shownPapers.length > 0 && shownPapers.map((d: any, idx: number) => (
 
-              <PaperListElement key={idx} paper={d}  selectedAuthor={selectedAuthor} selectedKeywords={selectedKeywords} 
-              handleCurrentPaper={handleCurrentPaper}
-              />
-              
-            ))
-        }
-        <Pagination className="pagination" count={numberPages} onChange={pageChanged}/>
-        </div>
+                <PaperListElement key={idx} paper={d} selectedAuthor={selectedAuthor} selectedKeywords={selectedKeywords}
+                  handleCurrentPaper={handleCurrentPaper}
+                />
+
+              ))
+            }
+            <Pagination className="pagination" count={numberPages} onChange={pageChanged} />
+          </div>
+        )}
+
+    </div>
 
   )
 }

@@ -59,7 +59,11 @@ const KeywordSelection = ({ keywords, getMultiplePapers, papersList, setPapersLi
             getKeywords({ variables: { ids: keywordsIds } });
         }
        
-    }, [isAnd, selectedKeywords] );
+    }, [selectedKeywords] );
+
+    useEffect( () =>{
+        handleChange(selectedKeywords);
+    }, [isAnd] );
 
     return (
         <>

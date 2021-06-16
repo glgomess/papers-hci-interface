@@ -58,7 +58,11 @@ const AuthorsSelection = ({ authors, getMultiplePapers, papersList, setPapersLis
             });
             getAuthors({ variables: { ids: authorsIds } });
         }
-    }, [isAnd, selectedAuthor] );
+    }, [ selectedAuthor] );
+
+    useEffect( () =>{
+        handleChange(selectedAuthor);
+    }, [isAnd] );
 
 
     return (
