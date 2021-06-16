@@ -2,8 +2,6 @@ import { Card, CardContent, CardHeader, Link, Typography, Button } from '@materi
 import React, { useState, useEffect } from 'react'
 import PaperInfoLoading from './PaperInfoLoading'
 import { toTitleCase } from '../utils/functions'
-import gql from 'graphql-tag'
-import { useLazyQuery, useQuery } from 'react-apollo'
 
 interface CustomProps {
   paper?: any,
@@ -14,27 +12,6 @@ interface CustomProps {
   setSelectedAuthor: Function,
   selectedAuthor: any
 }
-
-const GET_PAPER_KEYWORDS = gql`
-query getMultipleKeywords($ids: [Int]) {
-  getMultipleKeywords(ids: $ids) {
-    keyword_en
-    keyword_id
-    papers_list
-  }
-}
-`
-
-const GET_PAPER_AUTHORS = gql`
-query getMultipleAuthors($ids: [Int]) {
-  getMultipleAuthors(ids: $ids) {
-    person_name
-    person_name_in_ref
-    person_id
-    papers_list
-  }
-}
-`
 
 const PaperInfo = ({ paper, loading, handleCurrentPaper, setSelectedKeywords, selectedKeywords,setSelectedAuthor, selectedAuthor }: CustomProps) => {
 
@@ -53,26 +30,14 @@ const PaperInfo = ({ paper, loading, handleCurrentPaper, setSelectedKeywords, se
     },
   ]
 
-  const [getKeywords, { data: keywords  } ] = useLazyQuery(GET_PAPER_KEYWORDS);
-  const [getAuthors, { data: authors } ] = useLazyQuery(GET_PAPER_AUTHORS);
-
   const [selectedLanguage, setSelectedLanguage] = useState<string>('pt')
   const abstract = paper?.getPaper[`paper_abstract_${selectedLanguage}`]
 
   useEffect(() => {
+
     const defaultLanguage = paper?.getPaper.paper_language.split('-')[0].toLowerCase()
-
-    if(paper?.getPaper.paper_keywords.length >0){
-      const keywordsIds = paper.getPaper.paper_keywords;
-      getKeywords({ variables: { ids: keywordsIds } });
-    }
-
-    if(paper?.getPaper.paper_authors.length >0){
-      const authorsIds = paper.getPaper.paper_authors;
-      getAuthors({ variables: { ids: authorsIds } });
-    }
-
     if (LANGUAGES.find(l => l.value == defaultLanguage)) setSelectedLanguage(defaultLanguage)
+
   }, [paper])
 
   const handleSelectedAuthor = (value: any) => {
@@ -143,9 +108,9 @@ const PaperInfo = ({ paper, loading, handleCurrentPaper, setSelectedKeywords, se
                 <Typography variant="h6" gutterBottom>
                   Autores
                 </Typography>
-                {authors?.getMultipleAuthors?.length ? (
+                {paper.getPaper.paper_authors?.length ?  (
                   <Typography variant="body1" display="block" gutterBottom>
-                    {authors.getMultipleAuthors.map((author: any, index: number) => (
+                    {paper.getPaper.paper_authors.map((author: any, index: number) => (
                       <span key={index} className="flex pb2" onClick={()=>handleSelectedAuthor(author)}>{author.person_name}</span>
                     ))}
                   </Typography>
@@ -157,10 +122,10 @@ const PaperInfo = ({ paper, loading, handleCurrentPaper, setSelectedKeywords, se
                    <Typography variant="h6" gutterBottom>
                   Keywords
                 </Typography>
-                {keywords?.getMultipleKeywords?.length ? (
+                {paper.getPaper.paper_keywords?.length ? (
                   <Typography variant="body1" display="block" gutterBottom>
-                    {keywords.getMultipleKeywords.map((keyword: any, index: number) => (
-                      <span key={index} className="flex pb2" onClick={()=>handleSelectedKeyword(keyword)}>{toTitleCase(keyword.keyword_en)}</span>
+                    {paper.getPaper.paper_keywords.map((keyword: any, index: number) => (
+                      <span key={index} className="flex pb2" onClick={()=>handleSelectedKeyword(keyword)}>{toTitleCase(keyword.keyword)}</span>
                     ))}
                   </Typography>
                 ) : (

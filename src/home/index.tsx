@@ -20,8 +20,14 @@ const GET_ALL_PAPERS = gql`
       paper_id
       paper_title
       paper_language
-      paper_authors
-      paper_keywords
+      paper_authors{
+        person_name
+        person_id
+      }
+      paper_keywords{
+        keyword
+        keyword_id
+      }
       paper_year
     }
   }
@@ -64,13 +70,19 @@ const GET_PAPER = gql`
       paper_abstract_pt
       paper_abstract_en
       paper_abstract_es
-      paper_authors
       paper_year
+      paper_authors{
+        person_name
+        person_id
+      }
+      paper_keywords{
+        keyword
+        keyword_id
+      }
       paper_references {
         paper_reference,
         paper_reference_id
       }
-      paper_keywords
     }
     getReferencedByPapers(id: $id) {
       paper_id,
@@ -88,13 +100,19 @@ const GET_MULTIPLE_PAPERS = gql`
       paper_abstract_pt
       paper_abstract_en
       paper_abstract_es
-      paper_authors
+      paper_authors{
+        person_name
+        person_id
+      }
+      paper_keywords{
+        keyword
+        keyword_id
+      }
       paper_year
       paper_references {
         paper_reference,
         paper_reference_id
       }
-      paper_keywords
     }
   }
 `
@@ -108,13 +126,19 @@ const GET_MULTIPLE_PAPERS_SORTED = gql`
       paper_abstract_pt
       paper_abstract_en
       paper_abstract_es
-      paper_authors
       paper_year
+      paper_authors{
+        person_name
+        person_id
+      }
+      paper_keywords{
+        keyword
+        keyword_id
+      }
       paper_references {
         paper_reference,
         paper_reference_id
       }
-      paper_keywords
     }
   }
 `
@@ -128,13 +152,19 @@ const GET_ALL_PAPERS_SORTED = gql`
       paper_abstract_pt
       paper_abstract_en
       paper_abstract_es
-      paper_authors
       paper_year
+      paper_authors{
+        person_name
+        person_id
+      }
+      paper_keywords{
+        keyword
+        keyword_id
+      }
       paper_references {
         paper_reference,
         paper_reference_id
       }
-      paper_keywords
     }
   }
 `

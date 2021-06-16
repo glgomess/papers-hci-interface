@@ -1,10 +1,28 @@
 import React, { useState, useEffect } from 'react'
 import { Multiselect} from 'multiselect-react-dropdown';
 import "../assets/css/authors.css";
+import { useLazyQuery } from 'react-apollo';
+import gql from 'graphql-tag';
+
+const GET_PAPER_KEYWORDS = gql`
+query getMultipleKeywords($ids: [Int]) {
+  getMultipleKeywords(ids: $ids) {
+    keyword_en
+    keyword_id
+    papers_list
+  }
+}
+`
 
 
 const KeywordSelection = ({ keywords, getMultiplePapers, papersList, setPapersList, isAnd, selectedKeywords, setSelectedKeywords }: any) => {
 
+    const [getKeywords ] = useLazyQuery(GET_PAPER_KEYWORDS, {
+        onCompleted: (data) => {
+            handleChange(data.getMultipleKeywords);
+        }
+
+    });
 
     const handleChange = (values: any) => {
         let paper_ids = papersList;
@@ -34,7 +52,11 @@ const KeywordSelection = ({ keywords, getMultiplePapers, papersList, setPapersLi
 
     useEffect( () =>{
         if(selectedKeywords.length > 0){
-            handleChange(selectedKeywords);
+            let keywordsIds: any = [];
+            selectedKeywords.forEach(keyword => {
+                keywordsIds.push(keyword.keyword_id);
+            });
+            getKeywords({ variables: { ids: keywordsIds } });
         }
        
     }, [isAnd, selectedKeywords] );

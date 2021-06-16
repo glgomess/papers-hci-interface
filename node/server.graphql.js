@@ -29,14 +29,24 @@ type Paper {
   paper_year: Int,
   paper_theme: String,
   paper_language: String
-  paper_authors: [Int],
+  paper_authors: [PaperAuthor],
   paper_references: [Reference],
-  paper_keywords: [Int]
+  paper_keywords: [PaperKeyword]
 }
 
 type Reference {
   paper_reference: String,
   paper_reference_id: Int
+}
+
+type PaperAuthor {
+  person_name: String,
+  person_id: Int
+}
+
+type PaperKeyword {
+  keyword: String,
+  keyword_id: Int
 }
 
 type PaperGroup {

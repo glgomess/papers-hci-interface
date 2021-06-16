@@ -1,10 +1,29 @@
 import React, { useState, useEffect } from 'react'
 import { Multiselect} from 'multiselect-react-dropdown';
 import "../assets/css/authors.css";
+import { useLazyQuery } from 'react-apollo';
+import gql from 'graphql-tag';
 
+const GET_PAPER_AUTHORS = gql`
+query getMultipleAuthors($ids: [Int]) {
+  getMultipleAuthors(ids: $ids) {
+    person_name
+    person_name_in_ref
+    person_id
+    papers_list
+  }
+}
+`
 
 const AuthorsSelection = ({ authors, getMultiplePapers, papersList, setPapersList, isAnd,selectedAuthor,setSelectedAuthor  }: any) => {
 
+
+    const [getAuthors ] = useLazyQuery(GET_PAPER_AUTHORS, {
+        onCompleted: (data) => {
+            handleChange(data.getMultipleAuthors);
+        }
+
+    });
 
     const handleChange = (values: any) => {
         let paper_ids = papersList;
@@ -33,7 +52,11 @@ const AuthorsSelection = ({ authors, getMultiplePapers, papersList, setPapersLis
 
     useEffect( () =>{
         if(selectedAuthor.length > 0){
-            handleChange(selectedAuthor);
+            let authorsIds: any = [];
+            selectedAuthor.forEach(author => {
+                authorsIds.push(author.person_id);
+            });
+            getAuthors({ variables: { ids: authorsIds } });
         }
     }, [isAnd, selectedAuthor] );
 
