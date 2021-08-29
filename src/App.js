@@ -3,6 +3,7 @@ import TopBar from './topbar'
 import { HashRouter, Switch, Route } from 'react-router-dom'
 import ProjectPage from './pages/project-info/ProjectPage'
 import Home from './pages/home/index'
+import { Login } from './pages/login/index'
 
 function App() {
   return (
@@ -21,6 +22,9 @@ function App() {
           </Route>
           <Route path="/projeto">
             <ProjectPage />
+          </Route>
+          <Route path="/login">
+            <Login />
           </Route>
         </Switch>
       </HashRouter>
