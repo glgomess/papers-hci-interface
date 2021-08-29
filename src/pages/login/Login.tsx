@@ -8,6 +8,7 @@ import Button from '@material-ui/core/Button'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import Link from '@material-ui/core/Link'
 import { useLogin } from './hooks/useLogin'
+import { useHistory } from 'react-router'
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -35,12 +36,13 @@ const useStyles = makeStyles((theme: Theme) =>
 )
 
 export default function SpacingGrid() {
+  const history = useHistory()
   const { login } = useLogin()
   const classes = useStyles()
   const [username, setUsername] = useState<string>('')
   const [password, setPassword] = useState<string>('')
   const [isLogging, setIsLogging] = useState<boolean>(false)
-
+  const [requestError, setRequestError] = useState<boolean>(false)
   const preventDefault = (event: React.SyntheticEvent) => event.preventDefault()
 
   function onChangeUsername(e: React.ChangeEvent<HTMLInputElement>) {
@@ -53,13 +55,16 @@ export default function SpacingGrid() {
 
   async function handleLoginClick() {
     setIsLogging(true)
+    setRequestError(false)
     //valida pass
     //valida login
     try {
       await login(username, password)
-      // setIsLogging(false)
+      setIsLogging(false)
+      history.push('/')
     } catch (e) {
-      // setIsLogging(false)
+      setIsLogging(false)
+      setRequestError(true)
     }
   }
 
@@ -71,19 +76,25 @@ export default function SpacingGrid() {
           <TextField
             value={username}
             onChange={onChangeUsername}
-            id="standard-basicc"
+            id="username-input"
             label="Username"
             className={classes.usernameInputField}
+            InputLabelProps={{
+              shrink: true,
+            }}
+            error={requestError}
           />
           <TextField
-            id="standard-basic"
+            id="password-input"
             value={password}
             onChange={onChangePassword}
             label="Password"
             className={classes.passwordInputField}
             type="password"
+            InputLabelProps={{
+              shrink: true,
+            }}
           />
-
           {isLogging ? (
             <CircularProgress />
           ) : (
