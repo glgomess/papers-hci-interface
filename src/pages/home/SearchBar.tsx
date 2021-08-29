@@ -2,8 +2,8 @@ import { TextField, Typography } from '@material-ui/core'
 import SearchIcon from '@material-ui/icons/Search'
 import gql from 'graphql-tag'
 import React, { useEffect, useState } from 'react'
-import { useLazyQuery } from "react-apollo"
-import { debounce } from '../utils/functions'
+import { useLazyQuery } from 'react-apollo'
+import { debounce } from '../../utils/functions'
 
 const SEARCH_PAPER = gql`
   query searchPaper($props: SearchProps) {
@@ -26,10 +26,8 @@ const SearchBar = ({ handleCurrentPaper }: SearchProps) => {
     searchResult?.searchPaper?.length ? setOpenSearchResults(true) : setOpenSearchResults(false)
   }, [searchResult])
 
-
   return (
     <>
-
       <div className="mw7 flex-auto">
         <TextField
           id="input-search"
@@ -45,11 +43,7 @@ const SearchBar = ({ handleCurrentPaper }: SearchProps) => {
           variant="outlined"
           onChange={(e) => {
             const inputText = e.target.value
-            debounce(
-              (inputText: string) => searchPaper({ variables: { props: { title: inputText } } }),
-              inputText,
-              250
-            )
+            debounce((inputText: string) => searchPaper({ variables: { props: { title: inputText } } }), inputText, 250)
           }}
           onFocus={() => {
             searchResult?.searchPaper?.length && setOpenSearchResults(true)
@@ -57,14 +51,13 @@ const SearchBar = ({ handleCurrentPaper }: SearchProps) => {
           onBlur={() => {
             //setTimeout(() => setOpenSearchResults(false), 250)
           }}
-        />  
+        />
       </div>
-      {
-        openSearchResults &&
+      {openSearchResults && (
         <div className="relative z-1">
           <div className="absolute ma2">
             <div className="ba b--gray bg-white br3 bw1 pv2">
-              {searchResult?.searchPaper.map((paper: any) =>
+              {searchResult?.searchPaper.map((paper: any) => (
                 <div
                   key={paper.paper_id}
                   className="flex flex-row bg-animate bg-white hover-bg-light-gray ph3 items-center pointer"
@@ -73,16 +66,16 @@ const SearchBar = ({ handleCurrentPaper }: SearchProps) => {
                     setOpenSearchResults(false)
                   }}
                 >
-                  <div className="mr1 flex"><SearchIcon /></div>
-                  <Typography>
-                    {paper.paper_title}
-                  </Typography>
+                  <div className="mr1 flex">
+                    <SearchIcon />
+                  </div>
+                  <Typography>{paper.paper_title}</Typography>
                 </div>
-              )}
+              ))}
             </div>
           </div>
         </div>
-      }
+      )}
     </>
   )
 }

@@ -1,8 +1,8 @@
 import React from 'react'
 import TopBar from './topbar'
 import { HashRouter, Switch, Route } from 'react-router-dom'
-import ProjectPage from './other-pages/ProjectPage'
-import Home from './home/index'
+import ProjectPage from './pages/project-info/ProjectPage'
+import Home from './pages/home/index'
 
 function App() {
   return (

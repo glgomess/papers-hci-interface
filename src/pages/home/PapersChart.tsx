@@ -1,9 +1,9 @@
 /// <reference types="react-vis-types" />
 import React, { useEffect, useState } from 'react'
 import { HorizontalGridLines, makeVisFlexible, XAxis, XYPlot, YAxis } from 'react-vis'
-import '../../node_modules/react-vis/dist/style.css'
-import { CustomLabelSeries } from '../articles-chart/custom-label-series.js'
-import { CITED_BY_PAPERS_COLOR, CITED_PAPERS_COLOR, CURRENT_PAPER_COLOR } from '../utils/constants'
+import '../../../node_modules/react-vis/dist/style.css'
+import { CustomLabelSeries } from '../../articles-chart/custom-label-series.js'
+import { CITED_BY_PAPERS_COLOR, CITED_PAPERS_COLOR, CURRENT_PAPER_COLOR } from '../../utils/constants'
 import RangeSlider from './RangeSlider'
 
 interface Ticks {
@@ -99,10 +99,9 @@ const PapersChart = ({ data, handleCurrentPaper, selectedPaper }: CustomProps) =
     //console.log('startX', startX);
     //console.log('endX', endX);
 
-
     const visibleTicks = ticks.all.slice(startIndex, endIndex + 1)
     //console.log('visibleTicks', visibleTicks);
-    setXDomain([startX, endX])// a parte do grafico que esta vendo
+    setXDomain([startX, endX]) // a parte do grafico que esta vendo
     setTicks({
       ...ticks,
       visible: visibleTicks,
@@ -116,11 +115,10 @@ const PapersChart = ({ data, handleCurrentPaper, selectedPaper }: CustomProps) =
     let last = yearsWithPapers[0] ?? 2018
     let fullYearsSet = Array.from(Array(last - first + 1).keys()).map((curr: any) => curr + first)
 
-    if(fullYearsSet.length == 1){
-
-      fullYearsSet = [first-1, first, last+1];
-      first -=1;
-      last+=1;
+    if (fullYearsSet.length == 1) {
+      fullYearsSet = [first - 1, first, last + 1]
+      first -= 1
+      last += 1
     }
 
     setYears({
@@ -131,7 +129,7 @@ const PapersChart = ({ data, handleCurrentPaper, selectedPaper }: CustomProps) =
   }, [data])
 
   useEffect(() => {
-    handleRangeInput({start: years.last -5, end: years.last})
+    handleRangeInput({ start: years.last - 5, end: years.last })
     setChartData(buildChartData(data))
     setTicks({
       ...ticks,
@@ -141,7 +139,9 @@ const PapersChart = ({ data, handleCurrentPaper, selectedPaper }: CustomProps) =
 
   useEffect(() => {
     if (selectedPaper?.getPaper?.paper_references) {
-      const cited: number[] = selectedPaper.getPaper.paper_references.filter((reference: any) => reference.paper_reference_id !== null)
+      const cited: number[] = selectedPaper.getPaper.paper_references.filter(
+        (reference: any) => reference.paper_reference_id !== null
+      )
       setCitedPapers(cited)
     }
     if (selectedPaper?.getReferencedByPapers) {
@@ -150,8 +150,7 @@ const PapersChart = ({ data, handleCurrentPaper, selectedPaper }: CustomProps) =
   }, [selectedPaper])
 
   const getVisibleLabels = (tick: any) => {
-
-    const index = tick / TICK_SPACE;
+    const index = tick / TICK_SPACE
 
     return `${years.set[index]}`
   }
@@ -174,19 +173,19 @@ const PapersChart = ({ data, handleCurrentPaper, selectedPaper }: CustomProps) =
 
           return (
             <CustomLabelSeries
-              style={{cursor: "pointer"}}   
+              style={{ cursor: 'pointer' }}
               key={`${year}-${index}`}
               startX={index * TICK_SPACE}
               endX={(index + 1) * TICK_SPACE}
               data={dataPoints}
-              onValueMouseOver={(paperElement: DataPoint) => { }}
-              onValueMouseOut={(paperElement: DataPoint) => { }}
+              onValueMouseOver={(paperElement: DataPoint) => {}}
+              onValueMouseOut={(paperElement: DataPoint) => {}}
               onValueClick={(paperElement: any) => handleCurrentPaper(paperElement.id!)}
               highlights={[
-                { 
-                  paperId: selectedPaper?.getPaper?.paper_id, 
+                {
+                  paperId: selectedPaper?.getPaper?.paper_id,
                   color: CURRENT_PAPER_COLOR,
-                  fontWeight: "bold"
+                  fontWeight: 'bold',
                 },
                 ...citedPapers.map((reference) => {
                   return { paperId: reference.paper_reference_id, color: CITED_PAPERS_COLOR }
