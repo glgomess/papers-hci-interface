@@ -43,6 +43,10 @@ export default function SpacingGrid() {
   const [password, setPassword] = useState<string>('')
   const [isLogging, setIsLogging] = useState<boolean>(false)
   const [requestError, setRequestError] = useState<boolean>(false)
+  const [validationError, setValidationError] = useState<{ username: boolean; password: boolean }>({
+    username: false,
+    password: false,
+  })
   const preventDefault = (event: React.SyntheticEvent) => event.preventDefault()
 
   function onChangeUsername(e: React.ChangeEvent<HTMLInputElement>) {
@@ -54,10 +58,12 @@ export default function SpacingGrid() {
   }
 
   async function handleLoginClick() {
+    if (!isUsernameOk(username) || !isPasswordOk(password)) {
+      return
+    }
+
     setIsLogging(true)
     setRequestError(false)
-    //valida pass
-    //valida login
     try {
       await login(username, password)
       setIsLogging(false)
@@ -68,6 +74,27 @@ export default function SpacingGrid() {
     }
   }
 
+  function isUsernameOk(username: string): boolean {
+    const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    if (re.test(String(username).toLowerCase())) {
+      setValidationError({ ...validationError, username: false })
+      return true
+    }
+
+    setValidationError({ ...validationError, username: true })
+    return false
+  }
+
+  function isPasswordOk(password: string): boolean {
+    if (password.length >= 8) {
+      setValidationError({ ...validationError, password: false })
+      return true
+    }
+
+    setValidationError({ ...validationError, password: true })
+    return false
+  }
+
   return (
     <Grid container direction="column" alignItems="center" className={classes.root}>
       <Paper className={classes.paper} elevation={4}>
@@ -75,6 +102,8 @@ export default function SpacingGrid() {
           <Typography className={classes.header}>Login</Typography>
           <TextField
             value={username}
+            error={validationError.username}
+            helperText={validationError.username ? 'Invalid username.' : ''}
             onChange={onChangeUsername}
             id="username-input"
             label="Username"
@@ -82,11 +111,13 @@ export default function SpacingGrid() {
             InputLabelProps={{
               shrink: true,
             }}
-            error={requestError}
+            // error={requestError}
           />
           <TextField
             id="password-input"
+            helperText={validationError.password ? 'Invalid password.' : ''}
             value={password}
+            error={validationError.password}
             onChange={onChangePassword}
             label="Password"
             className={classes.passwordInputField}
